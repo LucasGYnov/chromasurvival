@@ -1,0 +1,317 @@
+/*Organisation des éléments CSS
+
+    1. Position (discplay, etc.)
+    2. Dimension(height, width, margin, etc.)
+    3. Apparence(color,font-size,font-weight, etc.)
+*/
+
+/* Définition des varibale */
+:root {
+	--clr-bg: #000000;
+	--clr-bgContent: #FAFAFA;
+}
+
+* {
+	margin: 0px;
+	padding: 0px;
+	cursor: none;
+	font-family: "Montserrat", sans-serif;
+	font-optical-sizing: auto;
+	font-style: normal;
+}
+
+
+body {
+	position: absolute;
+	display: flex;
+	align-items: center;
+
+	width: 100%;
+	height: 100%;
+	margin: 0%;
+
+	background-color: var(--clr-bg);
+	justify-content: center;
+	font-family: 'DM Sans', sans-serif;
+	color: white;
+}
+
+a {
+	text-decoration: none;
+}
+
+
+#settings {
+	position: fixed;
+	top: 0%;
+	right: 0%;
+	margin: 1.5% 1.8% 0% 0%;
+}
+
+#settings button {
+	height: 3.5rem;
+	width: 3.5rem;
+	border-radius: 50%;
+}
+
+#settings_button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: none;
+	padding: 0;
+	background: rgba(255, 255, 255, 50%);
+}
+
+#settings_button img {
+	width: 70%;
+	height: 70%;
+	transition: transform 0.5s ease;
+}
+
+#settings_button:hover img {
+	transform: rotate(90deg);
+}
+
+#settings_button:active img {
+	transform: scale(0.8);
+	transition: 0.2s;
+}
+
+
+.background_image {
+	position: fixed;
+	top: 0%;
+	left: 0%;
+	width: 100%;
+	height: 100%;
+	z-index: -1;
+	overflow: hidden;
+}
+
+.container_content {
+	align-items: center;
+	align-content: center;
+}
+
+.container_content h1 {
+	font-size: 100px;
+	user-select: none;
+	margin: 10% 0% 10% 0%;
+}
+
+.container_content button {
+	display: flex;
+	width: 25rem;
+	height: 8rem;
+	align-items: center;
+
+	font-size: 3rem;
+	font-weight: 800;
+
+	margin: -4% 0% 6% 25%;
+	border-radius: 10px;
+	background: #090909;
+	border: none;
+	cursor: pointer;
+	transition: 0.4s;
+	color: white;
+	cursor: none;
+	user-select: none;
+}
+
+.container_content button:hover {
+	box-shadow: 14px 10px 112px -28px #f5f5f5;
+	cursor: none;
+}
+
+.container_content button:active {
+	transform: scale(0.97);
+	box-shadow: 14px 10px 112px -20px #ffffff;
+	cursor: none;
+}
+
+.cursor {
+	position: fixed;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-color: #ffffff;
+	transition: 0.1s;
+	transform: translate(-50%, -50%);
+	pointer-events: none;
+	mix-blend-mode: difference;
+	z-index: 1000;
+
+	border: rgba(0, 0, 0, 10%) 2.5px ridge;
+}
+
+#lunch_game {
+	padding: 0% 0% 0% 14%;
+}
+
+#about {
+	padding: 0% 0% 0% 10.5%;
+}
+
+#credits {
+	padding: 0% 0% 0% 13.2%;
+}
+
+#settings_page {
+	position: fixed;
+	display: flex;
+	justify-content: center;
+
+	width: 30vw;
+	height: 80vh;
+	background-color: rgba(128, 128, 128, 0.5);
+	backdrop-filter: blur(8px);
+	border-radius: 20px;
+	z-index: -100;
+}
+
+#settings_page h2 {
+	position: absolute;
+	top: 1%;
+	font-size: 46px;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+#settings_page form {
+	margin: 20%;
+}
+
+#settings_page label {
+	font-size: 30px;
+	font-weight: 500;
+	margin: 0% 0% 0% 0%;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+#settings_page input[type="text"] {
+	width: 10%;
+	height: 32px;
+	background-color: rgba(255, 255, 255, 0.1);
+	border-bottom: 2px solid rgb(0, 0, 0) !important;
+	border: none;
+	font-size: 24px;
+	font-weight: 600;
+	text-align: center;
+	margin: 0% 0% 5% 2%;
+}
+
+#settings_page span {
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+#save {
+	position: absolute;
+	width: 100%;
+	height: 10%;
+	top: 90%;
+	right: 0%;
+	border-radius: 0px 0px 20px 20px;
+	border: none;
+	background-color: rgba(255, 255, 255, 0.8);
+}
+
+
+.close {
+	position: absolute;
+	top: -1.5%;
+	right: -2.5%;
+	width: 35px;
+	height: 35px;
+	border-radius: 50%;
+	background-color: rgba(255, 255, 255, 0.75);
+	background-image: url("../public/close.webp");
+	background-position: center;
+	background-size: 60%;
+	background-repeat: no-repeat;
+	border: none;
+}
+
+.toggle-switch {
+	position: relative;
+	width: 100px;
+	height: 50px;
+	right: 6%;
+	bottom: 1%;
+	transform: scale(0.6);
+}
+
+
+.switch-label {
+	position: absolute;
+	width: 100%;
+	height: 50px;
+	background-color: #000;
+	border-radius: 25px;
+	border: 4px solid #000;
+
+}
+
+.checkbox {
+	position: absolute;
+	display: none;
+}
+
+.slider {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	border-radius: 25px;
+	transition: 0.3s;
+	background-position: center;
+	background-size: cover;
+}
+
+.checkbox:checked~.slider {
+	background-color: #fff;
+}
+
+.slider::before {
+	content: "";
+	position: absolute;
+	top: 5px;
+	left: 10px;
+	width: 40px;
+	height: 40px;
+	background-color: #fff;
+	background-image: var(--image-url-before);
+	background-position: center;
+	background-size: cover;
+	border-radius: 50%;
+	transition: 0.3s;
+}
+
+.son-checkbox:checked~.slider::before {
+	transform: translateX(40px);
+	background-image: var(--image-url-after);
+	filter: invert(100%);
+	box-shadow: none;
+}
+
+.mobile-checkbox:checked~.slider::before {
+	transform: translateX(40px);
+	background-image: var(--image-url-after);
+	filter: invert(100%);
+	box-shadow: none;
+}
+
+.vibration-checkbox:checked~.slider::before {
+	transform: translateX(40px);
+	background-image: var(--image-url-after);
+	filter: invert(100%);
+	box-shadow: none;
+}
+
+#vibration_section {
+	opacity: 1;
+	transition: opacity 0.4s ease;
+}
+
+#vibration_section.hidden {
+	opacity: 0;
+}

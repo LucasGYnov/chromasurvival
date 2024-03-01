@@ -1,7 +1,7 @@
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 
-canvas.width = 1024
+canvas.width = 1080
 canvas.height = 576
 
 const gravity = 0.3
@@ -183,9 +183,14 @@ window.addEventListener('keydown', (event) => {
         keys.q.pressed = true
 
         break
-d
+
         case 'z' : 
         player.jump()
+
+        break
+
+        case 'x' : 
+        keys.q.pressed = true
 
         break
 
@@ -205,13 +210,11 @@ window.addEventListener('keyup', (event) => {
         keys.q.pressed = false
 
         break
-d
+
         case 'z' : 
         player.velocity.y =  0
 
         break
-
-        
 
     }
 })
