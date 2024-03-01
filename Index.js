@@ -42,7 +42,7 @@ class Player {
         this.height = 100
         this.maxJumps = 2 
         this.jumpCount = 0
-        this.color = 'red'
+        this.color = 'black'
     }
         draw(){
         c.fillStyle = this.color
@@ -72,7 +72,7 @@ class Player {
     }
     changecolor () {
 
-        this.color = this.color === 'red' ? 'blue' : 'red'
+        this.color = this.color === 'black' ? 'white' : 'black'
     
     }
 }
@@ -98,7 +98,47 @@ const scaledCanvas = {
 }
 
 
- 
+function detecterCollision(player, player2) {
+    
+    const playerLeft = player.position.x;
+    const playerRight = player.position.x + 60;
+    const playerTop = player.position.y;
+    const playerBottom = player.position.y + player.height;
+
+    const player2Left = player2.position.x;
+    const player2Right = player2.position.x + 60; 
+    const player2Top = player2.position.y;
+    const player2Bottom = player2.position.y + player2.height;
+
+    
+    if (playerRight > player2Left && 
+        playerLeft < player2Right && 
+        playerBottom > player2Top && 
+        playerTop < player2Bottom) {
+        return true; 
+    }
+
+    return false; 
+}
+
+function gererCollisions() {
+    if (detecterCollision(player, player2)) {
+        
+        if (player.color !== player2.color) {
+            
+            if (player.position.x < player2.position.x) {
+                
+                player.position.x = player2.position.x - 60;
+            } else {
+                
+                player2.position.x = player.position.x - 10;
+            }
+        }
+    }
+}
+
+
+
 function animate() {
     window.requestAnimationFrame(animate)
 
@@ -110,7 +150,8 @@ function animate() {
     c.translate(0, -backgroundlvl1.image.height +  + scaledCanvas.height)
     backgroundlvl1.update()
     c.restore()
-    
+
+    gererCollisions() 
     player2.update()
     player.update()
     
