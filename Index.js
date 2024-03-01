@@ -4,8 +4,8 @@ const c = canvas.getContext('2d')
 canvas.width = 1024
 canvas.height = 576
 
-const gravity = 0.1
-const gravityP = 0.2 
+const gravity = 0.3
+const gravityP = 0.5
 
 class Sprite {
     constructor({position, imageSrc}) {
@@ -37,12 +37,15 @@ class Player {
         this.position = position
         this.velocity = {
             x: 0,   
-            y: 0.5,
+            y: 1.0,
         }
         this.height = 100
+        this.maxJumps = 2 
+        this.jumpCount = 0
+        this.color = 'red'
     }
         draw(){
-        c.fillStyle = 'red'
+        c.fillStyle = this.color
         c.fillRect(this.position.x, this.position.y, 60, this.height)
 
     }
@@ -51,24 +54,27 @@ class Player {
         this.position.y += this.velocity.y
         this.position.x += this.velocity.x
 
-            if(this.position.y + this.height > canvas.height) 
-                this.velocity.y = 0
-            else 
-                this.velocity.y += gravity
- 
+            if(this.position.y + this.height > canvas.height) {
+                this.velocity.y = 0 
+                 this.jumpCount = 0
+                
+             } else {
+                this.velocity.y += gravity 
+            }
     }
-    // update1(){
-    //     this.draw()
-    //     this.position.y += this.velocity.y
-    //     this.position.x += this.velocity.x
 
-    //     if(this.position.y + this.height > canvas.height) 
-    //             this.velocity.y = 0
-    //         else        
-    //      this.velocity.y += gravityP
- 
-    // }
+    jump () {
+        if ( this.jumpCount < this.maxJumps) {
+            this.velocity.y = - 10
+            this.jumpCount++
+        }
+        
+    }
+    changecolor () {
 
+        this.color = this.color === 'red' ? 'blue' : 'red'
+    
+    }
 }
  
 const player = new Player({
@@ -109,8 +115,8 @@ function animate() {
     player.update()
     
     player.velocity.x = 0
-    if(keys.d.pressed) player.velocity.x = 9
-    else if (keys.q.pressed) player.velocity.x = -9
+    if(keys.d.pressed) player.velocity.x = 10
+    else if (keys.q.pressed) player.velocity.x = - 7
 
     
 }
@@ -138,9 +144,13 @@ window.addEventListener('keydown', (event) => {
         break
 d
         case 'z' : 
-        player.velocity.y = - 7
+        player.jump()
 
         break
+
+        case 'c':
+            player.changecolor()
+            break 
     }
 })
 
@@ -156,8 +166,11 @@ window.addEventListener('keyup', (event) => {
         break
 d
         case 'z' : 
-        player.velocity.y = - 7
+        player.velocity.y =  0
 
         break
+
+        
+
     }
 })
