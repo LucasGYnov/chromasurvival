@@ -40,10 +40,10 @@ class Player {
             x: 0,
             y: 1.0,
         };
-        this.width = 50;
-        this.height = 100;
+        this.width = 100;
+        this.height = 150;
         this.image = new Image();
-        this.image.src = './img/perso.png';
+        this.image.src = './img/player2.png';
         this.isInvertedColor = false;
     }
         invertColors() {
@@ -54,7 +54,7 @@ class Player {
         if (!this.image.complete) return;
         SCREEN.save();
         if (this.isInvertedColor) {
-            SCREEN.filter = 'invert(100%)';
+            SCREEN.filter = 'invert(100%)'; // Appliquer le filtre au contexte de rendu
         }
         SCREEN.drawImage(this.image, this.position.x, this.position.y, this.width, this.height); 
         SCREEN.restore();
@@ -103,7 +103,7 @@ const background = new Sprite({
         x: 0,
         y: 0,
     },
-    imageSrc: './img/bg1.png',
+    imageSrc: './img/bg2.png',
 });
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -202,6 +202,7 @@ window.addEventListener('keydown', (event) => {
             break;
         case keys.utiliserSortInput.key:
             keys.utiliserSortInput.pressed = true;
+            player.isInvertedColor = !player.isInvertedColor;
             break;
         default:
             break;
@@ -224,7 +225,6 @@ window.addEventListener('keyup', (event) => {
             break;
         case keys.utiliserSortInput.key:
             keys.utiliserSortInput.pressed = false;
-            player.isInvertedColor = false;
             break;
         default:
             break;
