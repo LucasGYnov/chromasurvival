@@ -40,7 +40,7 @@ class Player {
             y: 1.0,
         }
         this.height = 100
-        this.maxJumps = 2 
+        this.maxJumps = 2
         this.jumpCount = 0
         this.color = 'black'
     }

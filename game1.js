@@ -6,6 +6,22 @@ CANVAS.height = 576;
 
 const GRAVITY = 0.5;
 
+class Sprite{
+    constructor({position, imageSrc}) {
+        this.position = position;
+        this.image = new Image();
+        this.imageSrc = imageSrc;
+    }
+    draw() {
+        if (!this.image) return
+        c.drawImage(this.imageSrc, this.position.x, this.position.y);
+    }
+
+    update() {
+        this.draw();
+    }
+}
+
 class Player {
     constructor(position) {
         this.position = position;
@@ -16,7 +32,7 @@ class Player {
         this.height = 100;
     }
     draw() {
-        SCREEN.fillStyle = 'black';
+        SCREEN.fillStyle = 'red';
         SCREEN.fillRect(this.position.x, this.position.y, 100, this.height);
     }
     update() {
@@ -33,6 +49,31 @@ const player = new Player({
     y: 1,
 });
 
+// Définir les touches par défaut
+const keys = {
+    gaucheInput: {
+        pressed: false,
+        key: 'q'
+    },
+    droiteInput: {
+        pressed: false,
+        key: 'd'
+    },
+    sauterInput: {
+        pressed: false,
+        key: ' '
+    },
+    utiliserInput: {
+        pressed: false,
+        key: 'x'
+    },
+    utiliserSortInput: {
+        pressed: false,
+        key: 's'
+    }
+};
+
+
 document.addEventListener('DOMContentLoaded', function () {
     const sonCheckbox = document.querySelector('.son-checkbox');
     const mobileCheckbox = document.querySelector('.mobile-checkbox');
@@ -46,6 +87,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const settingsPage = document.getElementById('settings_page');
     const settingsForm = document.getElementById('control_settings_form');
 
+    function updateKeyBindings() {
+        keys.gaucheInput.key = gaucheInput.value;
+        keys.droiteInput.key = droiteInput.value;
+        keys.sauterInput.key = sauterInput.value;
+        keys.utiliserInput.key = utiliserInput.value;
+        keys.utiliserSortInput.key = utiliserSortInput.value;
+    }
+
     function saveSettings() {
         if (checkUniqueKeys()) {
             localStorage.setItem('son_enabled', sonCheckbox.checked);
@@ -57,6 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
             localStorage.setItem('utiliser_value', utiliserInput.value);
             localStorage.setItem('utiliser_sort_value', utiliserSortInput.value);
             settingsPage.style.zIndex = "-100";
+            updateKeyBindings();
         } else {
             saveButton.value = "Impossible d'assigner différentes touches à une même";
             saveButton.style.color = 'red';
@@ -72,6 +122,8 @@ document.addEventListener('DOMContentLoaded', function () {
         sauterInput.value = localStorage.getItem('sauter_value') || ' ';
         utiliserInput.value = localStorage.getItem('utiliser_value') || 'e';
         utiliserSortInput.value = localStorage.getItem('utiliser_sort_value') || 's';
+
+        updateKeyBindings();
     }
 
     function checkUniqueKeys() {
@@ -91,50 +143,78 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     loadSettings();
-
-    window.addEventListener('keydown', (event) => {
-        const inputs = [gaucheInput, droiteInput, sauterInput, utiliserInput, utiliserSortInput];
-        inputs.forEach(input => input.style.color = 'black'); // Réinitialiser les couleurs des inputs
-        switch (event.key) {
-            case gaucheInput.value:
-                player.position.x -= 5; // Déplacer le joueur vers la gauche
-                break;
-            case droiteInput.value:
-                player.position.x += 5; // Déplacer le joueur vers la droite
-                break;
-            case sauterInput.value:
-                player.velocity.y = -10; // Donner une impulsion verticale au joueur pour sauter
-                break;
-            case utiliserInput.value:
-                /* utiliser(); */
-                break;
-            case utiliserSortInput.value:
-                /* utiliserSort(); */
-                break;
-            default:
-                break;
-        }
-        // Mettre en surbrillance les touches identiques en rouge
-        const duplicatedKeys = inputs.filter(input => inputs.filter(other => other.value === input.value).length > 1);
-        duplicatedKeys.forEach(input => input.style.color = 'red');
-    });
 });
 
+window.addEventListener('keydown', (event) => {
+    switch (event.key) {
+        case keys.gaucheInput.key:
+            player.velocity.x = -5;
+            keys.gaucheInput.pressed = true;
+            break;
+        case keys.droiteInput.key:
+            player.velocity.x = 5;
+            keys.droiteInput.pressed = true;
+            break;
+        case keys.sauterInput.key:
+            player.velocity.y = -10;
+            keys.sauterInput.pressed = true;
+            break;
+        case keys.utiliserInput.key:
+            keys.utiliserInput.pressed = true;
+            break;
+        case keys.utiliserSortInput.key:
+            keys.utiliserSortInput.pressed = true;
+            break;
+        default:
+            break;
+    }
+});
 
+window.addEventListener('keyup', (event) => {
+    switch (event.key) {
+        case keys.gaucheInput.key:
+            keys.gaucheInput.pressed = false;
+            break;
+        case keys.droiteInput.key:
+            keys.droiteInput.pressed = false;
+            break;
+        case keys.sauterInput.key:
+            keys.sauterInput.pressed = false;
+            break;
+        case keys.utiliserInput.key:
+            keys.utiliserInput.pressed = false;
+            break;
+        case keys.utiliserSortInput.key:
+            keys.utiliserSortInput.pressed = false;
+            break;
+        default:
+            break;
+    }
+});
 
 const backgroundImage = new Image();
-backgroundImage.src = 'img/back.jpg';
-
+backgroundImage.src = 'img/bg1.png';
 
 var bouton = document.getElementById("menu_button");
-bouton.addEventListener("click", function() {
-  window.location.href = "index.html";
+bouton.addEventListener("click", function () {
+    window.location.href = "index.html";
 });
 
-function animate(){
+function animate() {
     window.requestAnimationFrame(animate);
+    SCREEN.clearRect(0, 0, CANVAS.width, CANVAS.height);
     SCREEN.drawImage(backgroundImage, 0, 0, CANVAS.width, CANVAS.height);
     player.update();
+
+    if (keys.gaucheInput.pressed) {
+        player.position.x += -5;
+        player.velocity.x = -5;
+    } else if (keys.droiteInput.pressed) {
+        player.position.x += 5;
+        player.velocity.x = 5;
+    } else {
+        player.velocity.x = 0;
+    }
 }
 
 animate();

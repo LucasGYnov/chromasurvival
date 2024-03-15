@@ -48,11 +48,11 @@
             <label for="utiliser">Utiliser:</label>
             <input type="text" id="utiliser" name="utiliser" value="e" maxlength="1"><br>
             <label for="utiliser_sort">Chroma Switch:</label>
-            <input type="text" id="utiliser_sort" name="utiliser_sort" value="s"><br>
+            <input type="text" id="utiliser_sort" name="utiliser_sort" value="s" maxlength="1"><br>
             <span>Son: </span>
             <div class="toggle-switch">
                <label class="switch-label">
-               <input type="checkbox" class="checkbox son-checkbox">
+               <input type="checkbox" class="checkbox son-checkbox" checked>
                <span class="slider" style="--image-url-before: url('../public/volume_off.webp'); --image-url-after: url('../public/volume_on.webp');"></span>
                </label>
             </div>
@@ -60,7 +60,7 @@
             <div class="toggle-switch">
                <label class="switch-label">
                <input type="checkbox" class="checkbox mobile-checkbox">
-               <span class="slider" style="--image-url-before: url('../public/mobile_off.webp'); --image-url-after: url('../public/mobile_on.webp');"></span>
+               <span class="slider" style="--image-url-before: url('../public/mobile_off'); --image-url-after: url('../public/mobile_on.webp');"></span>
                </label>
             </div>
             <div id="vibration_section">

@@ -33,7 +33,7 @@
            <span>Son: </span>
            <div class="toggle-switch">
               <label class="switch-label">
-              <input type="checkbox" class="checkbox son-checkbox">
+              <input type="checkbox" class="checkbox son-checkbox" checked>
               <span class="slider" style="--image-url-before: url('../public/volume_off.webp'); --image-url-after: url('../public/volume_on.webp');"></span>
               </label>
            </div>
@@ -55,10 +55,15 @@
            </div>
            <input id="save" type="submit" value="Enregistrer">
         </form>
+        <button id="menu_button">
+         <img src="public/menu.webp" alt="Menu">
+      </button>
         <button class="close"></button>
+        <p id="quit">QUITTER</p>
+        <p id="reset__settings">Réinitialiser</p>
      </div>
      <canvas></canvas>
-    <script src="game.js"></script>
+    <script src="game1.js"></script>
     <script src="script.js"></script>
 </body>
 

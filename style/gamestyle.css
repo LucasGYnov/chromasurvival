@@ -77,6 +77,46 @@ a {
 	transition: 0.2s;
 }
 
+#quit{
+	cursor: default;
+	font-size: 16px;
+	font-weight: 800;
+	position: absolute;
+	width: 90px;
+	height: 90px;
+	bottom: 12.5%;
+	right: 28%;
+}
+
+#menu_button {
+	position: absolute;
+	width: 75px;
+	height: 75px;
+	bottom: 27%;
+	right: 30%;
+	border-radius: 50%;
+	border: none;
+	padding: 0;
+	background: rgba(255, 255, 255, 50%);
+	overflow: hidden;
+}
+
+#menu_button img {
+	width: 70%;
+	height: 70%;
+	transition: transform 0.3s ease;
+}
+
+#menu_button:hover img {
+	transform: rotate(90deg);
+}
+
+#menu_button:active img {
+	transform: rotate(90deg) translateX(150px);
+	transition: transform 0.2s ease;
+	
+}
+
 
 .background_image {
 	position: fixed;
@@ -141,6 +181,7 @@ a {
 	background-color: rgba(128, 128, 128, 0.5);
 	backdrop-filter: blur(8px);
 	border-radius: 20px;
+	user-select: none;
 	z-index: -100;
 }
 
@@ -152,7 +193,7 @@ a {
 }
 
 #settings_page form {
-	margin: 20%;
+	margin: 22% 10% 20% 20%;
 }
 
 #settings_page label {
@@ -187,6 +228,7 @@ a {
 	border-radius: 0px 0px 20px 20px;
 	border: none;
 	background-color: rgba(255, 255, 255, 0.8);
+	font-weight: bold;
 }
 
 
@@ -294,3 +336,24 @@ canvas {
     height: 100vh;
     display: block;
 }
+
+#reset__settings{
+	position: relative;
+	top: 85%;
+	right: 2%;
+	cursor:default;	
+	text-decoration: underline;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+#error_key{
+	position: absolute;
+	color: rgb(255, 0, 0);
+	font-weight: 600;
+	width: 55%;
+	top: 82.2%;
+	left: 11%;
+	cursor:default;
+	text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.5);
+}
+
