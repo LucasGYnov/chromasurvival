@@ -1,0 +1,8 @@
+-mobile: https://www.flaticon.com/fr/icone-gratuite/telephone-intelligent_4443113?term=mobile&page=1&position=6&origin=tag&related_id=4443113 => 64
+- direction : https://www.flaticon.com/free-icon/direction-arrow_6352563?term=direction+game&page=1&position=57&origin=search&related_id=6352563 => 64
+- volume :https://www.flaticon.com/free-icon/volume_727269?term=sound&page=1&position=4&origin=search&related_id=727269 => 64
+- mute : https://www.flaticon.com/free-icon/mute_727240?term=sound&page=1&position=13&origin=search&related_id=727240 => 64
+- vibrate_off : https://www.flaticon.com/free-icon/phone-vibration_10017935?term=mobile+vibration&page=1&position=16&origin=search&related_id=10017935 => 64
+- vibrate_on : https://www.flaticon.com/free-icon/phone-vibration_10019057?term=mobile+vibration&page=1&position=14&origin=search&related_id=10019057 => 64
+- close :https://www.flaticon.com/free-icon/close_2976286?term=close&page=1&position=2&origin=search&related_id=2976286 => 128
+- setting : https://www.flaticon.com/free-icon/gear_484613?term=setting&page=1&position=9&origin=search&related_id=484613 => 128
