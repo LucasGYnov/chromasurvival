@@ -4,17 +4,28 @@ const SCREEN = CANVAS.getContext('2d');
 CANVAS.width = 1024;
 CANVAS.height = 576;
 
+const scale = 2;
+
+const scaledCanvas = {
+    width: CANVAS.width / scale,
+    height: CANVAS.height / scale,
+};
+
 const GRAVITY = 0.5;
 
-class Sprite{
-    constructor({position, imageSrc}) {
+class Sprite {
+    constructor({ position, imageSrc }) {
         this.position = position;
         this.image = new Image();
         this.imageSrc = imageSrc;
+        this.image.src = this.imageSrc;
+        this.image.onload = () => {
+            this.draw();
+        };
     }
     draw() {
-        if (!this.image) return
-        c.drawImage(this.imageSrc, this.position.x, this.position.y);
+        if (!this.image.complete) return;
+        SCREEN.drawImage(this.image, this.position.x, this.position.y);
     }
 
     update() {
@@ -29,11 +40,24 @@ class Player {
             x: 0,
             y: 1.0,
         };
+        this.width = 50;
         this.height = 100;
+        this.image = new Image();
+        this.image.src = './img/perso.png';
+        this.isInvertedColor = false;
     }
+        invertColors() {
+        this.isInvertedColor = true;
+    }
+
     draw() {
-        SCREEN.fillStyle = 'red';
-        SCREEN.fillRect(this.position.x, this.position.y, 100, this.height);
+        if (!this.image.complete) return;
+        SCREEN.save();
+        if (this.isInvertedColor) {
+            SCREEN.filter = 'invert(100%)';
+        }
+        SCREEN.drawImage(this.image, this.position.x, this.position.y, this.width, this.height); 
+        SCREEN.restore();
     }
     update() {
         this.draw();
@@ -49,30 +73,38 @@ const player = new Player({
     y: 1,
 });
 
+
 // Définir les touches par défaut
 const keys = {
     gaucheInput: {
         pressed: false,
-        key: 'q'
+        key: 'q',
     },
     droiteInput: {
         pressed: false,
-        key: 'd'
+        key: 'd',
     },
     sauterInput: {
         pressed: false,
-        key: ' '
+        key: ' ',
     },
     utiliserInput: {
         pressed: false,
-        key: 'x'
+        key: 'x',
     },
     utiliserSortInput: {
         pressed: false,
-        key: 's'
-    }
+        key: 's',
+    },
 };
 
+const background = new Sprite({
+    position: {
+        x: 0,
+        y: 0,
+    },
+    imageSrc: './img/bg1.png',
+});
 
 document.addEventListener('DOMContentLoaded', function () {
     const sonCheckbox = document.querySelector('.son-checkbox');
@@ -105,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
             localStorage.setItem('sauter_value', sauterInput.value);
             localStorage.setItem('utiliser_value', utiliserInput.value);
             localStorage.setItem('utiliser_sort_value', utiliserSortInput.value);
-            settingsPage.style.zIndex = "-100";
+            settingsPage.style.zIndex = '-100';
             updateKeyBindings();
         } else {
             saveButton.value = "Impossible d'assigner différentes touches à une même";
@@ -127,9 +159,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function checkUniqueKeys() {
-        const keys = [gaucheInput.value, droiteInput.value, sauterInput.value, utiliserInput.value, utiliserSortInput.value];
-        const uniqueKeys = new Set(keys);
-        return uniqueKeys.size === keys.length;
+        const keysArray = [
+            gaucheInput.value,
+            droiteInput.value,
+            sauterInput.value,
+            utiliserInput.value,
+            utiliserSortInput.value,
+        ];
+        const uniqueKeys = new Set(keysArray);
+        return uniqueKeys.size === keysArray.length;
     }
 
     saveButton.addEventListener('click', function (event) {
@@ -186,24 +224,29 @@ window.addEventListener('keyup', (event) => {
             break;
         case keys.utiliserSortInput.key:
             keys.utiliserSortInput.pressed = false;
+            player.isInvertedColor = false;
             break;
         default:
             break;
     }
 });
 
-const backgroundImage = new Image();
-backgroundImage.src = 'img/bg1.png';
-
-var bouton = document.getElementById("menu_button");
-bouton.addEventListener("click", function () {
-    window.location.href = "index.html";
+var bouton = document.getElementById('menu_button');
+bouton.addEventListener('click', function () {
+    window.location.href = 'index.html';
 });
 
 function animate() {
     window.requestAnimationFrame(animate);
-    SCREEN.clearRect(0, 0, CANVAS.width, CANVAS.height);
-    SCREEN.drawImage(backgroundImage, 0, 0, CANVAS.width, CANVAS.height);
+    SCREEN.fillStyle = 'blue';
+    SCREEN.fillRect(0, 0, CANVAS.width, CANVAS.height);
+
+    SCREEN.save();
+    SCREEN.scale(scale, scale);
+    SCREEN.translate(0, -background.image.height + scaledCanvas.height);
+    background.update();
+    SCREEN.restore();
+
     player.update();
 
     if (keys.gaucheInput.pressed) {
@@ -212,6 +255,7 @@ function animate() {
     } else if (keys.droiteInput.pressed) {
         player.position.x += 5;
         player.velocity.x = 5;
+        applyInvertedColorFilter(player);
     } else {
         player.velocity.x = 0;
     }
