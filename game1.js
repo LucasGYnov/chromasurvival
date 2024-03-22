@@ -13,60 +13,29 @@ const scaledCanvas = {
 
 const GRAVITY = 0.5;
 
-class Sprite {
-    constructor({ position, imageSrc }) {
-        this.position = position;
-        this.image = new Image();
-        this.imageSrc = imageSrc;
-        this.image.src = this.imageSrc;
-        this.image.onload = () => {
-            this.draw();
-        };
-    }
-    draw() {
-        if (!this.image.complete) return;
-        SCREEN.drawImage(this.image, this.position.x, this.position.y);
-    }
-
-    update() {
-        this.draw();
-    }
+const collision2D = []
+for(let i = 0; i < collision.length; i += 60) {
+    collision2D.push(collision.slice(i, i + 60));
 }
 
-class Player {
-    constructor(position) {
-        this.position = position;
-        this.velocity = {
-            x: 0,
-            y: 1.0,
-        };
-        this.width = 100;
-        this.height = 150;
-        this.image = new Image();
-        this.image.src = './img/player2.png';
-        this.isInvertedColor = false;
+const platform = []
+collision2D.forEach((row, y) => {
+    row.forEach((symbol, x) => {
+        if (symbol === 376 || symbol === 355 || symbol === 356 || symbol === 396 || symbol === 395) {
+            platform.push(
+                new Platform({
+                position: {
+                    x: x*16,
+                    y: y*16,
+                },
+        })
+            )
     }
-        invertColors() {
-        this.isInvertedColor = true;
-    }
+    })
+})
 
-    draw() {
-        if (!this.image.complete) return;
-        SCREEN.save();
-        if (this.isInvertedColor) {
-            SCREEN.filter = 'invert(100%)'; // Appliquer le filtre au contexte de rendu
-        }
-        SCREEN.drawImage(this.image, this.position.x, this.position.y, this.width, this.height); 
-        SCREEN.restore();
-    }
-    update() {
-        this.draw();
-        this.position.y += this.velocity.y;
-        if (this.position.y + this.height + this.velocity.y < CANVAS.height)
-            this.velocity.y += GRAVITY;
-        else this.velocity.y = 0;
-    }
-}
+console.log(platform)
+
 
 const player = new Player({
     x: 100,
@@ -103,7 +72,7 @@ const background = new Sprite({
         x: 0,
         y: 0,
     },
-    imageSrc: './img/bg2.png',
+    imageSrc: './img/mapTest.png',
 });
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -243,7 +212,7 @@ bouton.addEventListener('click', function () {
 
 function animate() {
     window.requestAnimationFrame(animate);
-    SCREEN.fillStyle = 'blue';
+    SCREEN.fillStyle = 'grey';
     SCREEN.fillRect(0, 0, CANVAS.width, CANVAS.height);
 
     SCREEN.save();
@@ -251,6 +220,10 @@ function animate() {
     SCREEN.translate(0, -background.image.height + scaledCanvas.height);
     background.update();
     SCREEN.restore();
+
+    /* platform.forEach((platform)=>{
+        collision2D(platform)
+    }) */
 
     player.update();
 
@@ -267,3 +240,5 @@ function animate() {
 }
 
 animate();
+
+// console.log(collision2D);
