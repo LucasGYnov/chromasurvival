@@ -4,6 +4,7 @@ document.addEventListener('mousemove', (e) => {
    cursor.style.top = e.pageY + 'px';
 });
 
+
 document.addEventListener('DOMContentLoaded', function () {
    const settingsButton = document.getElementById('settings_button');
    const closeButton = document.querySelector('#settings_page .close');
@@ -23,58 +24,47 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Définir une variable pour le bouton Enregistrer
     const saveButton = document.getElementById('save');
-    // Définir une variable pour le message d'erreur
     const errorMessage = document.getElementById('error_key');
 
-    // Fonction pour vérifier si les touches sont uniques
     function checkUniqueKeys() {
         const keys = [gaucheInput.value, droiteInput.value, sauterInput.value, utiliserInput.value, utiliserSortInput.value];
         const uniqueKeys = new Set(keys);
         return uniqueKeys.size === keys.length;
     }
 
-    // Fonction pour mettre à jour le texte du bouton et le message d'erreur
     function updateButtonAndError() {
         if (checkUniqueKeys()) {
             saveButton.value = "Enregistrer";
             saveButton.style.color = 'black';
-            errorMessage.textContent = ""; // Effacer le message d'erreur s'il n'y en a pas
+            errorMessage.textContent = "";
         } else {
             saveButton.value = "Impossible d'assigner différentes touches à une même";
             saveButton.style.color = 'red';
             errorMessage.textContent = "Impossible d'assigner différentes touches à une même action";
         }
-        // Mettre à jour la couleur des lettres en fonction de la validité des touches
         inputs.forEach(input => {
             input.style.color = checkUniqueKeys() ? 'black' : 'red';
         });
     }
 
-    // Ajouter un écouteur d'événements à chaque champ de saisie pour détecter les changements
     const inputs = [gaucheInput, droiteInput, sauterInput, utiliserInput, utiliserSortInput];
     inputs.forEach(input => {
         input.addEventListener('input', () => {
-            updateButtonAndError(); // Mettre à jour le texte du bouton et le message d'erreur lorsqu'une touche est modifiée
+            updateButtonAndError();
         });
     });
 
-    // Écouteur d'événements pour le clic sur le bouton Enregistrer
     saveButton.addEventListener('click', function (event) {
         event.preventDefault();
         if (checkUniqueKeys()) {
-            // Enregistrer les paramètres si les touches sont uniques
             saveSettings();
         } else {
-            // Afficher un message d'erreur si les touches ne sont pas uniques
             errorMessage.textContent = "Impossible d'assigner différentes touches à une même action";
         }
     });
 
-    // Fonction pour sauvegarder les paramètres
     function saveSettings() {
-        // Sauvegarder les paramètres dans le stockage local
         localStorage.setItem('son_enabled', sonCheckbox.checked);
         localStorage.setItem('mobile_enabled', mobileCheckbox.checked);
         localStorage.setItem('vibration_enabled', vibrationCheckbox.checked);
@@ -84,11 +74,9 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('utiliser_value', utiliserInput.value);
         localStorage.setItem('utiliser_sort_value', utiliserSortInput.value);
         settingsPage.style.zIndex = "-100";
-        // Réinitialiser le texte du bouton après avoir enregistré les paramètres
         updateButtonAndError();
     }
 
-    // Charger les paramètres au chargement de la page
     loadSettings();
 });
 
@@ -113,17 +101,29 @@ document.addEventListener('DOMContentLoaded', function () {
     updateVibrationVisibility();
 });
 
-var bouton = document.getElementById("lunch_game");
+document.addEventListener('DOMContentLoaded', function () {
+    const jeuContainer = document.querySelector('.jeu');
+    const menuContainer = document.querySelector('.menu');
 
-bouton.addEventListener("click", function() {
-  window.location.href = "game.html";
+    function afficherMenu() {
+        jeuContainer.style.zIndex = "-1";
+        menuContainer.style.zIndex = "1";
+    }
+
+    function afficherJeu() {
+        menuContainer.style.zIndex = "-1";
+        jeuContainer.style.zIndex = "1";
+    }
+
+    const boutonJoueur = document.getElementById('lunch_game');
+    boutonJoueur.addEventListener('click', function () {
+        afficherJeu();
+    });
+
+    const boutonRetourMenu = document.getElementById('menu_button');
+    boutonRetourMenu.addEventListener('click', function () {
+        afficherMenu();
+    });
+
+    afficherMenu();
 });
-
-const textHidden = document.querySelector('.text__hidden');
-         textHidden.addEventListener('mouseenter', () => {
-            textHidden.style.color = 'white';
-         });
-
-         textHidden.addEventListener('mouseleave', () => {
-            textHidden.style.color = 'transparent';
-         });

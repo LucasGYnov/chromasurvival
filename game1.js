@@ -232,9 +232,14 @@ window.addEventListener('keyup', (event) => {
 });
 
 var bouton = document.getElementById('menu_button');
+var menu = document.getElementById('settings_page');
+
 bouton.addEventListener('click', function () {
-    window.location.href = 'index.html';
+    menu.style.display = 'block';
+    menu.style.zIndex = '-100';
 });
+
+
 
 function animate() {
     window.requestAnimationFrame(animate);
