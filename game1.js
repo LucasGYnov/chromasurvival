@@ -11,30 +11,74 @@ const scaledCanvas = {
     height: CANVAS.height / scale,
 };
 
-const GRAVITY = 0.5;
+// Définition des couleurs
+const BLACK_COLOR = 'rgba(0, 0, 0, 0.5)';
+const WHITE_COLOR = 'rgba(255, 255, 255, 0.5)';
+const PLATFORM_COLOR = 'rgba(128, 128, 128, 0.5)';
 
-const collision2D = []
-for(let i = 0; i < collision.length; i += 60) {
-    collision2D.push(collision.slice(i, i + 60));
+// Création des plateformes avec les couleurs appropriées
+const floorCollision2D = [];
+for (let i = 0; i < floorCollision.length; i += 60) {
+    floorCollision2D.push(floorCollision.slice(i, i + 60));
 }
 
-const platform = []
-collision2D.forEach((row, y) => {
+const platform = [];
+floorCollision2D.forEach((row, y) => {
     row.forEach((symbol, x) => {
-        if (symbol === 376 || symbol === 355 || symbol === 356 || symbol === 396 || symbol === 395) {
-            platform.push(
-                new Platform({
+        if (symbol === 12) {
+            platform.push(new Platform({
                 position: {
-                    x: x*16,
-                    y: y*16,
+                    x: x * 16,
+                    y: y * 16,
                 },
-        })
-            )
-    }
-    })
-})
+                color: PLATFORM_COLOR // Utilisation de la couleur grise pour les plateformes
+            }));
+        }
+    });
+});
 
-console.log(platform)
+const blackCollision2D = [];
+for (let i = 0; i < blackCollision.length; i += 60) {
+    blackCollision2D.push(blackCollision.slice(i, i + 60));
+}
+
+const blackPlatform = [];
+blackCollision2D.forEach((row, y) => {
+    row.forEach((symbol, x) => {
+        if (symbol === 379) {
+            blackPlatform.push(new Platform({
+                position: {
+                    x: x * 16,
+                    y: y * 16,
+                },
+                color: BLACK_COLOR // Utilisation de la couleur noire pour les plateformes noires
+            }));
+        }
+    });
+});
+
+const whiteCollision2D = [];
+for (let i = 0; i < whiteCollision.length; i += 60) {
+    whiteCollision2D.push(whiteCollision.slice(i, i + 60));
+}
+
+const whitePlatform = [];
+whiteCollision2D.forEach((row, y) => {
+    row.forEach((symbol, x) => {
+        if (symbol === 376) {
+            whitePlatform.push(new Platform({
+                position: {
+                    x: x * 16,
+                    y: y * 16,
+                },
+                color: WHITE_COLOR // Utilisation de la couleur blanche pour les plateformes blanches
+            }));
+        }
+    });
+});
+
+const GRAVITY = 0.5;
+
 
 
 const player = new Player({
@@ -72,7 +116,7 @@ const background = new Sprite({
         x: 0,
         y: 0,
     },
-    imageSrc: './img/mapTest.png',
+    imageSrc: './img/map2.png',
 });
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -219,11 +263,19 @@ function animate() {
     SCREEN.scale(scale, scale);
     SCREEN.translate(0, -background.image.height + scaledCanvas.height);
     background.update();
+    platform.forEach((platform) => {
+        platform.update();
+    });
+    blackPlatform.forEach((blakcBlock) => {
+        blakcBlock.update();
+    });
+    whitePlatform.forEach((whiteBlock) => {
+        whiteBlock.update();
+    });
     SCREEN.restore();
 
-    /* platform.forEach((platform)=>{
-        collision2D(platform)
-    }) */
+    
+
 
     player.update();
 
