@@ -1,19 +1,14 @@
-class Player {
-    constructor({position, collisionBlocks}) {
+class Player extends Sprite {
+    constructor({position, collisionBlocks, imageSrc, frameRate}) {
+        super({ imageSrc});
         this.position = position;
         this.velocity = {
             x: 0,
             y: 1.0,
         };
-        this.width = 50 / scale;
-        this.height = 50 / scale;
+        /* this.width = 50 / scale; */
+        /* this.height = 50 / scale; */
         this.collisionBlocks = collisionBlocks;
-    
-        /* this.width = 100;
-        this.height = 100; */
-
-        /* this.image = new Image();
-        this.image.src = './img/player2.png'; */
         this.isInvertedColor = false;
     }
         invertColors() {
@@ -30,17 +25,16 @@ class Player {
         SCREEN.restore();
     } */
 
-    draw(){
+    /* draw(){
         SCREEN.save();
         SCREEN.fillStyle = 'white';
         SCREEN.fillRect(this.position.x, this.position.y, this.width, this.height);
-        if (this.isInvertedColor) {
-            SCREEN.filter = 'invert(100%)';
-        }
         SCREEN.restore();
-    }
+    } */
 
     update() {
+        SCREEN.fillStyle = 'rgba(0,255,0,0.1)';
+        SCREEN.fillRect(this.position.x, this.position.y, this.width, this.height);
         this.draw();
         this.position.x += this.velocity.x;
         this.checkForHorizontalCollision()

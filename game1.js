@@ -91,6 +91,7 @@ const player = new Player({
         y: 100,
     },
     collisionBlocks : platform,
+    imageSrc : "./img/Character/Idle.png",
 });
 
 
