@@ -88,10 +88,11 @@ const GRAVITY = 0.5;
 const player = new Player({
     position: {
         x: 100,
-        y: 100,
+        y: 475,
     },
     collisionBlocks : platform,
     imageSrc : "./img/Character/Idle.png",
+    frameRate: 12
 });
 
 
@@ -125,6 +126,7 @@ const background = new Sprite({
         y: 0,
     },
     imageSrc: './img/map2.png',
+
 });
 
 document.addEventListener('DOMContentLoaded', function () {
