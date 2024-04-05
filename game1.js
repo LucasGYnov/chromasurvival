@@ -92,7 +92,18 @@ const player = new Player({
     },
     collisionBlocks : platform,
     imageSrc : "./img/Character/Idle.png",
-    frameRate: 12
+    frameRate: 12,
+    animations:{
+        Idle:{
+            imageSrc : "./img/Character/Idle.png",
+            frameRate: 12,
+        },
+        Run:{
+            imageSrc : "./img/Character/Run.png",
+            frameRate: 8,
+        },
+    }
+
 });
 
 
@@ -297,8 +308,13 @@ function animate() {
     } */
 
     player.velocity.x = 0; 
-    if(keys.droiteInput.pressed) player.velocity.x = 5
-    else if(keys.gaucheInput.pressed) player.velocity.x = -5
+    if(keys.droiteInput.pressed) {
+        player.switchSprite('Run')
+        player.velocity.x = 5
+    } else if(keys.gaucheInput.pressed) player.velocity.x = -5
+    else if (player.velocity.x === 0){
+        player.switchSprite('Idle')
+    }
     SCREEN.restore(); 
 }
 
