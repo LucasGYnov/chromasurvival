@@ -88,7 +88,7 @@ const GRAVITY = 0.5;
 const player = new Player({
     position: {
         x: 100,
-        y: 0,
+        y: 100,
     },
     collisionBlocks : platform,
 });
@@ -214,7 +214,7 @@ window.addEventListener('keydown', (event) => {
             keys.droiteInput.pressed = true;
             break;
         case keys.sauterInput.key:
-            player.velocity.y = -10;
+            player.velocity.y = -8;
             keys.sauterInput.pressed = true;
             break;
         case keys.utiliserInput.key:
@@ -279,23 +279,24 @@ function animate() {
     whitePlatform.forEach((whiteBlock) => {
         whiteBlock.update();
     });
-    SCREEN.restore();
-
     
-
-
+    
     player.update();
 
-    if (keys.gaucheInput.pressed) {
-        player.position.x += -5;
+    /* if (keys.gaucheInput.pressed) {
+        player.position.x += -1;
         player.velocity.x = -5;
     } else if (keys.droiteInput.pressed) {
-        player.position.x += 5;
+        player.position.x += 1;
         player.velocity.x = 5;
-        applyInvertedColorFilter(player);
     } else {
         player.velocity.x = 0;
-    }
+    } */
+
+    player.velocity.x = 0; 
+    if(keys.droiteInput.pressed) player.velocity.x = 5
+    else if(keys.gaucheInput.pressed) player.velocity.x = -5
+    SCREEN.restore(); 
 }
 
 animate();
