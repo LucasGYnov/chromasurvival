@@ -12,8 +12,12 @@ const scaledCanvas = {
 };
 
 // Définition des couleurs
-const BLACK_COLOR = 'rgba(0, 0, 0, 0.5)';
-const WHITE_COLOR = 'rgba(255, 255, 255, 0.5)';
+/* const BLACK_COLOR = 'rgba(0, 0, 0, 0.5)'; */
+/* const WHITE_COLOR = 'rgba(255, 255, 255, 0.5)'; */
+/* const PLATFORM_COLOR = 'rgba(128, 128, 128, 0.5)'; */
+
+const BLACK_COLOR = 'rgba(255, 0, 0, 0.5)';
+const WHITE_COLOR = 'rgba(0, 255, 255, 0.5)';
 const PLATFORM_COLOR = 'rgba(128, 128, 128, 0.5)';
 
 // Création des plateformes avec les couleurs appropriées
@@ -82,8 +86,11 @@ const GRAVITY = 0.5;
 
 
 const player = new Player({
-    x: 100,
-    y: 1,
+    position: {
+        x: 100,
+        y: 0,
+    },
+    collisionBlocks : platform,
 });
 
 
@@ -292,5 +299,3 @@ function animate() {
 }
 
 animate();
-
-// console.log(collision2D);
