@@ -171,6 +171,7 @@ const background = new Sprite({
         y: 0,
     },
     imageSrc: './img/map2.png',
+    
 
 });
 
@@ -262,8 +263,11 @@ window.addEventListener('keydown', (event) => {
             keys.droiteInput.pressed = true;
             break;
         case keys.sauterInput.key:
+            if (player.isOnGround) {
             player.velocity.y = -8;
             keys.sauterInput.pressed = true;
+            player.isOnGround = false;
+            }
             break;
         case keys.utiliserInput.key:
             keys.utiliserInput.pressed = true;
@@ -307,7 +311,14 @@ bouton.addEventListener('click', function () {
     menu.style.zIndex = '-100';
 });
 
-
+const  bgImageHeight = 640//taille de l'image bg ici
+const  bgImageWidth = 960//taille de l'image bg ici
+const camera ={
+    position:{
+        x: 0,
+        y: -bgImageHeight + scaledCanvas.height, 
+    },
+}
 
 function animate() {
     window.requestAnimationFrame(animate);
@@ -316,7 +327,7 @@ function animate() {
 
     SCREEN.save();
     SCREEN.scale(scale, scale);
-    SCREEN.translate(0, -background.image.height + scaledCanvas.height);
+    SCREEN.translate(camera.position.x,camera.position.y);
     background.update();
     platform.forEach((platform) => {
         platform.update();
@@ -328,6 +339,8 @@ function animate() {
         whiteBlock.update();
     });
     
+
+    player.checkForHorizontalCollisionCanvas()
     player.update();
 
 
@@ -336,10 +349,13 @@ function animate() {
         player.switchSprite('Run')
         player.velocity.x = 2.5
         player.lastDirection = 'right'
+        player.cameraToTheLeft({CANVAS, camera})
+
     } else if(keys.gaucheInput.pressed) {
         player.switchSprite('RunLeft')
         player.velocity.x = -2.5
         player.lastDirection = 'left'
+        player.cameraToTheRight({CANVAS, camera})
     }
     else if (player.velocity.y === 0){
         if(player.lastDirection === 'right') player.switchSprite('Idle')
@@ -347,10 +363,12 @@ function animate() {
     }
 
     if (player.velocity.y < 0) {
+        player.cameraToDown({CANVAS, camera})
         if(player.lastDirection === 'right') player.switchSprite('Jump')
         else player.switchSprite('JumpLeft')
     }
     else if(player.velocity.y > 0) {
+        player.cameraToUp({CANVAS, camera})
         if(player.lastDirection === 'right')
             player.switchSprite('Fall')
         else player.switchSprite('FallLeft')
