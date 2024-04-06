@@ -16,6 +16,7 @@ class Player extends Sprite {
                 height:10
             }
             this.animations = animations
+            this.lastDirection = 'right'
             this.isInvertedColor = false;
 
             for(let key in this.animations) {
@@ -30,8 +31,11 @@ class Player extends Sprite {
     }
 
     switchSprite(key){
-        if(this.image === this.animations[key].image) return
+        if(this.image === this.animations[key].image || !this.loaded) return
+
         this.image = this.animations[key].image
+        this.frameBuffer = this.animations[key].frameBuffer
+        this.frameRate = this.animations[key].frameRate
     }
 
     update() {
@@ -39,16 +43,16 @@ class Player extends Sprite {
         this.updateHitbox()
 
 
-        SCREEN.fillStyle = 'rgba(0,255,0,0.1)';
+        /* SCREEN.fillStyle = 'rgba(0,255,0,0.1)';
         SCREEN.fillRect(this.position.x, this.position.y, this.width, this.height);
 
         SCREEN.fillStyle = 'rgba(255,0,0,0.5)';
-        SCREEN.fillRect(this.hitbox.position.x, this.hitbox.position.y, this.hitbox.width, this.hitbox.height);
+        SCREEN.fillRect(this.hitbox.position.x, this.hitbox.position.y, this.hitbox.width, this.hitbox.height); */
 
         this.draw();
         this.position.x += this.velocity.x;
-        this.checkForHorizontalCollision()
         this.updateHitbox()
+        this.checkForHorizontalCollision()
         this.applyGravity()
         this.updateHitbox()
         this.checkForVerticalCollision()
@@ -76,9 +80,9 @@ class Player extends Sprite {
                     if(this.velocity.x > 0){
                         this.velocity.x = 0;
 
-                        const offset = this.hitbox.position.x - this.position.x + this.hitbox.width
+                        // const offset = this.hitbox.position.x - this.position.x + this.hitbox.width
 
-                        this.position.x = collisionBlock.position.x - offset - 0.01;
+                        this.position.x = collisionBlock.position.x - this.width - 0.01;
                         break
                     }
                     if(this.velocity.x < 0){
@@ -94,8 +98,8 @@ class Player extends Sprite {
     }
 
     applyGravity(){
-        this.position.y += this.velocity.y;
         this.velocity.y += GRAVITY;
+        this.position.y += this.velocity.y;
     }
     checkForVerticalCollision(){
         for(let i = 0; i < this.collisionBlocks.length; i++){

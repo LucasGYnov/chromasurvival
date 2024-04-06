@@ -97,14 +97,46 @@ const player = new Player({
         Idle:{
             imageSrc : "./img/Character/Idle.png",
             frameRate: 12,
+            frameBuffer : 5
+        },
+        IdleLeft:{
+            imageSrc : "./img/Character/IdleLeft.png",
+            frameRate: 12,
+            frameBuffer : 5
         },
         Run:{
             imageSrc : "./img/Character/Run.png",
             frameRate: 8,
+            frameBuffer : 5
         },
-    }
+        RunLeft:{
+            imageSrc : "./img/Character/RunLeft.png",
+            frameRate: 8,
+            frameBuffer : 5
+        },
+        Jump:{
+            imageSrc : "./img/Character/Jump.png",
+            frameRate: 4,
+            frameBuffer : 3
+        },
+        JumpLeft:{
+            imageSrc : "./img/Character/JumpLeft.png",
+            frameRate: 4,
+            frameBuffer : 3
+        },
+        Fall:{
+            imageSrc : "./img/Character/Fall.png",
+            frameRate: 3,
+            frameBuffer : 15
+        },
+        FallLeft:{
+            imageSrc : "./img/Character/FallLeft.png",
+            frameRate: 3,
+            frameBuffer : 15
+        },
+    },
 
-});
+})
 
 
 // Définir les touches par défaut
@@ -220,11 +252,11 @@ document.addEventListener('DOMContentLoaded', function () {
 window.addEventListener('keydown', (event) => {
     switch (event.key) {
         case keys.gaucheInput.key:
-            player.velocity.x = -5;
+            player.velocity.x = -2.5;
             keys.gaucheInput.pressed = true;
             break;
         case keys.droiteInput.key:
-            player.velocity.x = 5;
+            player.velocity.x = 2.5;
             keys.droiteInput.pressed = true;
             break;
         case keys.sauterInput.key:
@@ -294,27 +326,34 @@ function animate() {
         whiteBlock.update();
     });
     
-    
     player.update();
 
-    /* if (keys.gaucheInput.pressed) {
-        player.position.x += -1;
-        player.velocity.x = -5;
-    } else if (keys.droiteInput.pressed) {
-        player.position.x += 1;
-        player.velocity.x = 5;
-    } else {
-        player.velocity.x = 0;
-    } */
 
     player.velocity.x = 0; 
     if(keys.droiteInput.pressed) {
         player.switchSprite('Run')
-        player.velocity.x = 5
-    } else if(keys.gaucheInput.pressed) player.velocity.x = -5
-    else if (player.velocity.x === 0){
-        player.switchSprite('Idle')
+        player.velocity.x = 2.5
+        player.lastDirection = 'right'
+    } else if(keys.gaucheInput.pressed) {
+        player.switchSprite('RunLeft')
+        player.velocity.x = -2.5
+        player.lastDirection = 'left'
     }
+    else if (player.velocity.y === 0){
+        if(player.lastDirection === 'right') player.switchSprite('Idle')
+        else player.switchSprite('IdleLeft')
+    }
+
+    if (player.velocity.y < 0) {
+        if(player.lastDirection === 'right') player.switchSprite('Jump')
+        else player.switchSprite('JumpLeft')
+    }
+    else if(player.velocity.y > 0) {
+        if(player.lastDirection === 'right')
+            player.switchSprite('Fall')
+        else player.switchSprite('FallLeft')
+    }
+
     SCREEN.restore(); 
 }
 
