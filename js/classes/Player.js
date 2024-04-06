@@ -1,5 +1,5 @@
 class Player extends Sprite {
-    constructor({position, collisionBlocks, imageSrc, frameRate, scale = 0.8, animations}) {
+    constructor({position, collisionBlocks, whitePlatform, blackPlatform, imageSrc, frameRate, scale = 0.8, animations}) {
         super({ imageSrc, frameRate, scale});
         this.position = position;
         this.velocity = {
@@ -7,6 +7,8 @@ class Player extends Sprite {
             y: 1.0,
         };
         this.collisionBlocks = collisionBlocks;
+        this.whitePlatform = whitePlatform;
+        this.blackPlatform = blackPlatform;
         this.hitbox = {
             position: {
                 x: this.position.x,
@@ -33,6 +35,7 @@ class Player extends Sprite {
     switchSprite(key){
         if(this.image === this.animations[key].image || !this.loaded) return
 
+        this.currentFrame = 0
         this.image = this.animations[key].image
         this.frameBuffer = this.animations[key].frameBuffer
         this.frameRate = this.animations[key].frameRate
@@ -127,5 +130,35 @@ class Player extends Sprite {
                     }
             }
         }
+
+        // Check for collisions with platforms based on color inversion
+    const platforms = this.isInvertedColor ? this.blackPlatform : this.whitePlatform;
+
+    for(let i = 0; i < platforms.length; i++){
+        const platformBlock = platforms[i];
+        if(
+            collisionDetection({
+                object1: this.hitbox,
+                object2: platformBlock,
+            })){
+                // Condition
+                if(this.velocity.y > 0){
+                    this.velocity.y = 0;
+
+                    const offset = this.hitbox.position.y - this.position.y + this.hitbox.height;
+
+                    this.position.y = platformBlock.position.y - offset - 0.01;
+                    break;
+                }
+                if(this.velocity.y < 0){
+                    this.velocity.y = 0;
+
+                    const offset = this.hitbox.position.y - this.position.y;
+
+                    this.position.y = platformBlock.position.y + platformBlock.height - offset + 0.01;
+                    break;
+                }
+        }
     }
+}
 }

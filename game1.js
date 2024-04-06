@@ -12,13 +12,13 @@ const scaledCanvas = {
 };
 
 // Définition des couleurs
-/* const BLACK_COLOR = 'rgba(0, 0, 0, 0.5)'; */
-/* const WHITE_COLOR = 'rgba(255, 255, 255, 0.5)'; */
-/* const PLATFORM_COLOR = 'rgba(128, 128, 128, 0.5)'; */
-
-const BLACK_COLOR = 'rgba(255, 0, 0, 0.5)';
-const WHITE_COLOR = 'rgba(0, 255, 255, 0.5)';
+const BLACK_COLOR = 'rgba(0, 0, 0, 1)';
+const WHITE_COLOR = 'rgba(255, 255, 255, 1)';
 const PLATFORM_COLOR = 'rgba(128, 128, 128, 0.5)';
+
+/* const BLACK_COLOR = 'rgba(255, 0, 0, 0.5)';
+const WHITE_COLOR = 'rgba(0, 255, 255, 0.5)';
+const PLATFORM_COLOR = 'rgba(128, 128, 128, 0.5)'; */
 
 // Création des plateformes avec les couleurs appropriées
 const floorCollision2D = [];
@@ -91,6 +91,8 @@ const player = new Player({
         y: 475,
     },
     collisionBlocks : platform,
+    whitePlatform,
+    blackPlatform,
     imageSrc : "./img/Character/Idle.png",
     frameRate: 12,
     animations:{
