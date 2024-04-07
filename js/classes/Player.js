@@ -65,16 +65,16 @@ class Player extends Sprite {
     }
 
     checkForHorizontalCollisionCanvas(){
-        if(this.hitbox.position.x + this.hitbox.width + this.velocity.x >= bgImageWidth || this.hitbox.position.x + this.velocity.x <= 0){//CANVAS.width remplacer par la largeur de notre image bg
+        if(this.hitbox.position.x + this.hitbox.width + this.velocity.x >= CANVAS.width || this.hitbox.position.x + this.velocity.x <= 0){//CANVAS.width remplacer par la largeur de notre image bg
             this.velocity.x =0
         }
     }
 
     cameraToTheLeft({CANVAS, camera}){
         const cameraboxRightSide = this.camerabox.position.x + this.camerabox.width 
-        const scaleCanvasWidth = CANVAS.width / scale
+        const scaleCanvasWidth = bgImageWidth / scale
 
-        if (cameraboxRightSide >= bgImageWidth) return
+        if (cameraboxRightSide >= CANVAS.WZ) return
 
         if(cameraboxRightSide >= scaleCanvasWidth + Math.abs(camera.position.x)){
            camera.position.x -= this.velocity.x
@@ -98,7 +98,7 @@ class Player extends Sprite {
 
     cameraToUp({CANVAS, camera}){
         if(this.camerabox.position.y + this.camerabox.height + this.velocity.y >= bgImageHeight) return
-        const scaleCanvasHeight = CANVAS.height / scale
+        const scaleCanvasHeight = bgImageHeight / scale //bgimg par CANVAS.height
 
         if(this.camerabox.position.y + this.camerabox.height >= Math.abs(camera.position.y) + scaleCanvasHeight){
             camera.position.y -= this.velocity.y

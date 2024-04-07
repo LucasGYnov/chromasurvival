@@ -1,10 +1,10 @@
 const CANVAS = document.querySelector('canvas');
 const SCREEN = CANVAS.getContext('2d');
 
-CANVAS.width = 1024;
-CANVAS.height = 576;
+CANVAS.width = 1280;
+CANVAS.height = 800;
 
-const scale = 2;
+const scale = 3;
 
 const scaledCanvas = {
     width: CANVAS.width / scale,
@@ -12,9 +12,9 @@ const scaledCanvas = {
 };
 
 // Définition des couleurs
-const BLACK_COLOR = 'rgba(0, 0, 0, 1)';
-const WHITE_COLOR = 'rgba(255, 255, 255, 1)';
-const PLATFORM_COLOR = 'rgba(128, 128, 128, 0.5)';
+const BLACK_COLOR = 'rgba(0, 0, 0, 0)';
+const WHITE_COLOR = 'rgba(255, 255, 255, 0)';
+const PLATFORM_COLOR = 'rgba(255, 0, 0, 0)';
 
 /* const BLACK_COLOR = 'rgba(255, 0, 0, 0.5)';
 const WHITE_COLOR = 'rgba(0, 255, 255, 0.5)';
@@ -22,8 +22,8 @@ const PLATFORM_COLOR = 'rgba(128, 128, 128, 0.5)'; */
 
 // Création des plateformes avec les couleurs appropriées
 const floorCollision2D = [];
-for (let i = 0; i < floorCollision.length; i += 60) {
-    floorCollision2D.push(floorCollision.slice(i, i + 60));
+for (let i = 0; i < floorCollision.length; i += 80) {
+    floorCollision2D.push(floorCollision.slice(i, i + 80));
 }
 
 const platform = [];
@@ -42,8 +42,8 @@ floorCollision2D.forEach((row, y) => {
 });
 
 const blackCollision2D = [];
-for (let i = 0; i < blackCollision.length; i += 60) {
-    blackCollision2D.push(blackCollision.slice(i, i + 60));
+for (let i = 0; i < blackCollision.length; i += 80) {
+    blackCollision2D.push(blackCollision.slice(i, i + 80));
 }
 
 const blackPlatform = [];
@@ -62,8 +62,8 @@ blackCollision2D.forEach((row, y) => {
 });
 
 const whiteCollision2D = [];
-for (let i = 0; i < whiteCollision.length; i += 60) {
-    whiteCollision2D.push(whiteCollision.slice(i, i + 60));
+for (let i = 0; i < whiteCollision.length; i += 80) {
+    whiteCollision2D.push(whiteCollision.slice(i, i + 80));
 }
 
 const whitePlatform = [];
@@ -87,8 +87,8 @@ const GRAVITY = 0.5;
 
 const player = new Player({
     position: {
-        x: 100,
-        y: 475,
+        x: 50,
+        y: 200,
     },
     collisionBlocks : platform,
     whitePlatform,
@@ -170,8 +170,7 @@ const background = new Sprite({
         x: 0,
         y: 0,
     },
-    imageSrc: './img/map2.png',
-    
+    imageSrc: './img/map2IMG.png',
 
 });
 
@@ -311,8 +310,8 @@ bouton.addEventListener('click', function () {
     menu.style.zIndex = '-100';
 });
 
-const  bgImageHeight = 640//taille de l'image bg ici
-const  bgImageWidth = 960//taille de l'image bg ici
+const  bgImageHeight = 1280 / 2 //taille de l'image bg ici
+const  bgImageWidth = 800 //taille de l'image bg ici
 const camera ={
     position:{
         x: 0,
