@@ -98,7 +98,7 @@ class Player extends Sprite {
 
     cameraToUp({CANVAS, camera}){
         if(this.camerabox.position.y + this.camerabox.height + this.velocity.y >= bgImageHeight) return
-        const scaleCanvasHeight = bgImageHeight / scale //bgimg par CANVAS.height
+        const scaleCanvasHeight = CANVAS.height / scale //bgimg par CANVAS.height
 
         if(this.camerabox.position.y + this.camerabox.height >= Math.abs(camera.position.y) + scaleCanvasHeight){
             camera.position.y -= this.velocity.y

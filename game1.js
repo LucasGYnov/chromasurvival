@@ -4,7 +4,11 @@ const SCREEN = CANVAS.getContext('2d');
 CANVAS.width = 1280;
 CANVAS.height = 800;
 
-const scale = 2;
+
+
+const scale = 3;
+
+
 
 const scaledCanvas = {
     width: CANVAS.width / scale,
@@ -313,7 +317,7 @@ const  bgImageWidth = 800 //taille de l'image bg ici
 const camera ={
     position:{
         x: 0,
-        y: -bgImageHeight + scaledCanvas.height, 
+        y: -bgImageHeight + scaledCanvas.width,
     },
 }
 
