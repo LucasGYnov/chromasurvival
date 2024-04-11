@@ -32,12 +32,13 @@ for (let i = 0; i < floorCollision.length; i += 80) {
             case 12:
                 platform.push(new Platform({ position, color: PLATFORM_COLOR }));
                 break;
-            case 379:
+            case 779:
                 blackPlatform.push(new Platform({ position, color: BLACK_COLOR }));
                 break;
-            case 376:
+            case 776:
                 whitePlatform.push(new Platform({ position, color: WHITE_COLOR }));
                 break;
+                
             default:
                 break;
         }
@@ -46,21 +47,21 @@ for (let i = 0; i < floorCollision.length; i += 80) {
 
 blackCollision.forEach((symbol, index) => {
     const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
-    if (symbol === 379) {
+    if (symbol === 779) {
         blackPlatform.push(new Platform({ position, color: BLACK_COLOR }));
     }
 });
 
 whiteCollision.forEach((symbol, index) => {
     const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
-    if (symbol === 376) {
+    if (symbol === 776) {
         whitePlatform.push(new Platform({ position, color: WHITE_COLOR }));
     }
 });
 
 killCollision.forEach((symbol, index) => {
     const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
-    if (symbol === -1) {
+    if (symbol === 71) {
         killPlatform.push(new Platform({ position, color: WHITE_COLOR }));
     }
 });
