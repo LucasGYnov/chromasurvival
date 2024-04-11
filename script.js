@@ -1,3 +1,5 @@
+let isMenuOpen = true;
+
 const cursor = document.querySelector('.cursor');
 document.addEventListener('mousemove', (e) => {
    cursor.style.left = e.pageX + 'px';
@@ -108,22 +110,28 @@ document.addEventListener('DOMContentLoaded', function () {
     function afficherMenu() {
         jeuContainer.style.zIndex = "-1";
         menuContainer.style.zIndex = "1";
+        isMenuOpen = true;
     }
 
     function afficherJeu() {
         menuContainer.style.zIndex = "-1";
         jeuContainer.style.zIndex = "1";
+        isMenuOpen = false;
     }
 
     const boutonJoueur = document.getElementById('lunch_game');
     boutonJoueur.addEventListener('click', function () {
         afficherJeu();
+        isMenuOpen = false;
     });
 
     const boutonRetourMenu = document.getElementById('menu_button');
     boutonRetourMenu.addEventListener('click', function () {
         afficherMenu();
+        isMenuOpen = true;
     });
 
     afficherMenu();
 });
+
+

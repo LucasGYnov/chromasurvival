@@ -1,7 +1,8 @@
 class Player extends Sprite {
-    constructor({position, collisionBlocks, whitePlatform, blackPlatform, imageSrc, frameRate, scale = 0.8, animations}) {
+    constructor({position, playerSpawn,  collisionBlocks, whitePlatform, blackPlatform, killPlatform, imageSrc, frameRate, scale = 0.8, animations}) {
         super({ imageSrc, frameRate, scale});
-        this.position = position;
+        this.position = {...position};
+        this.playerSpawn = {...playerSpawn};
         this.isOnGround = false;
         this.velocity = {
             x: 0,
@@ -10,6 +11,7 @@ class Player extends Sprite {
         this.collisionBlocks = collisionBlocks;
         this.whitePlatform = whitePlatform;
         this.blackPlatform = blackPlatform;
+        this.killPlatform = killPlatform;
         this.hitbox = {
             position: {
                 x: this.position.x,
@@ -98,7 +100,7 @@ class Player extends Sprite {
 
     cameraToUp({CANVAS, camera}){
         if(this.camerabox.position.y + this.camerabox.height + this.velocity.y >= bgImageHeight) return
-        const scaleCanvasHeight = CANVAS.height / scale //bgimg par CANVAS.height
+        const scaleCanvasHeight = bgImageHeight / scale //bgimg par CANVAS.height
 
         if(this.camerabox.position.y + this.camerabox.height >= Math.abs(camera.position.y) + scaleCanvasHeight){
             camera.position.y -= this.velocity.y
@@ -120,6 +122,8 @@ class Player extends Sprite {
         SCREEN.fillRect(this.camerabox.position.x, this.camerabox.position.y, this.camerabox.width, this.camerabox.height); */
 
         this.updateCameraBox()
+        this.checkKillBlockCollision()
+        this.checkKillBlockCollision()
         this.draw();
         this.position.x += this.velocity.x;
         this.updateHitbox()
@@ -262,4 +266,29 @@ class Player extends Sprite {
     }
 
 }
+
+
+checkKillBlockCollision() {
+    for (let i = 0; i < this.killPlatform.length; i++) {
+        const killBlock = this.killPlatform[i];
+        if (collisionDetection({
+            object1: this.hitbox,
+            object2: killBlock
+        })) {
+            this.respawn();
+            break;
+        }
+    }
+}
+
+
+respawn() {
+    this.position.x = this.playerSpawn.x;
+    this.position.y = this.playerSpawn.y;
+    this.updateCameraBox();
+    camera.position.x = this.position.x - (CANVAS.width / scale - 340) ;
+    camera.position.y = this.position.y - (CANVAS.height / scale + 50 );
+}
+
+
 }

@@ -456,7 +456,6 @@ canvas {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-    cursor: none;
 }
 
 .menu-content,

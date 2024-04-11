@@ -1,14 +1,13 @@
 const CANVAS = document.querySelector('canvas');
 const SCREEN = CANVAS.getContext('2d');
 
+const backgroundImage = new Image();
+backgroundImage.src = 'img/bgMap.png';
+
 CANVAS.width = 1280;
 CANVAS.height = 800;
 
-
-
 const scale = 3;
-
-
 
 const scaledCanvas = {
     width: CANVAS.width / scale,
@@ -20,81 +19,66 @@ const BLACK_COLOR = 'rgba(0, 0, 0, 0)';
 const WHITE_COLOR = 'rgba(255, 255, 255, 0)';
 const PLATFORM_COLOR = 'rgba(255, 0, 0, 0)';
 
-/* const BLACK_COLOR = 'rgba(255, 0, 0, 0.5)';
-const WHITE_COLOR = 'rgba(0, 255, 255, 0.5)';
-const PLATFORM_COLOR = 'rgba(128, 128, 128, 0.5)'; */
-
-// Création des plateformes avec les couleurs appropriées
-const floorCollision2D = [];
-for (let i = 0; i < floorCollision.length; i += 80) {
-    floorCollision2D.push(floorCollision.slice(i, i + 80));
-}
-
 const platform = [];
-floorCollision2D.forEach((row, y) => {
-    row.forEach((symbol, x) => {
-        if (symbol === 12) {
-            platform.push(new Platform({
-                position: {
-                    x: x * 16,
-                    y: y * 16,
-                },
-                color: PLATFORM_COLOR // Utilisation de la couleur grise pour les plateformes
-            }));
-        }
-    });
-});
-
-const blackCollision2D = [];
-for (let i = 0; i < blackCollision.length; i += 80) {
-    blackCollision2D.push(blackCollision.slice(i, i + 80));
-}
-
 const blackPlatform = [];
-blackCollision2D.forEach((row, y) => {
+const whitePlatform = [];
+const killPlatform = [];
+
+for (let i = 0; i < floorCollision.length; i += 80) {
+    const row = floorCollision.slice(i, i + 80);
     row.forEach((symbol, x) => {
-        if (symbol === 379) {
-            blackPlatform.push(new Platform({
-                position: {
-                    x: x * 16,
-                    y: y * 16,
-                },
-                color: BLACK_COLOR // Utilisation de la couleur noire pour les plateformes noires
-            }));
+        const position = { x: x * 16, y: (i / 80) * 16 };
+        switch (symbol) {
+            case 12:
+                platform.push(new Platform({ position, color: PLATFORM_COLOR }));
+                break;
+            case 379:
+                blackPlatform.push(new Platform({ position, color: BLACK_COLOR }));
+                break;
+            case 376:
+                whitePlatform.push(new Platform({ position, color: WHITE_COLOR }));
+                break;
+            default:
+                break;
         }
     });
-});
-
-const whiteCollision2D = [];
-for (let i = 0; i < whiteCollision.length; i += 80) {
-    whiteCollision2D.push(whiteCollision.slice(i, i + 80));
 }
 
-const whitePlatform = [];
-whiteCollision2D.forEach((row, y) => {
-    row.forEach((symbol, x) => {
-        if (symbol === 376) {
-            whitePlatform.push(new Platform({
-                position: {
-                    x: x * 16,
-                    y: y * 16,
-                },
-                color: WHITE_COLOR // Utilisation de la couleur blanche pour les plateformes blanches
-            }));
-        }
-    });
+blackCollision.forEach((symbol, index) => {
+    const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
+    if (symbol === 379) {
+        blackPlatform.push(new Platform({ position, color: BLACK_COLOR }));
+    }
+});
+
+whiteCollision.forEach((symbol, index) => {
+    const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
+    if (symbol === 376) {
+        whitePlatform.push(new Platform({ position, color: WHITE_COLOR }));
+    }
+});
+
+killCollision.forEach((symbol, index) => {
+    const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
+    if (symbol === -1) {
+        killPlatform.push(new Platform({ position, color: WHITE_COLOR }));
+    }
 });
 
 const GRAVITY = 0.5;
 
+const playerSpawn = {
+    x: 50,
+    y: 200
+};
+
 const player = new Player({
-    position: {
-        x: 50,
-        y: 200,
-    },
+    position:playerSpawn,
+    playerSpawn: playerSpawn,
     collisionBlocks : platform,
     whitePlatform,
     blackPlatform,
+    killPlatform,
     imageSrc : "./img/Character/Idle.png",
     frameRate: 12,
     animations:{
@@ -219,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function () {
         sonCheckbox.checked = JSON.parse(localStorage.getItem('son_enabled')) || false;
         mobileCheckbox.checked = JSON.parse(localStorage.getItem('mobile_enabled')) || false;
         vibrationCheckbox.checked = JSON.parse(localStorage.getItem('vibration_enabled')) || false;
-        gaucheInput.value = localStorage.getItem('gauche_value') || 'a';
+        gaucheInput.value = localStorage.getItem('gauche_value') || 'q';
         droiteInput.value = localStorage.getItem('droite_value') || 'd';
         sauterInput.value = localStorage.getItem('sauter_value') || ' ';
         utiliserInput.value = localStorage.getItem('utiliser_value') || 'e';
@@ -254,53 +238,57 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 window.addEventListener('keydown', (event) => {
-    switch (event.key) {
-        case keys.gaucheInput.key:
-            player.velocity.x = -2.5;
-            keys.gaucheInput.pressed = true;
-            break;
-        case keys.droiteInput.key:
-            player.velocity.x = 2.5;
-            keys.droiteInput.pressed = true;
-            break;
-        case keys.sauterInput.key:
-            if (player.isOnGround && !player.velocity.y > 0) {
-            player.velocity.y = -6.5;
-            keys.sauterInput.pressed = true;
-            player.isOnGround = false;
-            }
-            break;
-        case keys.utiliserInput.key:
-            keys.utiliserInput.pressed = true;
-            break;
-        case keys.utiliserSortInput.key:
-            keys.utiliserSortInput.pressed = true;
-            player.isInvertedColor = !player.isInvertedColor;
-            break;
-        default:
-            break;
+    if (!isMenuOpen) {
+        switch (event.key) {
+            case keys.gaucheInput.key:
+                player.velocity.x = -2.5;
+                keys.gaucheInput.pressed = true;
+                break;
+            case keys.droiteInput.key:
+                player.velocity.x = 2.5;
+                keys.droiteInput.pressed = true;
+                break;
+            case keys.sauterInput.key:
+                if (player.isOnGround && !player.velocity.y > 0) {
+                    player.velocity.y = -6.5;
+                    keys.sauterInput.pressed = true;
+                    player.isOnGround = false;
+                }
+                break;
+            case keys.utiliserInput.key:
+                keys.utiliserInput.pressed = true;
+                break;
+            case keys.utiliserSortInput.key:
+                keys.utiliserSortInput.pressed = true;
+                player.isInvertedColor = !player.isInvertedColor;
+                break;
+            default:
+                break;
+        }
     }
 });
 
 window.addEventListener('keyup', (event) => {
-    switch (event.key) {
-        case keys.gaucheInput.key:
-            keys.gaucheInput.pressed = false;
-            break;
-        case keys.droiteInput.key:
-            keys.droiteInput.pressed = false;
-            break;
-        case keys.sauterInput.key:
-            keys.sauterInput.pressed = false;
-            break;
-        case keys.utiliserInput.key:
-            keys.utiliserInput.pressed = false;
-            break;
-        case keys.utiliserSortInput.key:
-            keys.utiliserSortInput.pressed = false;
-            break;
-        default:
-            break;
+    if (!isMenuOpen) {
+        switch (event.key) {
+            case keys.gaucheInput.key:
+                keys.gaucheInput.pressed = false;
+                break;
+            case keys.droiteInput.key:
+                keys.droiteInput.pressed = false;
+                break;
+            case keys.sauterInput.key:
+                keys.sauterInput.pressed = false;
+                break;
+            case keys.utiliserInput.key:
+                keys.utiliserInput.pressed = false;
+                break;
+            case keys.utiliserSortInput.key:
+                keys.utiliserSortInput.pressed = false;
+                break;
+            default:
+                break;
+        }
     }
 });
 
@@ -317,14 +305,14 @@ const  bgImageWidth = 800 //taille de l'image bg ici
 const camera ={
     position:{
         x: 0,
-        y: -bgImageHeight + scaledCanvas.width,
+        y: -bgImageHeight + scaledCanvas.width - 20,
     },
 }
 
 function animate() {
     window.requestAnimationFrame(animate);
     SCREEN.fillStyle = 'grey';
-    SCREEN.fillRect(0, 0, CANVAS.width, CANVAS.height);
+    SCREEN.drawImage(backgroundImage, 0, 0, CANVAS.width, CANVAS.height);
 
     SCREEN.save();
     SCREEN.scale(scale, scale);
