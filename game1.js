@@ -4,7 +4,7 @@ const SCREEN = CANVAS.getContext('2d');
 CANVAS.width = 1280;
 CANVAS.height = 800;
 
-const scale = 3;
+const scale = 2;
 
 const scaledCanvas = {
     width: CANVAS.width / scale,
@@ -82,8 +82,6 @@ whiteCollision2D.forEach((row, y) => {
 });
 
 const GRAVITY = 0.5;
-
-
 
 const player = new Player({
     position: {
@@ -262,8 +260,8 @@ window.addEventListener('keydown', (event) => {
             keys.droiteInput.pressed = true;
             break;
         case keys.sauterInput.key:
-            if (player.isOnGround) {
-            player.velocity.y = -8;
+            if (player.isOnGround && !player.velocity.y > 0) {
+            player.velocity.y = -6.5;
             keys.sauterInput.pressed = true;
             player.isOnGround = false;
             }

@@ -101,7 +101,7 @@ a {
     width: 90px;
     height: 90px;
     bottom: 12.5%;
-    right: 28%;
+    right: 22%;
 }
 
 #menu_button {
@@ -109,7 +109,7 @@ a {
     width: 75px;
     height: 75px;
     bottom: 27%;
-    right: 30%;
+    right: 25%;
     border-radius: 50%;
     border: none;
     padding: 0;
@@ -216,7 +216,7 @@ a {
 }
 
 #settings_page label {
-    font-size: 30px;
+    font-size: 26px;
     font-weight: 500;
     margin: 0% 0% 0% 0%;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);

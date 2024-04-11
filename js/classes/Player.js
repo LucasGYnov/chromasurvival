@@ -66,7 +66,7 @@ class Player extends Sprite {
 
     checkForHorizontalCollisionCanvas(){
         if(this.hitbox.position.x + this.hitbox.width + this.velocity.x >= CANVAS.width || this.hitbox.position.x + this.velocity.x <= 0){//CANVAS.width remplacer par la largeur de notre image bg
-            this.velocity.x =0
+            this.velocity.x = 0
         }
     }
 
@@ -74,7 +74,7 @@ class Player extends Sprite {
         const cameraboxRightSide = this.camerabox.position.x + this.camerabox.width 
         const scaleCanvasWidth = bgImageWidth / scale
 
-        if (cameraboxRightSide >= CANVAS.WZ) return
+        if (cameraboxRightSide >= CANVAS.width) return
 
         if(cameraboxRightSide >= scaleCanvasWidth + Math.abs(camera.position.x)){
            camera.position.x -= this.velocity.x
@@ -166,6 +166,35 @@ class Player extends Sprite {
                     }
             }
         }
+        
+        // Vérification des collisions avec les plateformes
+    const platforms = this.isInvertedColor ? this.blackPlatform : this.whitePlatform;
+    for (let i = 0; i < platforms.length; i++) {
+        const platformBlock = platforms[i];
+        if (
+            collisionDetection({
+                object1: this.hitbox,
+                object2: platformBlock,
+            })
+        ) {
+            if (this.velocity.x > 0) {
+                this.velocity.x = 0;
+
+                const offset = this.hitbox.position.x - this.position.x + this.hitbox.width;
+
+                this.position.x = platformBlock.position.x - offset - 0.01;
+                break;
+            }
+            if (this.velocity.x < 0) {
+                this.velocity.x = 0;
+
+                const offset = this.hitbox.position.x - this.position.x;
+
+                this.position.x = platformBlock.position.x + platformBlock.width - offset + 0.01;
+                break;
+            }
+        }
+    }
     }
 
     applyGravity(){
@@ -173,8 +202,8 @@ class Player extends Sprite {
         this.position.y += this.velocity.y;
     }
     checkForVerticalCollision(){
-        for(let i = 0; i < this.collisionBlocks.length; i++){
-            const collisionBlock = this.collisionBlocks[i]
+         for (let i = 0; i < this.collisionBlocks.length; i++) {
+        const collisionBlock = this.collisionBlocks[i];
             if(
                 collisionDetection({
                     object1: this.hitbox,
