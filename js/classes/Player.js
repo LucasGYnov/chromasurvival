@@ -1,5 +1,5 @@
 class Player extends Sprite {
-    constructor({position, playerSpawn,  collisionBlocks, whitePlatform, blackPlatform, killPlatform, imageSrc, frameRate, scale = 0.8, animations}) {
+    constructor({position, playerSpawn,  collisionBlocks, whitePlatform, blackPlatform, killPlatform, qgPlatform, imageSrc, frameRate, scale = 0.8, animations}) {
         super({ imageSrc, frameRate, scale});
         this.position = {...position};
         this.playerSpawn = {...playerSpawn};
@@ -12,6 +12,7 @@ class Player extends Sprite {
         this.whitePlatform = whitePlatform;
         this.blackPlatform = blackPlatform;
         this.killPlatform = killPlatform;
+        this.qgPlatform = qgPlatform;
         this.hitbox = {
             position: {
                 x: this.position.x,
@@ -122,6 +123,7 @@ class Player extends Sprite {
         SCREEN.fillRect(this.camerabox.position.x, this.camerabox.position.y, this.camerabox.width, this.camerabox.height); */
 
         this.updateCameraBox()
+        this.checkQG()
         this.checkKillBlockCollision()
         this.checkKillBlockCollision()
         this.draw();
@@ -289,6 +291,26 @@ respawn() {
     camera.position.x = this.position.x - (CANVAS.width / scale - 340) ;
     camera.position.y = this.position.y - (CANVAS.height / scale + 50 );
 }
+
+checkQG() {
+    let isOnQGPlatform = false;
+    for (let i = 0; i < this.qgPlatform.length; i++) {
+        const QGBlock = this.qgPlatform[i];
+        if (collisionDetection({
+            object1: this.hitbox,
+            object2: QGBlock
+        })) {
+            isOnQGPlatform = true;
+            break;
+        }
+    }
+    return isOnQGPlatform; 
+}
+
+
+
+
+
 
 
 }

@@ -465,6 +465,66 @@ canvas {
 	align-items: center;
 }
 
+.instruction {
+    position: absolute;
+    justify-content: center;
+
+    width: 30vw;
+    height: 25vh;
+    transform: translateY(-100%);
+    background-color: rgba(128, 128, 128, 0.5);
+    backdrop-filter: blur(8px);
+    border-radius: 20px;
+    user-select: none;
+    z-index: -1;
+}
+
+.card-key {
+    content: "";
+    width: 2rem;
+    height: 2rem;
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(8px);
+    border-radius: 0.2rem;
+    user-select: none;
+    z-index: 0;
+    font-size: 1.2rem;
+    margin-right: 0.7rem;
+}
+
+.intrcution-text{
+    position: relative;
+    display: flex;
+    margin: 0.8rem 0.8rem 0 0.8rem;
+    font-weight: 600;
+}
+
+.instruction-container{
+    position: relative;
+    margin: 1rem 0 0 1rem;
+}
+
+.instruction-key{
+    display: flex;
+    width: 100%;
+    height: 20%;
+    margin-top: 0.5rem;
+}
+
+/* .qg {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+
+    width: 30vw;
+    height: 20vh;
+    background-color: rgba(128, 128, 128, 0.5);
+    backdrop-filter: blur(8px);
+    border-radius: 20px;
+    user-select: none;
+    z-index: 0;
+} */
+
 
 
 

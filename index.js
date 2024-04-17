@@ -23,6 +23,7 @@ const platform = [];
 const blackPlatform = [];
 const whitePlatform = [];
 const killPlatform = [];
+const qgPlatform = [];
 
 for (let i = 0; i < floorCollision.length; i += 80) {
     const row = floorCollision.slice(i, i + 80);
@@ -38,7 +39,9 @@ for (let i = 0; i < floorCollision.length; i += 80) {
             case 776:
                 whitePlatform.push(new Platform({ position, color: WHITE_COLOR }));
                 break;
-                
+            case 11:
+                qgPlatform.push(new Platform({ position, color: QG_PLATFORM_COLOR }));
+                break;
             default:
                 break;
         }
@@ -66,6 +69,13 @@ killCollision.forEach((symbol, index) => {
     }
 });
 
+QGCollision .forEach((symbol, index) => {
+    const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
+    if (symbol === 11) {
+        qgPlatform .push(new Platform({ position, color: WHITE_COLOR }));
+    }
+});
+
 const GRAVITY = 0.5;
 
 const playerSpawn = {
@@ -80,6 +90,7 @@ const player = new Player({
     whitePlatform,
     blackPlatform,
     killPlatform,
+    qgPlatform : qgPlatform,
     imageSrc : "./img/Character/Idle.png",
     frameRate: 12,
     animations:{
@@ -148,7 +159,7 @@ const keys = {
     },
     utiliserSortInput: {
         pressed: false,
-        key: 's',
+        key: 'n',
     },
 };
 
@@ -238,26 +249,41 @@ document.addEventListener('DOMContentLoaded', function () {
     loadSettings();
 });
 
+let instructionCount = 0; // Initialise la constante à 0
+
 window.addEventListener('keydown', (event) => {
     if (!isMenuOpen) {
         switch (event.key) {
             case keys.gaucheInput.key:
                 player.velocity.x = -2.5;
                 keys.gaucheInput.pressed = true;
+                instructionCount++;
+                console.log(instructionCount);
+                updateInstructionText(instructionCount);
                 break;
             case keys.droiteInput.key:
                 player.velocity.x = 2.5;
                 keys.droiteInput.pressed = true;
+                instructionCount++;
+                console.log(instructionCount);
+                updateInstructionText(instructionCount); 
                 break;
             case keys.sauterInput.key:
                 if (player.isOnGround && !player.velocity.y > 0) {
                     player.velocity.y = -6.5;
                     keys.sauterInput.pressed = true;
                     player.isOnGround = false;
+                    instructionCount++;
+                    console.log(instructionCount);
+                    updateInstructionText(instructionCount);
                 }
                 break;
             case keys.utiliserInput.key:
                 keys.utiliserInput.pressed = true;
+                const isOnQG = player.checkQG();
+                if (isOnQG) {
+                    alert("Utilisation sur le QG");
+                }
                 break;
             case keys.utiliserSortInput.key:
                 keys.utiliserSortInput.pressed = true;
@@ -269,8 +295,63 @@ window.addEventListener('keydown', (event) => {
     }
 });
 
+const instructionElement = document.querySelector('.instruction');
+let hasMoved = false;
+let initialInstructionCount = 0; 
+let instructionDisplayed = false;
+
+function updateInstructionText(count) {
+    if (!instructionDisplayed) { 
+        if (initialInstructionCount === 0) {
+            setTimeout(() => { 
+                instructionElement.style.zIndex = '1';
+                instructionElement.innerHTML = `
+                <p class="intrcution-text">Bienvenue dans le monde Contraste mortel, déplacez-vous dans ce monde avec les touches :</p>
+                <div class="instruction-container">
+                    <div class="instruction-key">
+                        <div class="card-key">&nbsp&nbsp${keys.gaucheInput.key}</div> pour aller à gauche.
+                    </div>
+                    <div class="instruction-key">
+                        <div class="card-key">&nbsp&nbsp${keys.droiteInput.key}</div> pour aller à droite.
+                    </div>
+                    <div class="instruction-key">
+                        <div class="card-key">${keys.sauterInput.key}</div> pour sauter.
+                    </div>
+                </div>
+                `;
+                initialInstructionCount = count;
+                instructionDisplayed = true; // Mettre à jour instructionDisplayed lorsque le premier message est affiché
+            }, 3000);
+        }
+
+        if (count >= initialInstructionCount + 5) {
+            instructionElement.style.zIndex = '-1';
+        }
+
+        if(count > 10 && !instructionDisplayed) {
+            instructionElement.innerHTML = `
+                <p class="intrcution-text"> Vous avez un pouvoir spécial en ce monde ! :</p>
+                <div class="instruction-container">
+                    <div class="instruction-key">
+                        <div class="card-key">&nbsp&nbsp${keys.utiliserSortInput.key}</div> pour utiliser le pouvoir Chroma Switch.
+                    </div>
+                </div>
+                `;
+            initialInstructionCount = count;
+            instructionElement.style.zIndex = '1';
+            instructionDisplayed = true;
+        }
+    }
+}
+
+updateInstructionText(0);
+
+
+
+
 window.addEventListener('keyup', (event) => {
     if (!isMenuOpen) {
+        hasMoved = true;
         switch (event.key) {
             case keys.gaucheInput.key:
                 keys.gaucheInput.pressed = false;
@@ -292,6 +373,9 @@ window.addEventListener('keyup', (event) => {
         }
     }
 });
+
+
+
 
 var bouton = document.getElementById('menu_button');
 var menu = document.getElementById('settings_page');
