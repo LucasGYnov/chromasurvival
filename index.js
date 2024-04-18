@@ -1,155 +1,18 @@
+/******************/
+/* GENERALE GAME */
+/******************/
 const CANVAS = document.querySelector('canvas');
 const SCREEN = CANVAS.getContext('2d');
-
-const backgroundImage = new Image();
-backgroundImage.src = 'img/bgMap.png';
-
 CANVAS.width = 1280;
 CANVAS.height = 800;
-
 const scale = 3;
-
 const scaledCanvas = {
     width: CANVAS.width / scale,
     height: CANVAS.height / scale,
 };
 
-// Définition des couleurs
-const BLACK_COLOR = 'rgba(0, 0, 0, 0)';
-const WHITE_COLOR = 'rgba(255, 255, 255, 0)';
-const PLATFORM_COLOR = 'rgba(255, 0, 0, 0)';
-
-const platform = [];
-const blackPlatform = [];
-const whitePlatform = [];
-const killPlatform = [];
-const qgPlatform = [];
-
-let level = 0;
-let levels = {
-    1:{
-        init: () =>{
-
-        }
-    }
-}
-
-
-for (let i = 0; i < floorCollision.length; i += 80) {
-    const row = floorCollision.slice(i, i + 80);
-    row.forEach((symbol, x) => {
-        const position = { x: x * 16, y: (i / 80) * 16 };
-        switch (symbol) {
-            case 12:
-                platform.push(new Platform({ position, color: PLATFORM_COLOR }));
-                break;
-            case 779:
-                blackPlatform.push(new Platform({ position, color: BLACK_COLOR }));
-                break;
-            case 776:
-                whitePlatform.push(new Platform({ position, color: WHITE_COLOR }));
-                break;
-            case 11:
-                qgPlatform.push(new Platform({ position, color: QG_PLATFORM_COLOR }));
-                break;
-            default:
-                break;
-        }
-    });
-}
-
-blackCollision.forEach((symbol, index) => {
-    const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
-    if (symbol === 779) {
-        blackPlatform.push(new Platform({ position, color: BLACK_COLOR }));
-    }
-});
-
-whiteCollision.forEach((symbol, index) => {
-    const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
-    if (symbol === 776) {
-        whitePlatform.push(new Platform({ position, color: WHITE_COLOR }));
-    }
-});
-
-killCollision.forEach((symbol, index) => {
-    const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
-    if (symbol === 71) {
-        killPlatform.push(new Platform({ position, color: WHITE_COLOR }));
-    }
-});
-
-QGCollision .forEach((symbol, index) => {
-    const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
-    if (symbol === 11) {
-        qgPlatform .push(new Platform({ position, color: WHITE_COLOR }));
-    }
-});
-
 const GRAVITY = 0.5;
 
-const playerSpawn = {
-    x: 50,
-    y: 200
-};
-
-const player = new Player({
-    position:playerSpawn,
-    playerSpawn: playerSpawn,
-    collisionBlocks : platform,
-    whitePlatform,
-    blackPlatform,
-    killPlatform,
-    qgPlatform : qgPlatform,
-    imageSrc : "./img/Character/Idle.png",
-    frameRate: 12,
-    animations:{
-        Idle:{
-            imageSrc : "./img/Character/Idle.png",
-            frameRate: 12,
-            frameBuffer : 5
-        },
-        IdleLeft:{
-            imageSrc : "./img/Character/IdleLeft.png",
-            frameRate: 12,
-            frameBuffer : 5
-        },
-        Run:{
-            imageSrc : "./img/Character/Run.png",
-            frameRate: 8,
-            frameBuffer : 5
-        },
-        RunLeft:{
-            imageSrc : "./img/Character/RunLeft.png",
-            frameRate: 8,
-            frameBuffer : 5
-        },
-        Jump:{
-            imageSrc : "./img/Character/Jump.png",
-            frameRate: 4,
-            frameBuffer : 3
-        },
-        JumpLeft:{
-            imageSrc : "./img/Character/JumpLeft.png",
-            frameRate: 4,
-            frameBuffer : 3
-        },
-        Fall:{
-            imageSrc : "./img/Character/Fall.png",
-            frameRate: 3,
-            frameBuffer : 15
-        },
-        FallLeft:{
-            imageSrc : "./img/Character/FallLeft.png",
-            frameRate: 3,
-            frameBuffer : 15
-        },
-    },
-
-})
-
-
-// Définir les touches par défaut
 const keys = {
     gaucheInput: {
         pressed: false,
@@ -172,15 +35,6 @@ const keys = {
         key: 'n',
     },
 };
-
-const background = new Sprite({
-    position: {
-        x: 0,
-        y: 0,
-    },
-    imageSrc: './img/map2IMG.png',
-
-});
 
 document.addEventListener('DOMContentLoaded', function () {
     const sonCheckbox = document.querySelector('.son-checkbox');
@@ -259,24 +113,6 @@ document.addEventListener('DOMContentLoaded', function () {
     loadSettings();
 });
 
-
-
-
-const qg = document.getElementById('qg');
-
-let qgAffiche = false; 
-function afficherQG() {
-    const isOnQG = player.checkQG();
-    if (isOnQG && !qgAffiche) {
-        qg.style.zIndex = '5';
-        qgAffiche = true;
-    } else if ((!isOnQG) && qgAffiche) {
-        qg.style.zIndex = '-1';
-        qgAffiche = false;
-    }
-}
-
-
 window.addEventListener('keydown', (event) => {
     if (!isMenuOpen) {
         const isOnQG = player.checkQG();
@@ -343,6 +179,109 @@ window.addEventListener('keyup', (event) => {
     }
 });
 
+var bouton = document.getElementById('menu_button');
+var menu = document.getElementById('settings_page');
+
+bouton.addEventListener('click', function () {
+    menu.style.display = 'block';
+    menu.style.zIndex = '-100';
+});
+
+/******************/
+/* GENERALE LEVEL */
+/******************/
+const backgroundImage = new Image(); //défintion image level
+backgroundImage.src = 'img/bgMap.png'; // assignation image level
+
+const qg = document.getElementById('qg');
+let qgAffiche = false;
+function afficherQG() {
+    const isOnQG = player.checkQG();
+    if (isOnQG && !qgAffiche) {
+        qg.style.zIndex = '5';
+        qgAffiche = true;
+    } else if ((!isOnQG) && qgAffiche) {
+        qg.style.zIndex = '-1';
+        qgAffiche = false;
+    }
+}
+
+const TRANSPARENT_COLOR = 'rgba(0, 0, 0, 0)';
+//global platform
+const platform = [];
+const blackPlatform = [];
+const whitePlatform = [];
+const killPlatform = [];
+const qgPlatform = [];
+
+/***********/
+/* LEVEL 1 */
+/***********/
+for (let i = 0; i < floorCollision_0.length; i += 80) { // floorCollision_0 in collision file
+    const row = floorCollision_0.slice(i, i + 80); // floorCollision_0 in collision file
+    row.forEach((symbol, x) => {
+        const position = { x: x * 16, y: (i / 80) * 16 };
+        switch (symbol) {
+            case 12:
+                platform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                break;
+            case 779:
+                blackPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                break;
+            case 776:
+                whitePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                break;
+            case 11:
+                qgPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                break;
+            default:
+                break;
+        }
+    });
+}
+
+blackCollision_0.forEach((symbol, index) => { // blackCollision_0 in collision file (different pour chaque level)
+    const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
+    if (symbol === 779) {
+        blackPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+    }
+});
+
+whiteCollision_0.forEach((symbol, index) => { // whiteCollision_0 in collision file(different pour chaque level)
+    const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
+    if (symbol === 776) {
+        whitePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+    }
+});
+
+killCollision_0.forEach((symbol, index) => { // killCollision_0 in collision file(different pour chaque level)
+    const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
+    if (symbol === 71) {
+        killPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+    }
+});
+
+QGCollision_0 .forEach((symbol, index) => { // QGCollision_0 in collision file(different pour chaque level)
+    const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
+    if (symbol === 11) {
+        qgPlatform .push(new Platform({ position, color: TRANSPARENT_COLOR }));
+    }
+});
+
+const mapImage = new Sprite({
+    position: {
+        x: 0,
+        y: 0,
+    },
+    imageSrc: './img/map2IMG.png',
+});
+
+const playerSpawn = {
+    x: 50,
+    y: 200
+};
+
+
 const instructionElement = document.querySelector('.instruction');
 let hasMoved = false;
 let instructionCount = 0;
@@ -399,24 +338,6 @@ function updateInstructionText(count) {
 
 updateInstructionText(0);
 
-
-
-
-
-
-
-
-
-
-
-var bouton = document.getElementById('menu_button');
-var menu = document.getElementById('settings_page');
-
-bouton.addEventListener('click', function () {
-    menu.style.display = 'block';
-    menu.style.zIndex = '-100';
-});
-
 const  bgImageHeight = 1280 / 2 //taille de l'image bg ici
 const  bgImageWidth = 800 //taille de l'image bg ici
 const camera ={
@@ -426,6 +347,63 @@ const camera ={
     },
 }
 
+const player = new Player({
+    position:playerSpawn,
+    playerSpawn: playerSpawn,
+    collisionBlocks : platform,
+    whitePlatform,
+    blackPlatform,
+    killPlatform,
+    qgPlatform,
+    imageSrc : "./img/Character/Idle.png",
+    frameRate: 12,
+    animations:{
+        Idle:{
+            imageSrc : "./img/Character/Idle.png",
+            frameRate: 12,
+            frameBuffer : 5
+        },
+        IdleLeft:{
+            imageSrc : "./img/Character/IdleLeft.png",
+            frameRate: 12,
+            frameBuffer : 5
+        },
+        Run:{
+            imageSrc : "./img/Character/Run.png",
+            frameRate: 8,
+            frameBuffer : 5
+        },
+        RunLeft:{
+            imageSrc : "./img/Character/RunLeft.png",
+            frameRate: 8,
+            frameBuffer : 5
+        },
+        Jump:{
+            imageSrc : "./img/Character/Jump.png",
+            frameRate: 4,
+            frameBuffer : 3
+        },
+        JumpLeft:{
+            imageSrc : "./img/Character/JumpLeft.png",
+            frameRate: 4,
+            frameBuffer : 3
+        },
+        Fall:{
+            imageSrc : "./img/Character/Fall.png",
+            frameRate: 3,
+            frameBuffer : 15
+        },
+        FallLeft:{
+            imageSrc : "./img/Character/FallLeft.png",
+            frameRate: 3,
+            frameBuffer : 15
+        },
+    },
+})
+
+
+
+
 function animate() {
     window.requestAnimationFrame(animate);
     SCREEN.fillStyle = 'grey';
@@ -434,7 +412,7 @@ function animate() {
     SCREEN.save();
     SCREEN.scale(scale, scale);
     SCREEN.translate(camera.position.x,camera.position.y);
-    background.update();
+    mapImage.update();
     platform.forEach((platform) => {
         platform.update();
     });
@@ -484,3 +462,15 @@ function animate() {
 }
 
 animate();
+
+/*********/
+/* LEVELS*/
+/*********/
+let level = 0;
+let levels = {
+    1:{
+        init: () =>{
+
+        }
+    }
+}
