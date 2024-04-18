@@ -25,6 +25,16 @@ const whitePlatform = [];
 const killPlatform = [];
 const qgPlatform = [];
 
+let level = 0;
+let levels = {
+    1:{
+        init: () =>{
+
+        }
+    }
+}
+
+
 for (let i = 0; i < floorCollision.length; i += 80) {
     const row = floorCollision.slice(i, i + 80);
     row.forEach((symbol, x) => {
@@ -381,7 +391,7 @@ function updateInstructionText(count) {
         `;
     }
 
-    if (count >= initialInstructionCount + 12) {
+    if (count >= initialInstructionCount + 10) {
         console.log('Instruction spécial désactivé');
         instructionElement.style.zIndex = '-1';
     }
