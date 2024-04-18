@@ -187,6 +187,20 @@ bouton.addEventListener('click', function () {
     menu.style.zIndex = '-100';
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /******************/
 /* GENERALE LEVEL */
 /******************/
@@ -207,79 +221,15 @@ function afficherQG() {
 }
 
 const TRANSPARENT_COLOR = 'rgba(0, 0, 0, 0)';
+
+
+
+
+
+
+
+
 //global platform
-const platform = [];
-const blackPlatform = [];
-const whitePlatform = [];
-const killPlatform = [];
-const qgPlatform = [];
-
-/***********/
-/* LEVEL 1 */
-/***********/
-for (let i = 0; i < floorCollision_0.length; i += 80) { // floorCollision_0 in collision file
-    const row = floorCollision_0.slice(i, i + 80); // floorCollision_0 in collision file
-    row.forEach((symbol, x) => {
-        const position = { x: x * 16, y: (i / 80) * 16 };
-        switch (symbol) {
-            case 12:
-                platform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
-                break;
-            case 779:
-                blackPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
-                break;
-            case 776:
-                whitePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
-                break;
-            case 11:
-                qgPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
-                break;
-            default:
-                break;
-        }
-    });
-}
-
-blackCollision_0.forEach((symbol, index) => { // blackCollision_0 in collision file (different pour chaque level)
-    const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
-    if (symbol === 779) {
-        blackPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
-    }
-});
-
-whiteCollision_0.forEach((symbol, index) => { // whiteCollision_0 in collision file(different pour chaque level)
-    const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
-    if (symbol === 776) {
-        whitePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
-    }
-});
-
-killCollision_0.forEach((symbol, index) => { // killCollision_0 in collision file(different pour chaque level)
-    const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
-    if (symbol === 71) {
-        killPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
-    }
-});
-
-QGCollision_0 .forEach((symbol, index) => { // QGCollision_0 in collision file(different pour chaque level)
-    const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
-    if (symbol === 11) {
-        qgPlatform .push(new Platform({ position, color: TRANSPARENT_COLOR }));
-    }
-});
-
-const mapImage = new Sprite({
-    position: {
-        x: 0,
-        y: 0,
-    },
-    imageSrc: './img/map2IMG.png',
-});
-
-const playerSpawn = {
-    x: 50,
-    y: 200
-};
 
 
 const instructionElement = document.querySelector('.instruction');
@@ -338,14 +288,102 @@ function updateInstructionText(count) {
 
 updateInstructionText(0);
 
-const  bgImageHeight = 1280 / 2 //taille de l'image bg ici
-const  bgImageWidth = 800 //taille de l'image bg ici
-const camera ={
-    position:{
-        x: 0,
-        y: -bgImageHeight + scaledCanvas.width - 20,
-    },
+const platform = [];
+const blackPlatform = [];
+const whitePlatform = [];
+const killPlatform = [];
+const qgPlatform = [];
+
+let mapImage = null;
+let playerSpawn = null;
+let bgImageHeight = null;
+let bgImageWidth = null;
+let camera = null;
+
+let level = 0;
+const levels = {
+    1: {
+        init: () => {
+            mapImage = new Sprite({
+                position: {
+                    x: 0,
+                    y: 0,
+                },
+                imageSrc: './img/map3IMG.png',
+            });
+
+            playerSpawn = {
+                x: 50,
+                y: 200
+            };
+
+            bgImageHeight = 1280 / 2;
+            bgImageWidth = 800;
+
+            camera = {
+                position: {
+                    x: 0,
+                    y: -bgImageHeight + scaledCanvas.width - 20,
+                },
+            };
+
+
+            for (let i = 0; i < floorCollision_1.length; i += 80) {
+                const row = floorCollision_1.slice(i, i + 80);
+                row.forEach((symbol, x) => {
+                    const position = { x: x * 16, y: (i / 80) * 16 };
+                    switch (symbol) {
+                        case 12:
+                            platform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 779:
+                            blackPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 776:
+                            whitePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 11:
+                            qgPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            }
+
+            blackCollision_1.forEach((symbol, index) => {
+                const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
+                if (symbol === 779) {
+                    blackPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+
+            whiteCollision_1.forEach((symbol, index) => {
+                const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
+                if (symbol === 776) {
+                    whitePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+
+            killCollision_1.forEach((symbol, index) => {
+                const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
+                if (symbol === 71) {
+                    killPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+
+            QGCollision_1.forEach((symbol, index) => {
+                const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
+                if (symbol === 11) {
+                    qgPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+        }
+    }
 }
+
+levels[1].init();
+
 
 const player = new Player({
     position:playerSpawn,
@@ -400,10 +438,6 @@ const player = new Player({
         },
     },
 })
-
-
-
-
 function animate() {
     window.requestAnimationFrame(animate);
     SCREEN.fillStyle = 'grey';
@@ -460,17 +494,6 @@ function animate() {
 
     SCREEN.restore(); 
 }
-
 animate();
 
-/*********/
-/* LEVELS*/
-/*********/
-let level = 0;
-let levels = {
-    1:{
-        init: () =>{
 
-        }
-    }
-}
