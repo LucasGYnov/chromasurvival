@@ -80,7 +80,21 @@
     </div>
     <div class="jeu" id="jeu">
       <div class="instruction"></div>
-      <div class="qg"></div>
+      <div id="qg">
+         <p class="qg-title">QG</p>
+         <p class="qg-description">Il permet de se déplacer à travers les différents mondes.</p>
+         <div class="btn-container">
+            <button class="btn" data-map="Guided Light" data-lock="true">Guided Light</button>
+            <button class="btn" data-map="Monochrome Meadows" data-lock="false">Monochrome Meadows</button>
+            <button class="btn" data-map="Shadowy Swamps" data-lock="false">Shadowy Swamps</button>
+            <button class="btn" data-map="Eclipsed Forest" data-lock="false">Eclipsed Forest</button>
+            <button class="btn" data-map="Gloom Haven" data-lock="false">Gloom Haven</button>
+            <button class="btn" data-map="Spectral Caverns" data-lock="false">Spectral Caverns</button>
+            <button class="btn" data-map="Twilight Peaks" data-lock="false">Twilight Peaks</button>
+            <button class="btn" data-map="Dim Abyss" data-lock="false">Dim Abyss</button>
+        </div>
+        
+      </div>
         <canvas></canvas>
     </div>
     <script src="./js/classes/Sprite.js"></script>

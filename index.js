@@ -249,10 +249,27 @@ document.addEventListener('DOMContentLoaded', function () {
     loadSettings();
 });
 
-let instructionCount = 0; // Initialise la constante à 0
+
+
+
+const qg = document.getElementById('qg');
+
+let qgAffiche = false; 
+function afficherQG() {
+    const isOnQG = player.checkQG();
+    if (isOnQG && !qgAffiche) {
+        qg.style.zIndex = '5';
+        qgAffiche = true;
+    } else if ((!isOnQG) && qgAffiche) {
+        qg.style.zIndex = '-1';
+        qgAffiche = false;
+    }
+}
+
 
 window.addEventListener('keydown', (event) => {
     if (!isMenuOpen) {
+        const isOnQG = player.checkQG();
         switch (event.key) {
             case keys.gaucheInput.key:
                 player.velocity.x = -2.5;
@@ -278,13 +295,9 @@ window.addEventListener('keydown', (event) => {
                     updateInstructionText(instructionCount);
                 }
                 break;
-            case keys.utiliserInput.key:
-                keys.utiliserInput.pressed = true;
-                const isOnQG = player.checkQG();
-                if (isOnQG) {
-                    alert("Utilisation sur le QG");
-                }
-                break;
+                case keys.utiliserInput.key:
+                    keys.utiliserInput.pressed = true;
+                    break;
             case keys.utiliserSortInput.key:
                 keys.utiliserSortInput.pressed = true;
                 player.isInvertedColor = !player.isInvertedColor;
@@ -295,8 +308,34 @@ window.addEventListener('keydown', (event) => {
     }
 });
 
+window.addEventListener('keyup', (event) => {
+    if (!isMenuOpen) {
+        hasMoved = true;
+        switch (event.key) {
+            case keys.gaucheInput.key:
+                keys.gaucheInput.pressed = false;
+                break;
+            case keys.droiteInput.key:
+                keys.droiteInput.pressed = false;
+                break;
+            case keys.sauterInput.key:
+                keys.sauterInput.pressed = false;
+                break;
+            case keys.utiliserInput.key:
+                keys.utiliserInput.pressed = false;
+                break;
+            case keys.utiliserSortInput.key:
+                keys.utiliserSortInput.pressed = false;
+                break;
+            default:
+                break;
+        }
+    }
+});
+
 const instructionElement = document.querySelector('.instruction');
 let hasMoved = false;
+let instructionCount = 0;
 let initialInstructionCount = 0;
 let instructionDisplayed = false;
 
@@ -329,10 +368,10 @@ function updateInstructionText(count) {
         instructionElement.style.zIndex = '-1';
     }
 
-    if (count >= initialInstructionCount + 6) {
+    if (count >= initialInstructionCount + 5) {
         instructionElement.style.zIndex = '1';
         instructionElement.innerHTML = `
-        <p class="intrcution-text"> Vous avez un pouvoir spécial en ce monde ! :</p>
+        <p class="intrcution-text"> Vous avez un pouvoir spécial en ce monde :</p>
         <div class="instruction-container">
             <div class="instruction-key">
                 <div class="card-key">&nbsp&nbsp${keys.utiliserSortInput.key}</div> pour utiliser le pouvoir Chroma Switch.
@@ -355,30 +394,7 @@ updateInstructionText(0);
 
 
 
-window.addEventListener('keyup', (event) => {
-    if (!isMenuOpen) {
-        hasMoved = true;
-        switch (event.key) {
-            case keys.gaucheInput.key:
-                keys.gaucheInput.pressed = false;
-                break;
-            case keys.droiteInput.key:
-                keys.droiteInput.pressed = false;
-                break;
-            case keys.sauterInput.key:
-                keys.sauterInput.pressed = false;
-                break;
-            case keys.utiliserInput.key:
-                keys.utiliserInput.pressed = false;
-                break;
-            case keys.utiliserSortInput.key:
-                keys.utiliserSortInput.pressed = false;
-                break;
-            default:
-                break;
-        }
-    }
-});
+
 
 
 

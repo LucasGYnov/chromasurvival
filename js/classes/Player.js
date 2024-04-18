@@ -122,6 +122,7 @@ class Player extends Sprite {
        /*  SCREEN.fillStyle = 'rgba(0,0,255,0.5)';
         SCREEN.fillRect(this.camerabox.position.x, this.camerabox.position.y, this.camerabox.width, this.camerabox.height); */
 
+        afficherQG()
         this.updateCameraBox()
         this.checkQG()
         this.checkKillBlockCollision()
@@ -304,12 +305,8 @@ checkQG() {
             break;
         }
     }
-    return isOnQGPlatform; 
+    return isOnQGPlatform;
 }
-
-
-
-
 
 
 
