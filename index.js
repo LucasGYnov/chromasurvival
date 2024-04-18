@@ -113,6 +113,8 @@ document.addEventListener('DOMContentLoaded', function () {
     loadSettings();
 });
 
+let isJumping = false;
+
 window.addEventListener('keydown', (event) => {
     if (!isMenuOpen) {
         const isOnQG = player.checkQG();
@@ -132,14 +134,15 @@ window.addEventListener('keydown', (event) => {
                 updateInstructionText(instructionCount); 
                 break;
             case keys.sauterInput.key:
-                if (player.isOnGround && !player.velocity.y > 0) {
-                    player.velocity.y = -6.5;
-                    keys.sauterInput.pressed = true;
-                    player.isOnGround = false;
-                    instructionCount++;
-                    console.log(instructionCount);
-                    updateInstructionText(instructionCount);
-                }
+    if (player.isOnGround && !player.velocity.y > 0) {
+        player.velocity.y = -6.5;
+        keys.sauterInput.pressed = true;
+        player.isOnGround = false;
+        isJumping = true; // Définir le saut en cours sur true
+        instructionCount++;
+        updateInstructionText(instructionCount);
+    }
+    break;
                 break;
                 case keys.utiliserInput.key:
                     keys.utiliserInput.pressed = true;
@@ -215,7 +218,6 @@ function afficherQG() {
         qg.style.zIndex = '5';
         qgAffiche = true;
     } else if ((!isOnQG) && qgAffiche) {
-        qg.style.zIndex = '-1';
         qgAffiche = false;
     }
 }
@@ -241,7 +243,7 @@ let instructionDisplayed = false;
 function updateInstructionText(count) {
     if (!instructionDisplayed) {
         if (initialInstructionCount === 0) {
-            setTimeout(() => { 
+            setTimeout(() => {
                 instructionElement.style.zIndex = '1';
                 instructionElement.innerHTML = `
                 <p class="intrcution-text">Bienvenue dans le monde Contraste mortel, déplacez-vous dans ce monde avec les touches :</p>
@@ -259,7 +261,7 @@ function updateInstructionText(count) {
                 `;
                 initialInstructionCount = count;
                 instructionDisplayed = true;
-            }, 2000);
+            }, 2500);
         }
     }
     
@@ -267,7 +269,7 @@ function updateInstructionText(count) {
         instructionElement.style.zIndex = '-1';
     }
 
-    if (count >= initialInstructionCount + 5) {
+    if (count >= initialInstructionCount + 6) {
         instructionElement.style.zIndex = '1';
         instructionElement.innerHTML = `
         <p class="intrcution-text"> Vous avez un pouvoir spécial en ce monde :</p>
@@ -288,11 +290,11 @@ function updateInstructionText(count) {
 
 updateInstructionText(0);
 
-const platform = [];
-const blackPlatform = [];
-const whitePlatform = [];
-const killPlatform = [];
-const qgPlatform = [];
+let platform;
+let blackPlatform;
+let whitePlatform;
+let killPlatform;
+let qgPlatform;
 
 let mapImage = null;
 let playerSpawn = null;
@@ -304,6 +306,11 @@ let level = 1;
 const levels = {
     1: {
         init: () => {
+            platform = [];
+            blackPlatform = [];
+            whitePlatform = [];
+            killPlatform = [];
+            qgPlatform = [];
             mapImage = new Sprite({
                 position: {
                     x: 0,
@@ -382,6 +389,11 @@ const levels = {
     },
     2: {
         init: () => {
+            platform = [];
+            blackPlatform = [];
+            whitePlatform = [];
+            killPlatform = [];
+            qgPlatform = [];
             mapImage = new Sprite({
                 position: {
                     x: 0,
@@ -462,27 +474,41 @@ const levels = {
 
 levels[level].init();
 
-
 const buttons = document.querySelectorAll('.btn');
 
 buttons.forEach(button => {
     button.addEventListener('click', () => {
         const mapName = button.dataset.map;
         const isLocked = button.dataset.lock === 'true';
-        qg.style.zIndex = '-1';
-        if (!isLocked) {
+        
+        if (isLocked) {
             loadMap(mapName);
         }
     });
 });
 
+const saveMapButton = document.getElementById('save-map');
+
+saveMapButton.addEventListener('click', () => {
+    qg.style.zIndex = '-1';
+});
+
+
 function loadMap(mapName) {
     if (mapName === 'Monochrome Meadows') {
-        levels[2].init();
-    } else if (mapName === 'Guided Light') {
-        levels[1].init();
+        level = 2;
+        levels[2].init(); 
+        player.collisionBlocks = platform.slice(); // Copie les collisions du niveau 2 dans le joueur
+        player.whitePlatform = whitePlatform.slice(); // Copie les plateformes blanches du niveau 2 dans le joueur
+        player.blackPlatform = blackPlatform.slice(); // Copie les plateformes noires du niveau 2 dans le joueur
+        player.killPlatform = killPlatform.slice(); // Copie les plateformes de mort du niveau 2 dans le joueur
+        player.qgPlatform = qgPlatform.slice(); // Copie les plateformes du QG du niveau 2 dans le joueur
+        player.position = playerSpawn;
+        player.velocity = { x: 0, y: 0 };
     }
 }
+
+
 
 
 
@@ -558,10 +584,11 @@ function animate() {
     whitePlatform.forEach((whiteBlock) => {
         whiteBlock.update();
     });
-    
 
     player.checkForHorizontalCollisionCanvas()
     player.update();
+
+
 
 
     player.velocity.x = 0; 
