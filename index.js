@@ -297,11 +297,11 @@ window.addEventListener('keydown', (event) => {
 
 const instructionElement = document.querySelector('.instruction');
 let hasMoved = false;
-let initialInstructionCount = 0; 
+let initialInstructionCount = 0;
 let instructionDisplayed = false;
 
 function updateInstructionText(count) {
-    if (!instructionDisplayed) { 
+    if (!instructionDisplayed) {
         if (initialInstructionCount === 0) {
             setTimeout(() => { 
                 instructionElement.style.zIndex = '1';
@@ -320,31 +320,37 @@ function updateInstructionText(count) {
                 </div>
                 `;
                 initialInstructionCount = count;
-                instructionDisplayed = true; // Mettre à jour instructionDisplayed lorsque le premier message est affiché
-            }, 3000);
+                instructionDisplayed = true;
+            }, 2000);
         }
+    }
+    
+    if (count >= initialInstructionCount + 4) {
+        instructionElement.style.zIndex = '-1';
+    }
 
-        if (count >= initialInstructionCount + 5) {
-            instructionElement.style.zIndex = '-1';
-        }
+    if (count >= initialInstructionCount + 6) {
+        instructionElement.style.zIndex = '1';
+        instructionElement.innerHTML = `
+        <p class="intrcution-text"> Vous avez un pouvoir spécial en ce monde ! :</p>
+        <div class="instruction-container">
+            <div class="instruction-key">
+                <div class="card-key">&nbsp&nbsp${keys.utiliserSortInput.key}</div> pour utiliser le pouvoir Chroma Switch.
+            </div>
+            <p class="intrcution-text"> Vous pouvez vous déplacer sur les blocs d'une couleur différente de vous.</p>
+        </div>
+        `;
+    }
 
-        if(count > 10 && !instructionDisplayed) {
-            instructionElement.innerHTML = `
-                <p class="intrcution-text"> Vous avez un pouvoir spécial en ce monde ! :</p>
-                <div class="instruction-container">
-                    <div class="instruction-key">
-                        <div class="card-key">&nbsp&nbsp${keys.utiliserSortInput.key}</div> pour utiliser le pouvoir Chroma Switch.
-                    </div>
-                </div>
-                `;
-            initialInstructionCount = count;
-            instructionElement.style.zIndex = '1';
-            instructionDisplayed = true;
-        }
+    if (count >= initialInstructionCount + 12) {
+        console.log('Instruction spécial désactivé');
+        instructionElement.style.zIndex = '-1';
     }
 }
 
 updateInstructionText(0);
+
+
 
 
 
