@@ -113,7 +113,8 @@ document.addEventListener('DOMContentLoaded', function () {
     loadSettings();
 });
 
-let isJumping = false;
+
+const runningSound = document.getElementById('running-sound');
 
 window.addEventListener('keydown', (event) => {
     if (!isMenuOpen) {
@@ -125,20 +126,21 @@ window.addEventListener('keydown', (event) => {
                 instructionCount++;
                 console.log(instructionCount);
                 updateInstructionText(instructionCount);
+                runningSound.play();
                 break;
             case keys.droiteInput.key:
                 player.velocity.x = 2.5;
                 keys.droiteInput.pressed = true;
                 instructionCount++;
                 console.log(instructionCount);
-                updateInstructionText(instructionCount); 
+                updateInstructionText(instructionCount);
+                runningSound.play();
                 break;
             case keys.sauterInput.key:
     if (player.isOnGround && !player.velocity.y > 0) {
         player.velocity.y = -6.5;
         keys.sauterInput.pressed = true;
         player.isOnGround = false;
-        isJumping = true; // Définir le saut en cours sur true
         instructionCount++;
         updateInstructionText(instructionCount);
     }
@@ -179,7 +181,14 @@ window.addEventListener('keyup', (event) => {
             default:
                 break;
         }
-    }
+    runningSound.pause();
+    runningSound.currentTime = 0;
+}
+});
+
+runningSound.addEventListener('ended', () => {
+    runningSound.currentTime = 0;
+    runningSound.play();
 });
 
 var bouton = document.getElementById('menu_button');
