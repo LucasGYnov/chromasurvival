@@ -300,7 +300,7 @@ let bgImageHeight = null;
 let bgImageWidth = null;
 let camera = null;
 
-let level = 0;
+let level = 1;
 const levels = {
     1: {
         init: () => {
@@ -379,10 +379,111 @@ const levels = {
                 }
             });
         }
+    },
+    2: {
+        init: () => {
+            mapImage = new Sprite({
+                position: {
+                    x: 0,
+                    y: 0,
+                },
+                imageSrc: './img/map2IMG.png',
+            });
+    
+            playerSpawn = {
+                x: 50,
+                y: 200
+            };
+    
+            bgImageHeight = 1280 / 2;
+            bgImageWidth = 800;
+    
+            camera = {
+                position: {
+                    x: 0,
+                    y: -bgImageHeight + scaledCanvas.width - 20,
+                },
+            };
+    
+            // Initialisation des plateformes, des collisions, etc. pour le niveau 2
+            for (let i = 0; i < floorCollision_0.length; i += 80) {
+                const row = floorCollision_0.slice(i, i + 80);
+                row.forEach((symbol, x) => {
+                    const position = { x: x * 16, y: (i / 80) * 16 };
+                    switch (symbol) {
+                        case 12:
+                            platform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 779:
+                            blackPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 776:
+                            whitePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 11:
+                            qgPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            }
+    
+            blackCollision_0.forEach((symbol, index) => {
+                const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
+                if (symbol === 779) {
+                    blackPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+    
+            whiteCollision_0.forEach((symbol, index) => {
+                const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
+                if (symbol === 776) {
+                    whitePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+    
+            killCollision_0.forEach((symbol, index) => {
+                const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
+                if (symbol === 71) {
+                    killPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+    
+            QGCollision_0.forEach((symbol, index) => {
+                const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
+                if (symbol === 11) {
+                    qgPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+        }
     }
 }
 
-levels[1].init();
+levels[level].init();
+
+
+const buttons = document.querySelectorAll('.btn');
+
+buttons.forEach(button => {
+    button.addEventListener('click', () => {
+        const mapName = button.dataset.map;
+        const isLocked = button.dataset.lock === 'true';
+        qg.style.zIndex = '-1';
+        if (!isLocked) {
+            loadMap(mapName);
+        }
+    });
+});
+
+function loadMap(mapName) {
+    if (mapName === 'Monochrome Meadows') {
+        levels[2].init();
+    } else if (mapName === 'Guided Light') {
+        levels[1].init();
+    }
+}
+
 
 
 const player = new Player({
@@ -438,6 +539,7 @@ const player = new Player({
         },
     },
 })
+
 function animate() {
     window.requestAnimationFrame(animate);
     SCREEN.fillStyle = 'grey';
@@ -494,6 +596,7 @@ function animate() {
 
     SCREEN.restore(); 
 }
+
 animate();
 
 
