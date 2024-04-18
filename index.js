@@ -506,6 +506,17 @@ function loadMap(mapName) {
         player.position = playerSpawn;
         player.velocity = { x: 0, y: 0 };
     }
+    if (mapName === 'Guided Light') {
+        level = 1;
+        levels[1].init(); 
+        player.collisionBlocks = platform.slice(); // Copie les collisions du niveau 2 dans le joueur
+        player.whitePlatform = whitePlatform.slice(); // Copie les plateformes blanches du niveau 2 dans le joueur
+        player.blackPlatform = blackPlatform.slice(); // Copie les plateformes noires du niveau 2 dans le joueur
+        player.killPlatform = killPlatform.slice(); // Copie les plateformes de mort du niveau 2 dans le joueur
+        player.qgPlatform = qgPlatform.slice(); // Copie les plateformes du QG du niveau 2 dans le joueur
+        player.position = playerSpawn;
+        player.velocity = { x: 0, y: 0 };
+    }
 }
 
 
