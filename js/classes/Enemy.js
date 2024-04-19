@@ -126,15 +126,13 @@
                 y: this.position.y + this.height + 1
             };
  */
-
-
             /* const nextBlockPosition = {
-                x: this.position.x + uniqueBlockSize * 1.5,
+                x: this.position.x + uniqueBlockSize * 1.1,
                 y: this.position.y + this.height
             };
 
             const nextBlockPosition2 = {
-                x: this.position.x + uniqueBlockSize * -0.8,
+                x: this.position.x + uniqueBlockSize * -0.1,
                 y: this.position.y + this.height
             };
         

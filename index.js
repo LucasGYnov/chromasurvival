@@ -304,6 +304,7 @@ let blackPlatform;
 let whitePlatform;
 let killPlatform;
 let qgPlatform;
+let enemySpawn;
 
 let mapImage = null;
 let playerSpawn = null;
@@ -324,6 +325,7 @@ const levels = {
             killPlatform = [];
             qgPlatform = [];
             enemieslevel1 = [];
+            enemySpawn = [];
             mapImage = new Sprite({
                 position: {
                     x: 0,
@@ -348,11 +350,10 @@ const levels = {
             };
 
             mobSpawn = {
-                x: 390,
-                y: 100
+                x: 400,
+                y: 284
             };
 
-            // Création du mob et ajout dans le tableau d'ennemis du niveau 1
             const mob = new Enemy({
                 position: mobSpawn,
                 mobSpawn:  {
@@ -388,9 +389,6 @@ const levels = {
                         case 241:
                             enemySpawn.push(new Platform({ position, color: TRANSPARENT_COLOR }));
                             break;
-                        case 221:
-                            returnMob.push(new Platform({ position, color: TRANSPARENT_COLOR }));
-                            break;
                         default:
                             break;
                     }
@@ -424,6 +422,14 @@ const levels = {
                     qgPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
                 }
             });
+
+            enemy_1.forEach((symbol, index) => {
+                const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
+                if (symbol === 241) {
+                enemySpawn.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                console.log(`Bloc de spawn d'ennemi ajouté à la position : x = ${position.x}, y = ${position.y}`);
+            }
+            });
         }
     },
     2: {
@@ -433,6 +439,7 @@ const levels = {
             whitePlatform = [];
             killPlatform = [];
             qgPlatform = [];
+            enemieslevel1 = [];
             mapImage = new Sprite({
                 position: {
                     x: 0,
@@ -554,7 +561,7 @@ saveMapButton.addEventListener('click', () => {
 function loadMap(mapName) {
     if (mapName === 'Monochrome Meadows') {
         level = 2;
-        levels[2].init(); 
+        levels[2].init();
         player.collisionBlocks = platform.slice();
         player.whitePlatform = whitePlatform.slice();
         player.blackPlatform = blackPlatform.slice();
@@ -565,7 +572,7 @@ function loadMap(mapName) {
     }
     if (mapName === 'Guided Light') {
         level = 1;
-        levels[1].init(); 
+        levels[1].init();
         player.collisionBlocks = platform.slice();
         player.whitePlatform = whitePlatform.slice();
         player.blackPlatform = blackPlatform.slice();
@@ -575,6 +582,7 @@ function loadMap(mapName) {
         player.velocity = { x: 0, y: 0 };
     }
 }
+
 
 
 const player = new Player({
