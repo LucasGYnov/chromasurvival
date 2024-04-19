@@ -321,8 +321,8 @@ checkEnemyCollision(enemies) {
             object2: enemy.hitbox,
         })) {
             if (this.velocity.y > 0) { 
-                this.velocity.y = 0;
-                this.position.y -= 100; 
+                enemies.splice(i, 1);
+                player.velocity.y = -5;
                 break;
             } else if (this.position.y + this.hitbox.width < enemy.position.y) {
                 this.respawn()

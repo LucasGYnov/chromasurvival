@@ -109,8 +109,8 @@ class Enemy extends Sprite {
         /* SCREEN.fillStyle = 'rgba(0,255,0,0.1)';
         SCREEN.fillRect(this.position.x, this.position.y, this.width, this.height); */
 
-        SCREEN.fillStyle = 'rgba(255,0,0,0.5)';
-        SCREEN.fillRect(this.hitbox.position.x, this.hitbox.position.y, this.hitbox.width, this.hitbox.height); 
+       /*  SCREEN.fillStyle = 'rgba(255,0,0,0.5)';
+        SCREEN.fillRect(this.hitbox.position.x, this.hitbox.position.y, this.hitbox.width, this.hitbox.height);  */
 
         /*             const nextBlockPosition = {
             x: this.position.x + uniqueBlockSize*1.2,
