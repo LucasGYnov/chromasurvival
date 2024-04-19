@@ -312,6 +312,8 @@ let bgImageWidth = null;
 let camera = null;
 let positionMob = null;
 
+let enemieslevel1;
+
 let level = 1;
 const levels = {
     1: {
@@ -321,6 +323,7 @@ const levels = {
             whitePlatform = [];
             killPlatform = [];
             qgPlatform = [];
+            enemieslevel1 = [];
             mapImage = new Sprite({
                 position: {
                     x: 0,
@@ -348,6 +351,21 @@ const levels = {
                 x: 390,
                 y: 100
             };
+
+            // Création du mob et ajout dans le tableau d'ennemis du niveau 1
+            const mob = new Enemy({
+                position: mobSpawn,
+                mobSpawn:  {
+                    x: 390,
+                    y: 100
+                },
+                collisionBlocks: platform,
+                blackPlatform,
+                whitePlatform,
+                imageSrc: "./img/Enemy.png",
+                frameRate: 6,
+            });
+            enemieslevel1.push(mob);
 
 
             for (let i = 0; i < floorCollision_1.length; i += 80) {
@@ -613,19 +631,7 @@ const player = new Player({
     },
 })
 
-const enemieslevel1 = [];
 
-const mob = new Enemy({
-    position: mobSpawn,
-    mobSpawn: mobSpawn,
-    collisionBlocks: platform,
-    blackPlatform,
-    whitePlatform,
-    imageSrc: "./img/Enemy.png",
-    frameRate: 6,
-});
-
-enemieslevel1.push(mob);
 
 
 function animate() {
@@ -649,8 +655,6 @@ function animate() {
 
     player.checkForHorizontalCollisionCanvas()
     player.update();
-    mob.checkForHorizontalCollisionCanvas()
-    mob.update();
 
     player.velocity.x = 0; 
     if(keys.droiteInput.pressed) {
@@ -682,9 +686,15 @@ function animate() {
         else player.switchSprite('FallLeft')
     }
 
+        enemieslevel1.forEach((enemy) => {
+            enemy.checkForHorizontalCollisionCanvas();
+            enemy.update();
+        });
+
     SCREEN.restore(); 
 }
 
 animate();
+
 
 
