@@ -42,6 +42,7 @@ class Player extends Sprite {
 
             }
     }
+
     invertColors() {
         this.isInvertedColor = true;
     }

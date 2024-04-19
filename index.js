@@ -536,18 +536,15 @@ function loadMap(mapName) {
     if (mapName === 'Guided Light') {
         level = 1;
         levels[1].init(); 
-        player.collisionBlocks = platform.slice(); // Copie les collisions du niveau 2 dans le joueur
-        player.whitePlatform = whitePlatform.slice(); // Copie les plateformes blanches du niveau 2 dans le joueur
-        player.blackPlatform = blackPlatform.slice(); // Copie les plateformes noires du niveau 2 dans le joueur
-        player.killPlatform = killPlatform.slice(); // Copie les plateformes de mort du niveau 2 dans le joueur
-        player.qgPlatform = qgPlatform.slice(); // Copie les plateformes du QG du niveau 2 dans le joueur
+        player.collisionBlocks = platform.slice();
+        player.whitePlatform = whitePlatform.slice();
+        player.blackPlatform = blackPlatform.slice();
+        player.killPlatform = killPlatform.slice();
+        player.qgPlatform = qgPlatform.slice();
         player.position = playerSpawn;
         player.velocity = { x: 0, y: 0 };
     }
 }
-
-
-
 
 
 const player = new Player({
@@ -603,6 +600,16 @@ const player = new Player({
         },
     },
 })
+
+/* const mob = new Enemy({
+    position: positionMob,
+    collisionBlocks : collisionBlocks ,
+    blackPlatform,
+    whitePlatform,
+    imageSrc: "./img/Enemy.png",
+    frameRate: 12,
+}) */
+
 
 function animate() {
     window.requestAnimationFrame(animate);
