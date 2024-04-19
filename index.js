@@ -489,18 +489,36 @@ buttons.forEach(button => {
     button.addEventListener('click', () => {
         const mapName = button.dataset.map;
         const isLocked = button.dataset.lock === 'true';
-        
+
         if (isLocked) {
+            const overlay = document.getElementById('overlay');
+            overlay.style.display = 'block';
+            overlay.style.opacity = '0';
+            overlay.style.transition = 'opacity 1s';
+            overlay.offsetHeight;
+
+            overlay.style.opacity = '1';
+
+            setTimeout(() => {
             loadMap(mapName);
+        }, 1000);
         }
     });
 });
 
+
+const overlay = document.getElementById('overlay');
 const saveMapButton = document.getElementById('save-map');
 
 saveMapButton.addEventListener('click', () => {
     qg.style.zIndex = '-1';
+    overlay.style.transition = 'opacity 1s';
+    overlay.style.opacity = '0';
+    setTimeout(() => {
+        overlay.style.display = 'none';
+    }, 1000);
 });
+
 
 
 function loadMap(mapName) {
