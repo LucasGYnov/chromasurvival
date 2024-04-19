@@ -11,6 +11,8 @@ const scaledCanvas = {
     height: CANVAS.height / scale,
 };
 
+const uniqueBlockSize = 16;
+
 const GRAVITY = 0.5;
 
 const keys = {
@@ -124,7 +126,6 @@ window.addEventListener('keydown', (event) => {
                 player.velocity.x = -2.5;
                 keys.gaucheInput.pressed = true;
                 instructionCount++;
-                console.log(instructionCount);
                 updateInstructionText(instructionCount);
                 runningSound.play();
                 break;
@@ -132,7 +133,6 @@ window.addEventListener('keydown', (event) => {
                 player.velocity.x = 2.5;
                 keys.droiteInput.pressed = true;
                 instructionCount++;
-                console.log(instructionCount);
                 updateInstructionText(instructionCount);
                 runningSound.play();
                 break;
@@ -292,12 +292,12 @@ function updateInstructionText(count) {
     }
 
     if (count >= initialInstructionCount + 10) {
-        console.log('Instruction spécial désactivé');
         instructionElement.style.zIndex = '-1';
     }
 }
 
 updateInstructionText(0);
+
 
 let platform;
 let blackPlatform;
@@ -310,6 +310,7 @@ let playerSpawn = null;
 let bgImageHeight = null;
 let bgImageWidth = null;
 let camera = null;
+let positionMob = null;
 
 let level = 1;
 const levels = {
@@ -328,19 +329,24 @@ const levels = {
                 imageSrc: './img/map3IMG.png',
             });
 
+            bgImageHeight = 1280 / 2;
+            bgImageWidth = 800;
+
             playerSpawn = {
                 x: 50,
                 y: 200
             };
-
-            bgImageHeight = 1280 / 2;
-            bgImageWidth = 800;
 
             camera = {
                 position: {
                     x: 0,
                     y: -bgImageHeight + scaledCanvas.width - 20,
                 },
+            };
+
+            mobSpawn = {
+                x: 385,
+                y: 30
             };
 
 
@@ -360,6 +366,12 @@ const levels = {
                             break;
                         case 11:
                             qgPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 241:
+                            enemySpawn.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 221:
+                            returnMob.push(new Platform({ position, color: TRANSPARENT_COLOR }));
                             break;
                         default:
                             break;
@@ -525,11 +537,11 @@ function loadMap(mapName) {
     if (mapName === 'Monochrome Meadows') {
         level = 2;
         levels[2].init(); 
-        player.collisionBlocks = platform.slice(); // Copie les collisions du niveau 2 dans le joueur
-        player.whitePlatform = whitePlatform.slice(); // Copie les plateformes blanches du niveau 2 dans le joueur
-        player.blackPlatform = blackPlatform.slice(); // Copie les plateformes noires du niveau 2 dans le joueur
-        player.killPlatform = killPlatform.slice(); // Copie les plateformes de mort du niveau 2 dans le joueur
-        player.qgPlatform = qgPlatform.slice(); // Copie les plateformes du QG du niveau 2 dans le joueur
+        player.collisionBlocks = platform.slice();
+        player.whitePlatform = whitePlatform.slice();
+        player.blackPlatform = blackPlatform.slice();
+        player.killPlatform = killPlatform.slice();
+        player.qgPlatform = qgPlatform.slice();
         player.position = playerSpawn;
         player.velocity = { x: 0, y: 0 };
     }
@@ -601,14 +613,19 @@ const player = new Player({
     },
 })
 
-/* const mob = new Enemy({
-    position: positionMob,
-    collisionBlocks : collisionBlocks ,
+const enemieslevel1 = [];
+
+const mob = new Enemy({
+    position: mobSpawn,
+    mobSpawn: mobSpawn,
+    collisionBlocks: platform,
     blackPlatform,
     whitePlatform,
     imageSrc: "./img/Enemy.png",
-    frameRate: 12,
-}) */
+    frameRate: 6,
+});
+
+enemieslevel1.push(mob);
 
 
 function animate() {
@@ -632,9 +649,8 @@ function animate() {
 
     player.checkForHorizontalCollisionCanvas()
     player.update();
-
-
-
+    mob.checkForHorizontalCollisionCanvas()
+    mob.update();
 
     player.velocity.x = 0; 
     if(keys.droiteInput.pressed) {

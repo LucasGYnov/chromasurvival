@@ -21,6 +21,10 @@ class Sprite {
             SCREEN.filter = 'invert(100%)';
         }
 
+        if (this.isInvertedColorMob) {
+            SCREEN.filter = 'invert(100%)';
+        }
+
         const cropbox ={
             position:{
                 x: this.currentFrame *  this.image.width / this.frameRate,

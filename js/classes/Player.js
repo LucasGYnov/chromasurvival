@@ -110,32 +110,32 @@ class Player extends Sprite {
     }
 
     update() {
-        this.updateFrame()
-        this.updateHitbox()
-
-
+        this.updateFrame();
+        this.updateHitbox();
+    
         /* SCREEN.fillStyle = 'rgba(0,255,0,0.1)';
         SCREEN.fillRect(this.position.x, this.position.y, this.width, this.height);*/
-
+    
         /* SCREEN.fillStyle = 'rgba(255,0,0,0.5)';
         SCREEN.fillRect(this.hitbox.position.x, this.hitbox.position.y, this.hitbox.width, this.hitbox.height);  */
-
-       /*  SCREEN.fillStyle = 'rgba(0,0,255,0.5)';
+    
+        /* SCREEN.fillStyle = 'rgba(0,0,255,0.5)';
         SCREEN.fillRect(this.camerabox.position.x, this.camerabox.position.y, this.camerabox.width, this.camerabox.height); */
-
-        afficherQG()
-        this.updateCameraBox()
-        this.checkQG()
-        this.checkKillBlockCollision()
-        this.checkKillBlockCollision()
+    
+        afficherQG();
+        this.updateCameraBox();
+        this.checkQG();
+        this.checkKillBlockCollision();
+        this.checkEnemyCollision(enemieslevel1);
         this.draw();
         this.position.x += this.velocity.x;
-        this.updateHitbox()
-        this.checkForHorizontalCollision()
-        this.applyGravity()
-        this.updateHitbox()
-        this.checkForVerticalCollision()
+        this.updateHitbox();
+        this.checkForHorizontalCollision();
+        this.applyGravity();
+        this.updateHitbox();
+        this.checkForVerticalCollision();
     }
+    
 
     updateHitbox() {
         this.hitbox = {
@@ -278,6 +278,18 @@ checkKillBlockCollision() {
         if (collisionDetection({
             object1: this.hitbox,
             object2: killBlock
+        })) {
+            this.respawn();
+            break;
+        }
+    }
+}
+checkEnemyCollision(enemies) {
+    for (let i = 0; i < enemies.length; i++) {
+        const enemy = enemies[i];
+        if (collisionDetection({
+            object1: this.hitbox,
+            object2: enemy.hitbox
         })) {
             this.respawn();
             break;
