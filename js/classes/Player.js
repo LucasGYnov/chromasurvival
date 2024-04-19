@@ -293,18 +293,47 @@ checkKillBlockCollision() {
     }
 }
 
+/* checkEnemyCollision(enemies) {
+    for (let i = 0; i < enemies.length; i++) {
+        const enemy = enemies[i];
+        if (this.hitbox.position.y + this.hitbox.height <= enemy.hitbox.position.y && 
+            this.position.y + this.hitbox.height >= enemy.position.y) {
+            console.log("Enemy collision detected on top");
+            continue;
+        }
+        if (
+            this.hitbox.position.x + this.hitbox.width >= enemy.hitbox.position.x &&
+            this.hitbox.position.x <= enemy.hitbox.position.x + enemy.hitbox.width &&
+            this.hitbox.position.y + this.hitbox.height >= enemy.hitbox.position.y &&
+            this.position.y <= enemy.hitbox.position.y + enemy.hitbox.height
+        ) {
+            this.respawn();
+            break;
+        }
+    }
+} */
+
 checkEnemyCollision(enemies) {
     for (let i = 0; i < enemies.length; i++) {
         const enemy = enemies[i];
         if (collisionDetection({
             object1: this.hitbox,
-            object2: enemy.hitbox
+            object2: enemy.hitbox,
         })) {
-            this.respawn();
-            break;
+            if (this.velocity.y > 0) { 
+                this.velocity.y = 0;
+                this.position.y -= 100; 
+                break;
+            } else if (this.position.y + this.hitbox.width < enemy.position.y) {
+                this.respawn()
+                break;
+            }
         }
     }
 }
+
+
+
 
 
 respawn() {
