@@ -15,7 +15,7 @@
                 height: 10
             };
             this.velocity = {
-                x: 0.5,
+                x: 0.3,
                 y: 1.0,
             };
             this.isInvertedColorMob = false;
@@ -24,25 +24,29 @@
 
             setInterval(() => {
                 this.invertColorsMob();
-            }, 1500);
+            }, 800);
         }
 
-        reverseDirection() {
-            this.direction *= -1;
-        }
 
         moveMob() {
             const allPlatforms = this.blackPlatform.concat(this.whitePlatform);
+            let collisionDetected = false;
+            
             for (const block of allPlatforms) {
                 if (this.isCollidingWith(block)) {
-                    this.reverseDirection();
+                    collisionDetected = true;
                     break;
                 }
+            }
+        
+            if (collisionDetected) {
+                this.reverseDirection();
             }
         
             this.position.x += this.velocity.x * this.direction;
             this.position.y += this.velocity.y;
         }
+        
 
         isCollidingWith(block) {
             const collidingHorizontally = this.hitbox.position.x < block.position.x + block.width &&
@@ -53,6 +57,32 @@
         
             return collidingHorizontally && collidingVertically;
         }
+        checkPlatformBounds() {
+            const allPlatforms = this.collisionBlocks.concat(this.blackPlatform, this.whitePlatform);
+        
+            const nextBlockPositionRight = {
+                x: this.position.x + this.width * 1.1,
+                y: this.position.y + this.height
+            };
+
+            const nextBlockPositionLeft = {
+                x: this.position.x + uniqueBlockSize * -0.1,
+                y: this.position.y + this.height
+            };
+        
+            const nextBlockIsDifferentRight = allPlatforms.every(platform => !platform.isInside(nextBlockPositionRight));
+            if (nextBlockIsDifferentRight) {
+                this.velocity.x *= -1;
+            }
+
+
+            const nextBlockIsDifferentLeft = allPlatforms.every(platform => !platform.isInside(nextBlockPositionLeft));
+            if (nextBlockIsDifferentLeft) {
+                this.velocity.x *= -1;
+            }
+            
+        }
+
         
 
         invertColorsMob() {
@@ -82,6 +112,7 @@
         update() {
             this.updateFrame()
             this.updateHitbox()
+            this.checkPlatformBounds()
             this.moveMob()
 
 
@@ -90,7 +121,30 @@
 
             /* SCREEN.fillStyle = 'rgba(255,0,0,0.5)';
             SCREEN.fillRect(this.hitbox.position.x, this.hitbox.position.y, this.hitbox.width, this.hitbox.height);  */
+/*             const nextBlockPosition = {
+                x: this.position.x + uniqueBlockSize*1.2,
+                y: this.position.y + this.height + 1
+            };
+ */
 
+
+            /* const nextBlockPosition = {
+                x: this.position.x + uniqueBlockSize * 1.5,
+                y: this.position.y + this.height
+            };
+
+            const nextBlockPosition2 = {
+                x: this.position.x + uniqueBlockSize * -0.8,
+                y: this.position.y + this.height
+            };
+        
+            // Dessiner le rectangle autour de nextBlockPosition
+            SCREEN.fillStyle = 'rgba(255, 0, 0, 0.5)';
+            SCREEN.fillRect(nextBlockPosition.x, nextBlockPosition.y, uniqueBlockSize, uniqueBlockSize);
+
+            SCREEN.fillStyle = 'rgba(0, 255, 0, 0.5)';
+            SCREEN.fillRect(nextBlockPosition2.x, nextBlockPosition2.y, uniqueBlockSize, uniqueBlockSize); */
+        
             this.draw();
             this.position.x += this.velocity.x;
             this.updateHitbox()

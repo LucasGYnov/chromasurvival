@@ -5,6 +5,15 @@ class Platform {
         this.height = 16;
         this.color = color;
     }
+
+    isInside(point) {
+        return (
+            point.x >= this.position.x &&
+            point.x <= this.position.x + this.width &&
+            point.y >= this.position.y &&
+            point.y <= this.position.y + this.height
+        );
+    }
     
     draw(color) {
         SCREEN.fillStyle = color || this.color;

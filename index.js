@@ -345,8 +345,8 @@ const levels = {
             };
 
             mobSpawn = {
-                x: 385,
-                y: 30
+                x: 390,
+                y: 100
             };
 
 
