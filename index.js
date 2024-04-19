@@ -356,10 +356,7 @@ const levels = {
 
             const mob = new Enemy({
                 position: mobSpawn,
-                mobSpawn:  {
-                    x: 390,
-                    y: 100
-                },
+                mobSpawn: mobSpawn,
                 collisionBlocks: platform,
                 blackPlatform,
                 whitePlatform,
@@ -367,7 +364,22 @@ const levels = {
                 frameRate: 6,
             });
             enemieslevel1.push(mob);
-
+            
+            const mob2Spawn = {
+                x: 1136,
+                y: 236
+            };
+            
+            const mob2 = new Enemy({
+                position: mob2Spawn,
+                mobSpawn: mob2Spawn,
+                collisionBlocks: platform,
+                blackPlatform,
+                whitePlatform,
+                imageSrc: "./img/Enemy.png",
+                frameRate: 6,
+            });
+            enemieslevel1.push(mob2);
 
             for (let i = 0; i < floorCollision_1.length; i += 80) {
                 const row = floorCollision_1.slice(i, i + 80);
@@ -440,6 +452,7 @@ const levels = {
             killPlatform = [];
             qgPlatform = [];
             enemieslevel1 = [];
+            
             mapImage = new Sprite({
                 position: {
                     x: 0,
@@ -447,23 +460,22 @@ const levels = {
                 },
                 imageSrc: './img/map2IMG.png',
             });
-    
+
             playerSpawn = {
                 x: 50,
                 y: 200
             };
-    
+
             bgImageHeight = 1280 / 2;
             bgImageWidth = 800;
-    
+
             camera = {
                 position: {
                     x: 0,
                     y: -bgImageHeight + scaledCanvas.width - 20,
                 },
             };
-    
-            // Initialisation des plateformes, des collisions, etc. pour le niveau 2
+
             for (let i = 0; i < floorCollision_0.length; i += 80) {
                 const row = floorCollision_0.slice(i, i + 80);
                 row.forEach((symbol, x) => {

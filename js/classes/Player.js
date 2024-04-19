@@ -44,8 +44,9 @@ class Player extends Sprite {
     }
 
     invertColors() {
-        this.isInvertedColor = true;
+        this.isInvertedColor = !this.isInvertedColor;
     }
+
 
     switchSprite(key){
         if(this.image === this.animations[key].image || !this.loaded) return
@@ -110,6 +111,13 @@ class Player extends Sprite {
     }
 
     update() {
+        if (this.isInvertedColor) {
+            SCREEN.filter = 'invert(100%)';
+        }
+
+        super.update();
+
+
         this.updateFrame();
         this.updateHitbox();
     
@@ -284,6 +292,7 @@ checkKillBlockCollision() {
         }
     }
 }
+
 checkEnemyCollision(enemies) {
     for (let i = 0; i < enemies.length; i++) {
         const enemy = enemies[i];

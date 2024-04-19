@@ -17,13 +17,6 @@ class Sprite {
     }
     draw() {
         if (!this.image.complete) return;
-        if (this.isInvertedColor) {
-            SCREEN.filter = 'invert(100%)';
-        }
-
-        if (this.isInvertedColorMob) {
-            SCREEN.filter = 'invert(100%)';
-        }
 
         const cropbox ={
             position:{
