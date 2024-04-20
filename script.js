@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function () {
     mobileCheckbox.checked = false;
 
     sonCheckbox.checked = true;
-    musicCheckbox.checked = true;
+    musicCheckbox.checked = false;
 
     const keysSection = document.getElementById('keys');
     keysSection.style.display = 'block'; 

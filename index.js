@@ -119,12 +119,37 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 const runningSound = document.getElementById('running-sound');
+const originalVolume = 1; // Volume d'origine du son
+let currentVolume = originalVolume;
+
+function decreaseVolume() {
+    const decreaseRate = 0.3;
+
+    const interval = setInterval(() => {
+        currentVolume -= decreaseRate;
+        if (currentVolume <= 0) {
+            clearInterval(interval);
+        }
+        runningSound.volume = currentVolume;
+    }, 200);
+}
+
+function resetVolume() {
+    currentVolume = 0.8;
+    runningSound.volume = currentVolume;
+    decreaseVolume();
+}
+
 const jumpSound = document.getElementById('jump-sound');
 
 document.getElementById('left_button').addEventListener('touchstart', (event) => {
     event.preventDefault();
     leftButtonTouch = true;
     moveLeft();
+    isRunning = true;
+    runningSound.loop = true; 
+    runningSound.play();
+    resetVolume()
 });
 
 document.getElementById('left_button').addEventListener('touchend', () => {
@@ -138,6 +163,9 @@ document.getElementById('right_button').addEventListener('touchstart', (event) =
     event.preventDefault();
     rightButtonTouch = true;
     moveRight();
+    runningSound.loop = true; 
+    runningSound.play();
+    resetVolume()
 });
 
 document.getElementById('right_button').addEventListener('touchend', () => {
@@ -183,8 +211,9 @@ window.addEventListener('keydown', (event) => {
                 updateInstructionText(instructionCount);
                 if (!isRunning) {
                     isRunning = true;
-                    runningSound.loop = true; // Définit la lecture en boucle
+                    runningSound.loop = true;
                     runningSound.play();
+                    resetVolume()
                 }
                 break;
             case keys.droiteInput.key:
@@ -194,8 +223,9 @@ window.addEventListener('keydown', (event) => {
                 updateInstructionText(instructionCount);
                 if (!isRunning) {
                     isRunning = true;
-                    runningSound.loop = true; // Définit la lecture en boucle
+                    runningSound.loop = true; 
                     runningSound.play();
+                    resetVolume()
                 }
                 break;
             case keys.sauterInput.key:
@@ -205,7 +235,7 @@ window.addEventListener('keydown', (event) => {
                     player.isOnGround = false;
                     instructionCount++;
                     updateInstructionText(instructionCount);
-                    jumpSound.play(); 
+                    jumpSound.play();
                 }
                 break;
             case keys.utiliserSortInput.key:
@@ -425,7 +455,7 @@ const levels = {
                 whitePlatform,
                 imageSrc: "./img/Enemy.png",
                 frameRate: 6,
-                frameBuffer: 30 
+                frameBuffer: 15 
             });
             
             enemieslevel1.push(mob);
@@ -443,7 +473,7 @@ const levels = {
                 whitePlatform,
                 imageSrc: "./img/Enemy.png",
                 frameRate: 6,
-                frameBuffer: 30
+                frameBuffer: 15 // Spécifiez la valeur du frame buffer ici
             });
             
             enemieslevel1.push(mob2);
