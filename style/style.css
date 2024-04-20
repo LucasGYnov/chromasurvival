@@ -398,8 +398,8 @@ canvas {
 
 #reset__settings{
     position: relative;
-    top: 85%;
-    right: 2%;
+    bottom: 15%;
+    left: 80%;
     font-size: 1rem;
     cursor:default;
     text-decoration: underline;

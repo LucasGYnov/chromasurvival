@@ -15,6 +15,12 @@
         margin: -2% 0% 5% 22%;
     }
 
+    #settings button {
+        height: 2rem;
+        width: 2rem;
+        border-radius: 50%;
+    }
+
     #settings_page h2 {
         top: 3%;
         left: 18%;
@@ -53,24 +59,19 @@
 
     #menu_button {
         position: absolute;
-        width: 30px;
-        height: 30px;
-        bottom: 22%;
-        right: 18%;
+        width: 40px;
+        height: 40px;
+        bottom: 25%;
+        right: 25%;
     }
 
     #quit{
-        font-size: 0.4rem;
-        font-weight: 800;
-        position: absolute;
-        bottom: -8%;
-        right: -10%;
+       display: none;
     }
 
     #reset__settings{
-        position: relative;
-        top: 85%;
-        right: 2%;
+        bottom: 25%;
+        left: 80%;
         font-size: 0.4rem;
     }
 
