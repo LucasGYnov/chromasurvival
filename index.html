@@ -13,7 +13,7 @@
       <meta name="keywords" content="jeu"/>
       <meta name="author" content="[A COMPLETER]" />
       <meta name="copyright" content="Copyright owner" />
-      <link rel ="icon" href = "/public/logo_chromasurvival.png" type = "image/x-icon">
+      <link rel ="icon" href = "/public/logo_chromasurvival.webp" type = "image/x-icon">
       <!-- Link for the page -->
       <link rel="stylesheet" href="style/style.css">
    </head>
@@ -107,18 +107,16 @@
           </div>
       </div>
       <div id="overlay"></div> <!-- Élément pour l'écran noir -->
-    
       <canvas></canvas>
-  
-      
+
       <div id="mobile-controls">
          <div id="left-controls">
-            <button id="left_button">LEFT</button>
-            <button id="right_button">RIGHT</button>
+            <button id="left_button" style="--image-url: url('../public/icon_gauche.webp');"></button>
+            <button id="right_button" style="--image-url: url('../public/icon_droite.webp');"></button>
           </div>
           <div id="right-controls">
-            <button id="jump_button">JUMP</button>
-            <button id="chroma_switch_button">POWER</button>
+            <button id="jump_button" style="--image-url: url('../public/icon_saut.webp');"></button>
+            <button id="chroma_switch_button" style="--image-url: url('../public/icon_power.webp');"></button>
          </div>
       </div>
   </div>

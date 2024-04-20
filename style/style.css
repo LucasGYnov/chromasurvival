@@ -633,8 +633,8 @@ canvas {
     align-items: center;
     bottom: 0;
     width: 95vw;
-    height: 20vh;
-    margin: 2rem;
+    height: 25vh;
+    margin: 0 0 2rem 2rem;
     z-index: 3;
     gap: 2rem;
     user-select: none;
@@ -661,32 +661,30 @@ canvas {
 }
 
 #left_button {
-    width: 6rem;
-    height: 6rem;
-    border-radius: 50%;
     margin-right: auto;
 }
 
 #right_button {
-    width: 6rem;
-    height: 6rem;
-    border-radius: 50%;
     margin-right: auto;
 }
 
 #jump_button {
-    width: 6rem;
-    height: 6rem;
-    border-radius: 50%;
     margin-left: auto;
 }
 
 #chroma_switch_button{
-    width: 6rem;
-    height: 6rem;
-    border-radius: 50%;
     margin-left: auto;
 }
 
-
+#mobile-controls button {
+    border:rgba(0, 0, 0, 0.80)  solid 2px;
+    width: 8rem;
+    height: 8rem;
+    border-radius: 50%;
+    backdrop-filter: blur(10px); 
+    background-color: rgba(255, 255, 255, 0.3);
+    background-size: cover;
+    background-position: center;
+    background-image: var(--image-url);
+}
 
