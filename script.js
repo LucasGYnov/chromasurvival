@@ -192,17 +192,60 @@ document.addEventListener('DOMContentLoaded', function () {
     updateVisibility(); 
 });
 
+const mobileCheckbox = document.querySelector('.mobile-checkbox');
 
+const keysSection = document.getElementById('keys');
 
+mobileCheckbox.addEventListener('change', function() {
+    if (this.checked) {
+        keysSection.style.display = 'none';
+    } else {
+        keysSection.style.display = 'block';
+    }
+});
 
+keysSection.style.display = 'block';
 
+document.addEventListener('DOMContentLoaded', function () {
+    const mobileCheckbox = document.querySelector('.mobile-checkbox');
+    const sonCheckbox = document.querySelector('.son-checkbox');
+    const musicCheckbox = document.querySelector('.music-checkbox');
 
+    mobileCheckbox.checked = false;
 
+    sonCheckbox.checked = true;
+    musicCheckbox.checked = true;
 
+    const keysSection = document.getElementById('keys');
+    keysSection.style.display = 'block'; 
 
+    mobileCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            keysSection.style.display = 'none';
+        } else {
+            keysSection.style.display = 'block';
+        }
+    });
+});
 
+document.addEventListener('DOMContentLoaded', function () {
+    const mobileCheckbox = document.querySelector('.mobile-checkbox');
+    const vibrationSection = document.getElementById('vibration_section');
+    const reverseSection = document.getElementById('reverse_section');
 
+    function updateSectionsVisibility() {
+        if (mobileCheckbox.checked) {
+            vibrationSection.classList.remove('hidden');
+            reverseSection.classList.remove('hidden');
+        } else {
+            vibrationSection.classList.add('hidden');
+            reverseSection.classList.add('hidden');
+        }
+    }
 
+    mobileCheckbox.addEventListener('change', function () {
+        updateSectionsVisibility();
+    });
 
-
-
+    updateSectionsVisibility();
+});
