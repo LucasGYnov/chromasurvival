@@ -1,6 +1,6 @@
 class Enemy extends Sprite {
-    constructor({position, mobSpawn, collisionBlocks, blackPlatform, whitePlatform, imageSrc, frameRate, scale = 0.8}) {
-        super({ imageSrc, frameRate, scale});
+    constructor({ position, mobSpawn, collisionBlocks, blackPlatform, whitePlatform, imageSrc, frameRate, frameBuffer = 5, scale = 0.8 }) {
+        super({ imageSrc, frameRate, frameBuffer, scale });
         this.position = {...position};
         this.mobSpawn = {...mobSpawn};
         this.collisionBlocks = collisionBlocks;

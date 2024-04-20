@@ -90,6 +90,9 @@ document.addEventListener('DOMContentLoaded', function () {
         updateKeyBindings();
     }
 
+
+
+
     function checkUniqueKeys() {
         const keysArray = [
             gaucheInput.value,
@@ -115,46 +118,8 @@ document.addEventListener('DOMContentLoaded', function () {
     loadSettings();
 });
 
-
-const runningSound = document.getElementById('running-sound'); //son
-
-
-let leftButtonTouch = false;
-let rightButtonTouch = false;
-let jumpButtonTouch = false;
-let powerButtonTouch = false;
-
-function moveLeft() {
-    player.velocity.x = -2.5;
-    keys.gaucheInput.pressed = true;
-    instructionCount++;
-    updateInstructionText(instructionCount);
-    runningSound.play();
-}
-
-function moveRight() {
-    player.velocity.x = 2.5;
-    keys.droiteInput.pressed = true;
-    instructionCount++;
-    updateInstructionText(instructionCount);
-    runningSound.play();
-}
-
-function jump() {
-    if (player.isOnGround && !player.velocity.y > 0) {
-        player.velocity.y = -6.5;
-        keys.sauterInput.pressed = true;
-        player.isOnGround = false;
-        instructionCount++;
-        updateInstructionText(instructionCount);
-    }
-}
-
-function usePower() {
-    keys.utiliserSortInput.pressed = true;
-    player.isInvertedColor = !player.isInvertedColor;
-}
-
+const runningSound = document.getElementById('running-sound');
+const jumpSound = document.getElementById('jump-sound');
 
 document.getElementById('left_button').addEventListener('touchstart', (event) => {
     event.preventDefault();
@@ -205,6 +170,8 @@ document.getElementById('chroma_switch_button').addEventListener('touchend', () 
 });
 
 
+let isRunning = false;
+
 window.addEventListener('keydown', (event) => {
     if (!isMenuOpen) {
         const isOnQG = player.checkQG();
@@ -214,28 +181,33 @@ window.addEventListener('keydown', (event) => {
                 keys.gaucheInput.pressed = true;
                 instructionCount++;
                 updateInstructionText(instructionCount);
-                runningSound.play();
+                if (!isRunning) {
+                    isRunning = true;
+                    runningSound.loop = true; // Définit la lecture en boucle
+                    runningSound.play();
+                }
                 break;
             case keys.droiteInput.key:
                 player.velocity.x = 2.5;
                 keys.droiteInput.pressed = true;
                 instructionCount++;
                 updateInstructionText(instructionCount);
-                runningSound.play();
+                if (!isRunning) {
+                    isRunning = true;
+                    runningSound.loop = true; // Définit la lecture en boucle
+                    runningSound.play();
+                }
                 break;
             case keys.sauterInput.key:
-    if (player.isOnGround && !player.velocity.y > 0) {
-        player.velocity.y = -6.5;
-        keys.sauterInput.pressed = true;
-        player.isOnGround = false;
-        instructionCount++;
-        updateInstructionText(instructionCount);
-    }
-    break;
+                if (player.isOnGround && !player.velocity.y > 0) {
+                    player.velocity.y = -6.5;
+                    keys.sauterInput.pressed = true;
+                    player.isOnGround = false;
+                    instructionCount++;
+                    updateInstructionText(instructionCount);
+                    jumpSound.play(); 
+                }
                 break;
-                case keys.utiliserInput.key:
-                    keys.utiliserInput.pressed = true;
-                    break;
             case keys.utiliserSortInput.key:
                 keys.utiliserSortInput.pressed = true;
                 player.isInvertedColor = !player.isInvertedColor;
@@ -268,9 +240,13 @@ window.addEventListener('keyup', (event) => {
             default:
                 break;
         }
-    runningSound.pause();
-    runningSound.currentTime = 0;
-}
+        // Arrête la lecture du son de course lorsque la touche gauche ou droite est relâchée
+        if (event.key === keys.gaucheInput.key || event.key === keys.droiteInput.key) {
+            runningSound.pause();
+            runningSound.currentTime = 0;
+            isRunning = false;
+        }
+    }
 });
 
 runningSound.addEventListener('ended', () => {
@@ -449,7 +425,9 @@ const levels = {
                 whitePlatform,
                 imageSrc: "./img/Enemy.png",
                 frameRate: 6,
+                frameBuffer: 30 
             });
+            
             enemieslevel1.push(mob);
             
             const mob2Spawn = {
@@ -465,7 +443,9 @@ const levels = {
                 whitePlatform,
                 imageSrc: "./img/Enemy.png",
                 frameRate: 6,
+                frameBuffer: 30
             });
+            
             enemieslevel1.push(mob2);
 
             for (let i = 0; i < floorCollision_1.length; i += 80) {
@@ -708,7 +688,7 @@ const player = new Player({
         Run:{
             imageSrc : "./img/Character/Run.png",
             frameRate: 8,
-            frameBuffer : 5
+            frameBuffer : 8
         },
         RunLeft:{
             imageSrc : "./img/Character/RunLeft.png",

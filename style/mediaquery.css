@@ -228,9 +228,10 @@
 }
 
 .btn{
-    width: 8rem;
-    height: 1.8rem;
-    font-size: 0.7rem;
+    width: 6rem;
+    height: 1.4rem;
+    font-size: 0.4rem;
+    margin-bottom: -0.5rem;
 }
 
 #save-map {

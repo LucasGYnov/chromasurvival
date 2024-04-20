@@ -250,3 +250,37 @@ document.addEventListener('DOMContentLoaded', function () {
     updateSectionsVisibility();
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+    const gameMusic = document.getElementById('game-music');
+    const musicCheckbox = document.querySelector('.music-checkbox');
+
+    function restartMusic() {
+        const delay = Math.random() * (21 - 3) + 3;
+        setTimeout(function() {
+            gameMusic.currentTime = 0;
+            if (musicCheckbox.checked) {
+                gameMusic.play();
+            }
+        }, delay * 1000);
+    }
+
+    gameMusic.addEventListener('ended', function() {
+        if (musicCheckbox.checked) {
+            restartMusic();
+        }
+    });
+
+    if (musicCheckbox.checked) {
+        restartMusic();
+    }
+
+    musicCheckbox.addEventListener('change', function() {
+        if (!this.checked) {
+            gameMusic.pause();
+        } else {
+            restartMusic();
+        }
+    });
+});
+
+
