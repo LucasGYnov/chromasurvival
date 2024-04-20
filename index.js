@@ -142,6 +142,8 @@ function resetVolume() {
 
 const jumpSound = document.getElementById('jump-sound');
 
+
+
 document.getElementById('left_button').addEventListener('touchstart', (event) => {
     event.preventDefault();
     leftButtonTouch = true;
@@ -196,6 +198,7 @@ document.getElementById('chroma_switch_button').addEventListener('touchend', () 
     powerButtonTouch = false;
     keys.utiliserSortInput.pressed = false;
 });
+
 
 
 let isRunning = false;

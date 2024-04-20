@@ -659,6 +659,10 @@ canvas {
     user-select: none;
 }
 
+#mobile-controls.hidden {
+    display: none;
+}
+
 #left-controls {
     width: 20%;
     height: 100%;

@@ -283,4 +283,21 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+    const mobileCheckbox = document.querySelector('.mobile-checkbox');
+    const mobileControls = document.getElementById('mobile-controls');
+
+    mobileCheckbox.addEventListener('change', function () {
+        if (this.checked) {
+            mobileControls.classList.remove('hidden');
+        } else {
+            mobileControls.classList.add('hidden');
+        }
+    });
+
+    // Initialisation : cacher les contrôles mobiles au chargement de la page
+    mobileControls.classList.add('hidden');
+});
+
+
 
