@@ -134,4 +134,75 @@ document.addEventListener('DOMContentLoaded', function () {
     afficherMenu();
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+    const reverseCheckbox = document.querySelector('.reverse-checkbox');
+    const mobileCheckbox = document.querySelector('.mobile-checkbox');
+    const mobileControls = document.getElementById('mobile-controls');
+    const leftControls = document.getElementById('left-controls');
+    const rightControls = document.getElementById('right-controls');
+    const leftButton = document.getElementById('left_button');
+    const rightButton = document.getElementById('right_button');
+    const jumpButton = document.getElementById('jump_button');
+    const chromaSwitchButton = document.getElementById('chroma_switch_button');
+    const vibrationSection = document.getElementById('vibration_section');
+    const reverseSection = document.getElementById('reverse_section');
+
+    function updateVisibility() {
+        if (mobileCheckbox.checked) {
+            mobileControls.style.display = 'flex';
+            vibrationSection.classList.remove('hidden');
+            reverseSection.classList.remove('hidden'); 
+        } else {
+            mobileControls.style.display = 'none';
+            vibrationSection.classList.add('hidden');
+            reverseSection.classList.add('hidden'); 
+        }
+    }
+
+    reverseCheckbox.addEventListener('change', function () {
+        if (reverseCheckbox.checked) {
+            mobileControls.style.flexDirection = 'row-reverse';
+            leftControls.style.marginRight = '0';
+            rightControls.style.marginRight = 'auto';
+            rightControls.style.marginLeft = '0';
+
+            leftButton.style.marginLeft = 'auto';
+            rightButton.style.marginLeft = 'auto';
+
+            jumpButton.style.marginRight = 'auto';
+            chromaSwitchButton.style.marginRight = 'auto';
+        } else {
+            mobileControls.style.flexDirection = 'row';
+            leftControls.style.marginRight = 'auto';
+            rightControls.style.marginLeft = '0';
+            rightControls.style.marginRight = '0';
+
+            leftButton.style.marginLeft = 'auto';
+            rightButton.style.marginLeft = 'auto';
+
+            jumpButton.style.marginRight = 'auto';
+            chromaSwitchButton.style.marginRight = 'auto';
+        }
+    });
+
+    mobileCheckbox.addEventListener('change', function () {
+        updateVisibility();
+    });
+
+    updateVisibility(); 
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
