@@ -1,5 +1,5 @@
 class Player extends Sprite {
-    constructor({position, playerSpawn,  collisionBlocks, whitePlatform, blackPlatform, killPlatform, qgPlatform, imageSrc, frameRate, scale = 0.8, powerLeft, animations}) {
+    constructor({position, playerSpawn,  collisionBlocks, whitePlatform, blackPlatform, killPlatform, qgPlatform, bouncePlatform, imageSrc, frameRate, scale = 0.8, powerLeft, animations}) {
         super({ imageSrc, frameRate, scale});
         this.position = {...position};
         this.playerSpawn = {...playerSpawn};
@@ -13,6 +13,7 @@ class Player extends Sprite {
         this.blackPlatform = blackPlatform;
         this.killPlatform = killPlatform;
         this.qgPlatform = qgPlatform;
+        this.bouncePlatform = bouncePlatform;
         this.hitbox = {
             position: {
                 x: this.position.x,
@@ -96,7 +97,7 @@ class Player extends Sprite {
     }
 
     cameraToDown({CANVAS, camera}){
-        if(this.camerabox.position.y + this.velocity.y <= 0) return
+        if((this.camerabox.position.y) + this.velocity.y <= 0) return
         if(this.camerabox.position.y <= Math.abs(camera.position.y)){
             camera.position.y -= this.velocity.y
         }
@@ -104,7 +105,7 @@ class Player extends Sprite {
 
     cameraToUp({CANVAS, camera}){
         if(this.camerabox.position.y + this.camerabox.height + this.velocity.y >= bgImageHeight) return
-        const scaleCanvasHeight = bgImageHeight / scale //bgimg par CANVAS.height
+        const scaleCanvasHeight = CANVAS.height / scale
 
         if(this.camerabox.position.y + this.camerabox.height >= Math.abs(camera.position.y) + scaleCanvasHeight){
             camera.position.y -= this.velocity.y
@@ -136,6 +137,7 @@ class Player extends Sprite {
         this.checkQG();
         this.checkKillBlockCollision();
         this.checkEnemyCollision(enemieslevel1);
+        this.checkBounceCollision();
         this.draw();
         this.position.x += this.velocity.x;
         this.updateHitbox();
@@ -323,6 +325,22 @@ checkEnemyCollision(enemies) {
 }
 
 
+checkBounceCollision() {
+    for (let i = 0; i < this.bouncePlatform.length; i++) {
+        const bounce = this.bouncePlatform[i];
+        if (collisionDetection({
+            object1: this.hitbox,
+            object2: bounce,
+        })) {
+            if (this.velocity.y > 0) {
+                this.velocity.y = -12;
+                break;
+            }
+        }
+    }
+}
+
+
 
 
 
@@ -332,6 +350,7 @@ respawn() {
     this.updateCameraBox();
     camera.position.x = this.position.x - (CANVAS.width / scale - 340) ;
     camera.position.y = this.position.y - (CANVAS.height / scale + 50 );
+    SCREEN.translate(camera.position.x,camera.position.y);
 }
 
 checkQG() {

@@ -5,6 +5,7 @@ const CANVAS = document.querySelector('canvas');
 const SCREEN = CANVAS.getContext('2d');
 CANVAS.width = 1280;
 CANVAS.height = 800;
+
 const scale = 3;
 const scaledCanvas = {
     width: CANVAS.width / scale,
@@ -436,6 +437,7 @@ let whitePlatform;
 let killPlatform;
 let qgPlatform;
 let enemySpawn;
+let bouncePlatform;
 
 let mapImage = null;
 let playerSpawn = null;
@@ -458,6 +460,7 @@ const levels = {
             qgPlatform = [];
             enemieslevel1 = [];
             enemySpawn = [];
+            bouncePlatform = [];
             mapImage = new Sprite({
                 position: {
                     x: 0,
@@ -590,36 +593,38 @@ const levels = {
             killPlatform = [];
             qgPlatform = [];
             enemieslevel1 = [];
-            
+            enemySpawn = [];
+            bouncePlatform = [];
+
             mapImage = new Sprite({
                 position: {
                     x: 0,
                     y: 0,
                 },
-                imageSrc: './img/map2IMG.png',
+                imageSrc: './img/monochromeMeadows.png',
             });
 
             playerSpawn = {
                 x: 50,
-                y: 200
+                y: 20
             };
 
-            bgImageHeight = 1280 / 2;
-            bgImageWidth = 800;
+            bgImageHeight = 3360 / 2.5;
+            bgImageWidth = 1280;
 
             camera = {
                 position: {
                     x: 0,
-                    y: -bgImageHeight + scaledCanvas.width - 20,
+                    y: -bgImageHeight + 3360/2 - 500,
                 },
             };
 
-            defaultPowerLeft = 12;
+            defaultPowerLeft = 20;
 
-            for (let i = 0; i < floorCollision_0.length; i += 80) {
-                const row = floorCollision_0.slice(i, i + 80);
+            for (let i = 0; i < floorCollision_2.length; i += 210) {
+                const row = floorCollision_2.slice(i, i + 210);
                 row.forEach((symbol, x) => {
-                    const position = { x: x * 16, y: (i / 80) * 16 };
+                    const position = { x: x * 16, y: (i / 210) * 16 };
                     switch (symbol) {
                         case 12:
                             platform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
@@ -633,37 +638,58 @@ const levels = {
                         case 11:
                             qgPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
                             break;
+                        case 241:
+                            enemySpawn.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 565:
+                            bouncePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
                         default:
                             break;
                     }
                 });
             }
+
     
-            blackCollision_0.forEach((symbol, index) => {
-                const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
+            blackCollision_2.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
                 if (symbol === 779) {
                     blackPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
                 }
             });
     
-            whiteCollision_0.forEach((symbol, index) => {
-                const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
+            whiteCollision_2.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
                 if (symbol === 776) {
                     whitePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
                 }
             });
     
-            killCollision_0.forEach((symbol, index) => {
-                const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
+            killCollision_2.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
                 if (symbol === 71) {
                     killPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
                 }
             });
     
-            QGCollision_0.forEach((symbol, index) => {
-                const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
+            QGCollision_2.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
                 if (symbol === 11) {
                     qgPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+
+            enemy_2.forEach((symbol, index) => {
+                const position = { x: (index % 80) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 241) {
+                enemySpawn.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                console.log(`Bloc de spawn d'ennemi ajouté à la position : x = ${position.x}, y = ${position.y}`);
+            }
+            });
+
+            bounce_2.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 565) {
+                    bouncePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
                 }
             });
         }
@@ -774,6 +800,8 @@ function loadMap(mapName) {
     if (mapName === 'Monochrome Meadows') {
         level = 2;
         levels[2].init();
+        CANVAS.width = 3360 / 2;
+        CANVAS.height = 1280;
     }
 
     player.isInvertedColor = false;
@@ -782,6 +810,7 @@ function loadMap(mapName) {
     player.blackPlatform = blackPlatform.slice();
     player.killPlatform = killPlatform.slice();
     player.qgPlatform = qgPlatform.slice();
+    player.bouncePlatform = bouncePlatform.slice();
     player.powerLeft = defaultPowerLeft; 
     player.position = playerSpawn;
     player.velocity = { x: 0, y: 0 };
@@ -805,6 +834,7 @@ const player = new Player({
     blackPlatform,
     killPlatform,
     qgPlatform,
+    bouncePlatform: bouncePlatform,
     imageSrc : "./img/Character/Idle.png",
     frameRate: 12,
     powerLeft : defaultPowerLeft,
