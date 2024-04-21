@@ -245,6 +245,7 @@ let isRunning = false;
 
 window.addEventListener('keydown', (event) => {
     if (!isMenuOpen) {
+        updatePowerLeftCounter();
         const isOnQG = player.checkQG();
         switch (event.key) {
             case keys.gaucheInput.key:
@@ -697,27 +698,56 @@ buttons.forEach(button => {
 
 const overlay = document.getElementById('overlay');
 const saveMapButton = document.getElementById('save-map');
+const levelButtons = document.querySelectorAll('.btn[data-map]');
+
+let selectedMap = null;
+
+levelButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        selectedMap = button.dataset.map;
+        saveMapButton.disabled = false;
+    });
+});
 
 saveMapButton.addEventListener('click', () => {
-    qg.style.zIndex = '-1';
-    overlay.style.transition = 'opacity 1s';
-    overlay.style.opacity = '0';
-    saveMapButton.blur();
-    updatePowerLeftCounter();
-    playerScore += 500;
-    setTimeout(() => {
-        overlay.style.display = 'none';
-    }, 1000);
+    if (selectedMap !== null) {
+        qg.style.zIndex = '-1';
+        overlay.style.transition = 'opacity 1s';
+        overlay.style.opacity = '0';
+        saveMapButton.blur();
+        updatePowerLeftCounter();
+        playerScore += 500;
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 1000);
+        selectedMap = null;
+        saveMapButton.disabled = true;
+    }
 });
+
+document.addEventListener('click', (event) => {
+    if (event.target.id === 'save-map' && selectedMap === null) {
+        event.preventDefault();
+    }
+});
+
+saveMapButton.disabled = true;
+
+
+
+
+
 
 
 const resetLevelButton = document.getElementById('reset-level-button');
 
 resetLevelButton.addEventListener('click', () => {
+    playerScore -= (250 + (player.powerLeft * 300));
+    updateScoreDisplay();
     resetLevel();
     resetLevelButton.blur();
-    playerScore -= 250;
 });
+
 
 
 
