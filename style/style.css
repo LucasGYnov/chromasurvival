@@ -101,7 +101,7 @@ a {
     position: absolute;
     width: 90px;
     height: 90px;
-    bottom: 12.5%;
+    bottom: 8%;
     right: 22%;
 }
 
@@ -109,7 +109,7 @@ a {
     position: absolute;
     width: 75px;
     height: 75px;
-    bottom: 27%;
+    bottom: 22%;
     right: 25%;
     border-radius: 50%;
     border: none;
@@ -583,7 +583,7 @@ canvas {
 
 .btn{
     width: 12rem;
-    height: 3rem;
+    height: 2.5rem;
     margin-top: 0.8rem;
     border-radius: 2rem;
     border: none;
