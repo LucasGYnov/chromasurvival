@@ -243,5 +243,10 @@
     font-size: 0.7rem;
 }
 
-
+#powerLeftCounter{
+    position: absolute;
+    top : 0;
+    transform: scale(0.5);
+    margin: 0.5rem 0 0 0;
+}
 }

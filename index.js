@@ -142,8 +142,43 @@ function resetVolume() {
 
 const jumpSound = document.getElementById('jump-sound');
 
+
+let leftButtonTouch = false;
+let rightButtonTouch = false;
+let jumpButtonTouch = false;
+let powerButtonTouch = false;
+
+function moveLeft() {
+    player.velocity.x = -2.5;
+    keys.gaucheInput.pressed = true;
+    instructionCount++;
+    updateInstructionText(instructionCount);
+    runningSound.play();
+}
+
+function moveRight() {
+    player.velocity.x = 2.5;
+    keys.droiteInput.pressed = true;
+    instructionCount++;
+    updateInstructionText(instructionCount);
+    runningSound.play();
+}
+
+function jump() {
+    if (player.isOnGround && !player.velocity.y > 0) {
+        player.velocity.y = -6.5;
+        keys.sauterInput.pressed = true;
+        player.isOnGround = false;
+        instructionCount++;
+        updateInstructionText(instructionCount);
+    }
+}
+
 function usePower() {
+    keys.utiliserSortInput.pressed = true;
+    player.isInvertedColor = !player.isInvertedColor;
     updatePowerLeftCounter();
+    player.powerLeft--;
 }
 
 
