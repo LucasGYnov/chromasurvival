@@ -1,5 +1,5 @@
 class Player extends Sprite {
-    constructor({position, playerSpawn,  collisionBlocks, whitePlatform, blackPlatform, killPlatform, qgPlatform, imageSrc, frameRate, scale = 0.8, animations}) {
+    constructor({position, playerSpawn,  collisionBlocks, whitePlatform, blackPlatform, killPlatform, qgPlatform, imageSrc, frameRate, scale = 0.8, powerLeft, animations}) {
         super({ imageSrc, frameRate, scale});
         this.position = {...position};
         this.playerSpawn = {...playerSpawn};
@@ -22,6 +22,7 @@ class Player extends Sprite {
                 height:10
             }
             this.animations = animations
+            this.powerLeft = powerLeft
             this.lastDirection = 'right'
             this.isInvertedColor = false;
 
@@ -293,25 +294,6 @@ checkKillBlockCollision() {
     }
 }
 
-/* checkEnemyCollision(enemies) {
-    for (let i = 0; i < enemies.length; i++) {
-        const enemy = enemies[i];
-        if (this.hitbox.position.y + this.hitbox.height <= enemy.hitbox.position.y && 
-            this.position.y + this.hitbox.height >= enemy.position.y) {
-            console.log("Enemy collision detected on top");
-            continue;
-        }
-        if (
-            this.hitbox.position.x + this.hitbox.width >= enemy.hitbox.position.x &&
-            this.hitbox.position.x <= enemy.hitbox.position.x + enemy.hitbox.width &&
-            this.hitbox.position.y + this.hitbox.height >= enemy.hitbox.position.y &&
-            this.position.y <= enemy.hitbox.position.y + enemy.hitbox.height
-        ) {
-            this.respawn();
-            break;
-        }
-    }
-} */
 
 checkEnemyCollision(enemies) {
     for (let i = 0; i < enemies.length; i++) {
@@ -323,6 +305,8 @@ checkEnemyCollision(enemies) {
             if (this.velocity.y > 0) { 
                 enemies.splice(i, 1);
                 player.velocity.y = -5;
+                this.powerLeft += 2
+                updatePowerLeftCounter();
                 break;
             } else if (this.position.y + this.hitbox.width < enemy.position.y) {
                 this.respawn()

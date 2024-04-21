@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 const runningSound = document.getElementById('running-sound');
-const originalVolume = 1; // Volume d'origine du son
+const originalVolume = 1;
 let currentVolume = originalVolume;
 
 function decreaseVolume() {
@@ -141,6 +141,10 @@ function resetVolume() {
 }
 
 const jumpSound = document.getElementById('jump-sound');
+
+function usePower() {
+    updatePowerLeftCounter();
+}
 
 
 
@@ -190,15 +194,16 @@ document.getElementById('jump_button').addEventListener('touchend', () => {
 
 document.getElementById('chroma_switch_button').addEventListener('touchstart', (event) => {
     event.preventDefault();
-    powerButtonTouch = true;
-    usePower();
+    if (player.powerLeft > 0) {
+        powerButtonTouch = true;
+        usePower();
+    }
 });
 
 document.getElementById('chroma_switch_button').addEventListener('touchend', () => {
     powerButtonTouch = false;
     keys.utiliserSortInput.pressed = false;
 });
-
 
 
 let isRunning = false;
@@ -241,10 +246,14 @@ window.addEventListener('keydown', (event) => {
                     jumpSound.play();
                 }
                 break;
-            case keys.utiliserSortInput.key:
-                keys.utiliserSortInput.pressed = true;
-                player.isInvertedColor = !player.isInvertedColor;
-                break;
+                case keys.utiliserSortInput.key:
+                    if (player.powerLeft > 0) {
+                        keys.utiliserSortInput.pressed = true;
+                        player.isInvertedColor = !player.isInvertedColor;
+                        player.powerLeft--;
+                        updatePowerLeftCounter();
+                    }
+                    break;
             default:
                 break;
         }
@@ -273,7 +282,6 @@ window.addEventListener('keyup', (event) => {
             default:
                 break;
         }
-        // Arrête la lecture du son de course lorsque la touche gauche ou droite est relâchée
         if (event.key === keys.gaucheInput.key || event.key === keys.droiteInput.key) {
             runningSound.pause();
             runningSound.currentTime = 0;
@@ -294,15 +302,6 @@ bouton.addEventListener('click', function () {
     menu.style.display = 'block';
     menu.style.zIndex = '-100';
 });
-
-
-
-
-
-
-
-
-
 
 
 
@@ -458,7 +457,7 @@ const levels = {
                 whitePlatform,
                 imageSrc: "./img/Enemy.png",
                 frameRate: 6,
-                frameBuffer: 15 
+                frameBuffer: 20
             });
             
             enemieslevel1.push(mob);
@@ -476,7 +475,7 @@ const levels = {
                 whitePlatform,
                 imageSrc: "./img/Enemy.png",
                 frameRate: 6,
-                frameBuffer: 15 // Spécifiez la valeur du frame buffer ici
+                frameBuffer: 20
             });
             
             enemieslevel1.push(mob2);
@@ -695,7 +694,7 @@ function loadMap(mapName) {
     }
 }
 
-
+const defaultPowerLeft = 10;
 
 const player = new Player({
     position:playerSpawn,
@@ -707,6 +706,7 @@ const player = new Player({
     qgPlatform,
     imageSrc : "./img/Character/Idle.png",
     frameRate: 12,
+    powerLeft : defaultPowerLeft,
     animations:{
         Idle:{
             imageSrc : "./img/Character/Idle.png",

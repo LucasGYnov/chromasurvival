@@ -294,10 +294,25 @@ document.addEventListener('DOMContentLoaded', function () {
             mobileControls.classList.add('hidden');
         }
     });
-
-    // Initialisation : cacher les contrôles mobiles au chargement de la page
     mobileControls.classList.add('hidden');
 });
 
+const powerLeftCounter = document.getElementById('powerLeftCounter');
+
+function generateImageHTML(imageSrc, count) {
+    let html = '';
+    for (let i = 0; i < count; i++) {
+        html += `<img src="${imageSrc}">`;
+    }
+    return html;
+}
+
+function updatePowerLeftCounter() {
+    const imageSrc = 'public/logo_chromasurvival.webp';
+    const imageCount = player.powerLeft;
+    powerLeftCounter.innerHTML = generateImageHTML(imageSrc, imageCount);
+}
+
+updatePowerLeftCounter();
 
 
