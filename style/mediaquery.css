@@ -109,7 +109,7 @@
     align-items: center;
     bottom: 0;
     width: 95vw;
-    height: 100vh;
+    height: 38vh;
     margin: 0 0 2rem 2rem;
     z-index: 3;
     gap: 2rem;
@@ -164,10 +164,6 @@
     background-image: var(--image-url);
 }
 
-
-#mobile-controls {
-    height: 30vh;
-}
 
 #mobile-controls button {
     width: 4rem;
@@ -248,5 +244,17 @@
     top : 0;
     transform: scale(0.5);
     margin: 0.5rem 0 0 0;
+}
+
+#reset-level-button {
+    height: 2rem;
+    width: 2rem;
+    border-radius: 50%;
+}
+
+#scoreDisplay{
+    font-size: 1rem;
+    font-weight: 600;
+    margin: -1.5rem 0 0 2.5rem;
 }
 }

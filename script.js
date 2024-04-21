@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
             saveButton.style.color = 'black';
             errorMessage.textContent = "";
         } else {
-            saveButton.value = "Impossible d'assigner différentes touches à une même";
+            saveButton.value = "Impossible d'assigner différentes touches à une même action";
             saveButton.style.color = 'red';
             errorMessage.textContent = "Impossible d'assigner différentes touches à une même action";
         }
@@ -49,6 +49,12 @@ document.addEventListener('DOMContentLoaded', function () {
             input.style.color = checkUniqueKeys() ? 'black' : 'red';
         });
     }
+
+    const gaucheInput = document.getElementById('gaucheInput');
+    const droiteInput = document.getElementById('droiteInput');
+    const sauterInput = document.getElementById('sauterInput');
+    const utiliserInput = document.getElementById('utiliserInput');
+    const utiliserSortInput = document.getElementById('utiliserSortInput');
 
     const inputs = [gaucheInput, droiteInput, sauterInput, utiliserInput, utiliserSortInput];
     inputs.forEach(input => {
@@ -82,26 +88,6 @@ document.addEventListener('DOMContentLoaded', function () {
     loadSettings();
 });
 
-
-
-document.addEventListener('DOMContentLoaded', function () {
-    const mobileCheckbox = document.querySelector('.mobile-checkbox');
-    const vibrationSection = document.getElementById('vibration_section');
-
-    function updateVibrationVisibility() {
-        if (mobileCheckbox.checked) {
-            vibrationSection.classList.remove('hidden');
-        } else {
-            vibrationSection.classList.add('hidden');
-        }
-    }
-
-    mobileCheckbox.addEventListener('change', function () {
-        updateVibrationVisibility();
-    });
-
-    updateVibrationVisibility();
-});
 
 document.addEventListener('DOMContentLoaded', function () {
     const jeuContainer = document.querySelector('.jeu');
@@ -314,5 +300,7 @@ function updatePowerLeftCounter() {
 }
 
 updatePowerLeftCounter();
+
+
 
 

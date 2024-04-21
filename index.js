@@ -444,6 +444,7 @@ let camera = null;
 let positionMob = null;
 
 let enemieslevel1;
+let defaultPowerLeft;
 
 let level = 1;
 const levels = {
@@ -483,6 +484,8 @@ const levels = {
                 x: 400,
                 y: 284
             };
+
+            defaultPowerLeft = 6;
 
             const mob = new Enemy({
                 position: mobSpawn,
@@ -610,6 +613,8 @@ const levels = {
                 },
             };
 
+            defaultPowerLeft = 12;
+
             for (let i = 0; i < floorCollision_0.length; i += 80) {
                 const row = floorCollision_0.slice(i, i + 80);
                 row.forEach((symbol, x) => {
@@ -697,39 +702,70 @@ saveMapButton.addEventListener('click', () => {
     qg.style.zIndex = '-1';
     overlay.style.transition = 'opacity 1s';
     overlay.style.opacity = '0';
+    saveMapButton.blur();
+    updatePowerLeftCounter();
+    playerScore += 500;
     setTimeout(() => {
         overlay.style.display = 'none';
     }, 1000);
 });
 
 
+const resetLevelButton = document.getElementById('reset-level-button');
+
+resetLevelButton.addEventListener('click', () => {
+    resetLevel();
+    resetLevelButton.blur();
+    playerScore -= 250;
+});
+
+
+
+function resetLevel() {
+    const mapNames = Object.keys(levels);
+    const mapName = mapNames[level - 1];
+    levels[level].init();
+    loadMap(mapName);
+    updatePowerLeftCounter();
+}
+
+
+
 
 function loadMap(mapName) {
-    if (mapName === 'Monochrome Meadows') {
-        level = 2;
-        levels[2].init();
-        player.collisionBlocks = platform.slice();
-        player.whitePlatform = whitePlatform.slice();
-        player.blackPlatform = blackPlatform.slice();
-        player.killPlatform = killPlatform.slice();
-        player.qgPlatform = qgPlatform.slice();
-        player.position = playerSpawn;
-        player.velocity = { x: 0, y: 0 };
+    if (player.powerLeft > 0) {
+        playerScore += player.powerLeft * 300;
+        updateScoreDisplay();
     }
     if (mapName === 'Guided Light') {
         level = 1;
         levels[1].init();
-        player.collisionBlocks = platform.slice();
-        player.whitePlatform = whitePlatform.slice();
-        player.blackPlatform = blackPlatform.slice();
-        player.killPlatform = killPlatform.slice();
-        player.qgPlatform = qgPlatform.slice();
-        player.position = playerSpawn;
-        player.velocity = { x: 0, y: 0 };
     }
+    if (mapName === 'Monochrome Meadows') {
+        level = 2;
+        levels[2].init();
+    }
+
+    player.isInvertedColor = false;
+    player.collisionBlocks = platform.slice();
+    player.whitePlatform = whitePlatform.slice();
+    player.blackPlatform = blackPlatform.slice();
+    player.killPlatform = killPlatform.slice();
+    player.qgPlatform = qgPlatform.slice();
+    player.powerLeft = defaultPowerLeft; 
+    player.position = playerSpawn;
+    player.velocity = { x: 0, y: 0 };
+    player.powerLeft = defaultPowerLeft;
 }
 
-const defaultPowerLeft = 10;
+
+const scoreDisplay = document.getElementById('scoreDisplay');
+let playerScore = 0;
+
+function updateScoreDisplay() {
+    scoreDisplay.textContent = `Score: ${playerScore}`;
+}
+
 
 const player = new Player({
     position:playerSpawn,
@@ -845,6 +881,7 @@ function animate() {
             enemy.checkForHorizontalCollisionCanvas();
             enemy.update();
         });
+    updateScoreDisplay()
 
     SCREEN.restore(); 
 }

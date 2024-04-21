@@ -143,6 +143,7 @@ class Player extends Sprite {
         this.applyGravity();
         this.updateHitbox();
         this.checkForVerticalCollision();
+        updateScoreDisplay()
     }
     
 
@@ -288,6 +289,8 @@ checkKillBlockCollision() {
             object1: this.hitbox,
             object2: killBlock
         })) {
+            playerScore -= 100;
+            updatePowerLeftCounter();
             this.respawn();
             break;
         }
@@ -306,9 +309,12 @@ checkEnemyCollision(enemies) {
                 enemies.splice(i, 1);
                 player.velocity.y = -5;
                 this.powerLeft += 2
+                playerScore += 100;
                 updatePowerLeftCounter();
                 break;
             } else if (this.position.y + this.hitbox.width < enemy.position.y) {
+                playerScore -= 150;
+                updatePowerLeftCounter();
                 this.respawn()
                 break;
             }
