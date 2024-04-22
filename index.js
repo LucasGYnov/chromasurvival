@@ -130,10 +130,12 @@ function decreaseVolume() {
         currentVolume -= decreaseRate;
         if (currentVolume <= 0) {
             clearInterval(interval);
+            currentVolume = 0;
         }
         runningSound.volume = currentVolume;
     }, 200);
 }
+
 
 function resetVolume() {
     currentVolume = 0.8;
@@ -274,14 +276,14 @@ window.addEventListener('keydown', (event) => {
                 }
                 break;
             case keys.sauterInput.key:
-                /* if (player.isOnGround && !player.velocity.y > 0) { */
+                if (player.isOnGround && !player.velocity.y > 0) {
                     player.velocity.y = -6.5;
                     keys.sauterInput.pressed = true;
                     player.isOnGround = false;
                     instructionCount++;
                     updateInstructionText(instructionCount);
                     jumpSound.play();
-                // }
+                }
                 break;
                 case keys.utiliserSortInput.key:
                     if (player.powerLeft > 0) {
@@ -471,6 +473,7 @@ const levels = {
 
             bgImageHeight = 1280 / 2;
             bgImageWidth = 800;
+            defaultPowerLeft = 6;
 
             playerSpawn = {
                 x: 50,
@@ -480,7 +483,7 @@ const levels = {
             camera = {
                 position: {
                     x: 0,
-                    y: -bgImageHeight + scaledCanvas.width - 20,
+                    y: -bgImageHeight + scaledCanvas.width + 60,
                 },
             };
 
@@ -488,8 +491,6 @@ const levels = {
                 x: 400,
                 y: 284
             };
-
-            defaultPowerLeft = 6;
 
             const mob = new Enemy({
                 position: mobSpawn,
@@ -606,7 +607,7 @@ const levels = {
 
             playerSpawn = {
                 x: 50,
-                y: 20
+                y: 500
             };
 
             bgImageHeight = 3360 / 2.5;
@@ -615,11 +616,46 @@ const levels = {
             camera = {
                 position: {
                     x: 0,
-                    y: -bgImageHeight + 3360/2 - 500,
+                    y: -bgImageHeight + 3360/2 - 800,
                 },
             };
 
-            defaultPowerLeft = 20;
+            defaultPowerLeft = 2000;
+
+            const enemySpawnPositions = [
+                { x: 192, y: 272 },
+                { x: 416, y: 272},
+                { x: 688, y: 272},
+                { x: 1056, y: 544},
+                { x: 1680, y: 544},
+                { x: 1344, y: 576 },
+                { x: 608, y: 608 },
+                { x: 672, y: 608},
+                { x: 736, y: 608},
+                { x: 816, y: 608},
+                { x: 2240, y: 608},
+                { x: 2448, y: 608},
+                { x: 224, y: 720},
+                { x: 240, y: 720},
+                { x: 2912, y: 928}
+            ];
+            
+            enemySpawnPositions.forEach(spawnPosition => {
+                const mob = new Enemy({
+                    position: spawnPosition,
+                    mobSpawn: spawnPosition,
+                    collisionBlocks: platform,
+                    blackPlatform,
+                    whitePlatform,
+                    imageSrc: "./img/Enemy.png",
+                    frameRate: 6,
+                    frameBuffer: 20
+                });
+            
+                enemieslevel1.push(mob);
+            });
+            
+            
 
             for (let i = 0; i < floorCollision_2.length; i += 210) {
                 const row = floorCollision_2.slice(i, i + 210);
@@ -679,10 +715,10 @@ const levels = {
             });
 
             enemy_2.forEach((symbol, index) => {
-                const position = { x: (index % 80) * 16, y: Math.floor(index / 210) * 16 };
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
                 if (symbol === 241) {
                 enemySpawn.push(new Platform({ position, color: TRANSPARENT_COLOR }));
-                console.log(`Bloc de spawn d'ennemi ajouté à la position : x = ${position.x}, y = ${position.y}`);
+                console.log(`Level 2 - Bloc de spawn d'ennemi ajouté à la position : x = ${position.x}, y = ${position.y}`);
             }
             });
 

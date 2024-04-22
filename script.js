@@ -283,12 +283,20 @@ document.addEventListener('DOMContentLoaded', function () {
     mobileControls.classList.add('hidden');
 });
 
-const powerLeftCounter = document.getElementById('powerLeftCounter');
+const MAX_DISPLAY_COUNT = 10;
 
 function generateImageHTML(imageSrc, count) {
     let html = '';
-    for (let i = 0; i < count; i++) {
-        html += `<img src="${imageSrc}">`;
+    if (count <= MAX_DISPLAY_COUNT) {
+        for (let i = 0; i < count; i++) {
+            html += `<img src="${imageSrc}">`;
+        }
+    } else {
+        const remainingCount = count - MAX_DISPLAY_COUNT;
+        for (let i = 0; i < MAX_DISPLAY_COUNT; i++) {
+            html += `<img src="${imageSrc}">`;
+        }
+        html += `+${remainingCount}`;
     }
     return html;
 }
@@ -299,7 +307,7 @@ function updatePowerLeftCounter() {
     powerLeftCounter.innerHTML = generateImageHTML(imageSrc, imageCount);
 }
 
-updatePowerLeftCounter();
+updatePowerLeftCounter()
 
 
 

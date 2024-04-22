@@ -96,18 +96,22 @@ class Player extends Sprite {
         }
     }
 
+
     cameraToDown({CANVAS, camera}){
-        if((this.camerabox.position.y) + this.velocity.y <= 0) return
+        if((this.camerabox.position.y + this.velocity.y) <= 0) return;
+        
         if(this.camerabox.position.y <= Math.abs(camera.position.y)){
-            camera.position.y -= this.velocity.y
+            camera.position.y -= this.velocity.y;
         }
     }
+    
+
 
     cameraToUp({CANVAS, camera}){
         if(this.camerabox.position.y + this.camerabox.height + this.velocity.y >= bgImageHeight) return
         const scaleCanvasHeight = CANVAS.height / scale
 
-        if(this.camerabox.position.y + this.camerabox.height >= Math.abs(camera.position.y) + scaleCanvasHeight){
+        if(this.camerabox.position.y + this.camerabox.height >= Math.abs(camera.position.y) + scaleCanvasHeight/1.5){
             camera.position.y -= this.velocity.y
         }
     }
@@ -350,6 +354,7 @@ respawn() {
     this.updateCameraBox();
     camera.position.x = this.position.x - (CANVAS.width / scale - (CANVAS.width/ 3.4)) ;
     camera.position.y = this.position.y - ((CANVAS.height / scale) + (CANVAS.height/ 5.5));
+    this.isInvertedColor = false;
 }
 
 checkQG() {

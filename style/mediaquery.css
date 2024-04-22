@@ -246,6 +246,18 @@
     margin: 0.5rem 0 0 0;
 }
 
+#powerLeftCounter {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) scale(0.5);
+    margin: 0.5rem 0 0 0;
+    font-weight: 600;
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+}
+
 #reset-level-button {
     height: 2rem;
     width: 2rem;

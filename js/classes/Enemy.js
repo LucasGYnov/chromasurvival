@@ -41,6 +41,10 @@ class Enemy extends Sprite {
         this.position.x += this.velocity.x * this.direction;
         this.position.y += this.velocity.y;
     }
+
+    reverseDirection() {
+        this.direction *= -1;
+    }
     
 
     isCollidingWith(block) {
