@@ -274,14 +274,14 @@ window.addEventListener('keydown', (event) => {
                 }
                 break;
             case keys.sauterInput.key:
-                if (player.isOnGround && !player.velocity.y > 0) {
+                /* if (player.isOnGround && !player.velocity.y > 0) { */
                     player.velocity.y = -6.5;
                     keys.sauterInput.pressed = true;
                     player.isOnGround = false;
                     instructionCount++;
                     updateInstructionText(instructionCount);
                     jumpSound.play();
-                }
+                // }
                 break;
                 case keys.utiliserSortInput.key:
                     if (player.powerLeft > 0) {

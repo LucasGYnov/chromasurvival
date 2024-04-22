@@ -72,7 +72,7 @@ class Player extends Sprite {
     }
 
     checkForHorizontalCollisionCanvas(){
-        if(this.hitbox.position.x + this.hitbox.width + this.velocity.x >= CANVAS.width || this.hitbox.position.x + this.velocity.x <= 0){//CANVAS.width remplacer par la largeur de notre image bg
+        if(this.hitbox.position.x + this.hitbox.width + this.velocity.x >= (CANVAS.width*2) || this.hitbox.position.x + this.velocity.x <= 0){//CANVAS.width remplacer par la largeur de notre image bg
             this.velocity.x = 0
         }
     }
@@ -81,7 +81,7 @@ class Player extends Sprite {
         const cameraboxRightSide = this.camerabox.position.x + this.camerabox.width 
         const scaleCanvasWidth = bgImageWidth / scale
 
-        if (cameraboxRightSide >= CANVAS.width) return
+        if (cameraboxRightSide >= (CANVAS.width*2)) return
 
         if(cameraboxRightSide >= scaleCanvasWidth + Math.abs(camera.position.x)){
            camera.position.x -= this.velocity.x
@@ -348,9 +348,8 @@ respawn() {
     this.position.x = this.playerSpawn.x;
     this.position.y = this.playerSpawn.y;
     this.updateCameraBox();
-    camera.position.x = this.position.x - (CANVAS.width / scale - 340) ;
-    camera.position.y = this.position.y - (CANVAS.height / scale + 50 );
-    SCREEN.translate(camera.position.x,camera.position.y);
+    camera.position.x = this.position.x - (CANVAS.width / scale - (CANVAS.width/ 3.4)) ;
+    camera.position.y = this.position.y - ((CANVAS.height / scale) + (CANVAS.height/ 5.5));
 }
 
 checkQG() {
