@@ -459,7 +459,7 @@ let defaultPowerLeft;
 let allPlatforms;
 
 
-let level = 1;
+let level = 1 ;
 const levels = {
     1: {
         init: () => {
@@ -694,7 +694,7 @@ const levels = {
                             break;
                         case 565:
                             bouncePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
-                        case 813: // Ajout du checkpoint
+                        case 813:
                             checkpoint.push(new Platform({ position, color: TRANSPARENT_COLOR }));
                             break;
                         default:
@@ -754,7 +754,121 @@ const levels = {
                 }
             });
         }
+    },3: {
+        init: () => {
+            platform = [];
+            blackPlatform = [];
+            whitePlatform = [];
+            killPlatform = [];
+            qgPlatform = [];
+            enemieslevel1 = [];
+            enemySpawn = [];
+            bouncePlatform = [];
+            checkpoint = [];
+            allPlatforms = [];
+    
+            allPlatforms = platform.concat(blackPlatform, whitePlatform);
+    
+            mapImage = new Sprite({
+                position: {
+                    x: 0,
+                    y: 0,
+                },
+                imageSrc: './img/ShadowySwamps.png',
+            });
+    
+            playerSpawn = {
+                x: 50,
+                y: 50
+            };
+    
+            bgImageHeight = 3360 / 2.5;
+            bgImageWidth = 1280;
+    
+            camera = {
+                position: {
+                    x: 0,
+                    y: -bgImageHeight + 3360/2 - 300,
+                },
+            };
+    
+            defaultPowerLeft = 20;
+    
+            for (let i = 0; i < floorCollision_3.length; i += 210) {
+                const row = floorCollision_3.slice(i, i + 210);
+                row.forEach((symbol, x) => {
+                    const position = { x: x * 16, y: (i / 210) * 16 };
+                    switch (symbol) {
+                        case 12:
+                            platform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 779:
+                            blackPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 776:
+                            whitePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 11:
+                            qgPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 241:
+                            enemySpawn.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 565:
+                            bouncePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                        default:
+                            break;
+                    }
+                });
+            }
+    
+            blackCollision_3.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 779) {
+                    blackPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+    
+            whiteCollision_3.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 776) {
+                    whitePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+    
+            killCollision_3.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 71) {
+                    killPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+    
+            QGCollision_3.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 11) {
+                    qgPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+    
+            enemy_3.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 241) {
+                    enemySpawn.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                    console.log(`Level 2 - Bloc de spawn d'ennemi ajouté à la position : x = ${position.x}, y = ${position.y}`);
+                }
+            });
+    
+            bounce_3.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 565) {
+                    bouncePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+    
+        }
     }
+    
+    
 }
 
 levels[level].init();
@@ -870,6 +984,12 @@ function loadMap(mapName) {
         CANVAS.width = 3360 / 2;
         CANVAS.height = 1280;
     }
+    if (mapName === 'Shadowy Swamps') {
+        level = 3;
+        levels[3].init();
+        CANVAS.width = 3360 / 2;
+        CANVAS.height = 1280;
+    }
 
     player.isInvertedColor = false;
     player.collisionBlocks = platform.slice();
@@ -889,6 +1009,7 @@ function loadMap(mapName) {
     checkpointOffsetX = 0;
     checkpointOffsetY = 0;
 }
+
 
 
 const scoreDisplay = document.getElementById('scoreDisplay');
