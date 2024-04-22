@@ -281,14 +281,14 @@ window.addEventListener('keydown', (event) => {
                 }
                 break;
             case keys.sauterInput.key:
-                if (player.isOnGround && !player.velocity.y > 0) {
+                // if (player.isOnGround && !player.velocity.y > 0) {
                     player.velocity.y = -6.5;
                     keys.sauterInput.pressed = true;
                     player.isOnGround = false;
                     instructionCount++;
                     updateInstructionText(instructionCount);
                     jumpSound.play();
-                }
+                // }
                 break;
                 case keys.utiliserSortInput.key:
                     if (player.powerLeft > 0) {
@@ -845,6 +845,10 @@ function resetLevel() {
     loadMap(mapName);
     updatePowerLeftCounter();
     checkpointReached = false;
+    player.playerSpawn.x = 50;
+    player.playerSpawn.y = 500;
+    checkpointOffsetX = 0;
+    checkpointOffsetY = 0;
 }
 
 
@@ -859,20 +863,12 @@ function loadMap(mapName) {
     if (mapName === 'Guided Light') {
         level = 1;
         levels[1].init();
-        playerSpawn = {
-            x: 50,
-            y: 500
-        };
     }
     if (mapName === 'Monochrome Meadows') {
         level = 2;
         levels[2].init();
         CANVAS.width = 3360 / 2;
         CANVAS.height = 1280;
-        playerSpawn = {
-            x: 50,
-            y: 500
-        };
     }
 
     player.isInvertedColor = false;
@@ -887,6 +883,11 @@ function loadMap(mapName) {
     player.position = playerSpawn;
     player.velocity = { x: 0, y: 0 };
     player.powerLeft = defaultPowerLeft;
+    checkpointReached = false;
+    player.playerSpawn.x = 50;
+    player.playerSpawn.y = 500;
+    checkpointOffsetX = 0;
+    checkpointOffsetY = 0;
 }
 
 
