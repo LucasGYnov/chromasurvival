@@ -281,14 +281,14 @@ window.addEventListener('keydown', (event) => {
                 }
                 break;
             case keys.sauterInput.key:
-                // if (player.isOnGround && !player.velocity.y > 0) {
+                if (player.isOnGround && !player.velocity.y > 0) {
                     player.velocity.y = -6.5;
                     keys.sauterInput.pressed = true;
                     player.isOnGround = false;
                     instructionCount++;
                     updateInstructionText(instructionCount);
                     jumpSound.play();
-                // }
+                }
                 break;
                 case keys.utiliserSortInput.key:
                     if (player.powerLeft > 0) {
@@ -983,6 +983,8 @@ function loadMap(mapName) {
         levels[2].init();
         CANVAS.width = 3360 / 2;
         CANVAS.height = 1280;
+        const levelButton = document.getElementById('level2');
+        levelButton.dataset.lock = 'true';
     }
     if (mapName === 'Shadowy Swamps') {
         level = 3;
