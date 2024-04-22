@@ -190,6 +190,72 @@ function usePower() {
 }
 
 
+let controllerIndex = null;
+let previousButtonStates = [];
+
+window.addEventListener("gamepadconnected", (event) => {
+  const gamepad = event.gamepad;
+  controllerIndex = gamepad.index;
+  previousButtonStates = new Array(gamepad.buttons.length).fill(false);
+  console.log("Manette connectée :", gamepad.id);
+});
+
+window.addEventListener("gamepaddisconnected", (event) => {
+  controllerIndex = null;
+  console.log("Manette déconnectée");
+});
+
+function updateGamepadState() {
+  if (controllerIndex !== null) {
+    const gamepad = navigator.getGamepads()[controllerIndex];
+    
+    // Contrôles des mouvements
+    const stickThreshold = 0.5;
+    const stickLeftRight = gamepad.axes[0];
+    const stickUpDown = gamepad.axes[1];
+
+    // Mouvement horizontal
+    if (stickLeftRight < -stickThreshold) {
+      moveLeft();
+    } else if (stickLeftRight > stickThreshold) {
+      moveRight();
+    } else {
+      stopMovingHorizontally();
+    }
+
+    // Saut
+    handleButtonPress(gamepad.buttons[1], jump, 1);
+
+    // Contrôle de l'action spéciale (ex: utiliser un pouvoir)
+    handleButtonPress(gamepad.buttons[0], usePower, 0);
+  }
+}
+
+function handleButtonPress(button, action, index) {
+  if (button.pressed && !previousButtonStates[index]) {
+    action();
+  }
+  previousButtonStates[index] = button.pressed;
+}
+
+function gameLoop() {
+  updateGamepadState();
+  requestAnimationFrame(gameLoop);
+}
+
+gameLoop();
+
+function stopMovingHorizontally() {
+  player.velocity.x = 0;
+  keys.gaucheInput.pressed = false;
+  keys.droiteInput.pressed = false;
+}
+
+
+
+
+
+
 
 document.getElementById('left_button').addEventListener('touchstart', (event) => {
     event.preventDefault();
@@ -633,7 +699,7 @@ const levels = {
                 },
             };
 
-            defaultPowerLeft = 20;
+            defaultPowerLeft = 10;
 
             const enemySpawnPositions = [
                 { x: 336 - 15, y: 272 - 200 },
@@ -792,7 +858,45 @@ const levels = {
                 },
             };
     
-            defaultPowerLeft = 20;
+            defaultPowerLeft = 5;
+
+            const enemySpawnPositions = [
+                { x: 1968, y: 128 },
+                { x: 2336, y: 176 },
+                { x: 2656, y: 368 },
+                { x: 1680, y: 384 },
+                { x: 1824, y: 384 },
+                { x: 1984, y: 384 },
+                { x: 2144, y: 384 },
+                { x: 2288, y: 384 },
+                { x: 2448, y: 384 },
+                { x: 2608, y: 384 },
+                { x: 2576, y: 400 },
+                { x: 2656, y: 432 },
+                { x: 2720, y: 528 },
+                { x: 1056, y: 544 },
+                { x: 1344, y: 576 },
+                { x: 2368, y: 832 },
+                { x: 2464, y: 832 },
+                { x: 2544, y: 848 },
+                { x: 2416, y: 864 },
+                { x: 2688, y: 864 }
+            ];
+    
+            enemySpawnPositions.forEach(spawnPosition => {
+                const mob = new Enemy({
+                    position: spawnPosition,
+                    mobSpawn: spawnPosition,
+                    collisionBlocks: allPlatforms,
+                    blackPlatform,
+                    whitePlatform,
+                    imageSrc: "./img/Enemy.png",
+                    frameRate: 6,
+                    frameBuffer: 20
+                });
+    
+                enemieslevel1.push(mob);
+            });
     
             for (let i = 0; i < floorCollision_3.length; i += 210) {
                 const row = floorCollision_3.slice(i, i + 210);
