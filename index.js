@@ -16,6 +16,11 @@ const uniqueBlockSize = 16;
 
 const GRAVITY = 0.5;
 
+let checkpointOffsetX = 0;
+let checkpointOffsetY = 0;
+let checkpointReached = false;
+
+
 const keys = {
     gaucheInput: {
         pressed: false,
@@ -440,6 +445,7 @@ let killPlatform;
 let qgPlatform;
 let enemySpawn;
 let bouncePlatform;
+let checkpoint;
 
 let mapImage = null;
 let playerSpawn = null;
@@ -450,6 +456,8 @@ let positionMob = null;
 
 let enemieslevel1;
 let defaultPowerLeft;
+let allPlatforms;
+
 
 let level = 1;
 const levels = {
@@ -463,6 +471,7 @@ const levels = {
             enemieslevel1 = [];
             enemySpawn = [];
             bouncePlatform = [];
+            checkpoint = [];
             mapImage = new Sprite({
                 position: {
                     x: 0,
@@ -510,6 +519,7 @@ const levels = {
                 y: 236
             };
             
+            
             const mob2 = new Enemy({
                 position: mob2Spawn,
                 mobSpawn: mob2Spawn,
@@ -542,8 +552,6 @@ const levels = {
                             break;
                         case 241:
                             enemySpawn.push(new Platform({ position, color: TRANSPARENT_COLOR }));
-                            break;
-                        default:
                             break;
                     }
                 });
@@ -596,6 +604,11 @@ const levels = {
             enemieslevel1 = [];
             enemySpawn = [];
             bouncePlatform = [];
+            checkpoint = [];
+            allPlatforms = [];
+
+            allPlatforms = platform.concat(blackPlatform, whitePlatform);
+
 
             mapImage = new Sprite({
                 position: {
@@ -620,31 +633,33 @@ const levels = {
                 },
             };
 
-            defaultPowerLeft = 2000;
+            defaultPowerLeft = 20;
 
             const enemySpawnPositions = [
-                { x: 192, y: 272 },
-                { x: 416, y: 272},
-                { x: 688, y: 272},
-                { x: 1056, y: 544},
-                { x: 1680, y: 544},
-                { x: 1344, y: 576 },
-                { x: 608, y: 608 },
-                { x: 672, y: 608},
-                { x: 736, y: 608},
-                { x: 816, y: 608},
-                { x: 2240, y: 608},
-                { x: 2448, y: 608},
-                { x: 224, y: 720},
-                { x: 240, y: 720},
-                { x: 2912, y: 928}
+                { x: 336 - 15, y: 272 - 200 },
+                { x: 688 - 15, y: 272 - 200 },
+                { x: 1056 - 15, y: 544 - 200 },
+                { x: 1680 - 15, y: 544 - 200 },
+                { x: 1344 - 15, y: 576 - 200 },
+                { x: 608 - 15, y: 608 - 200 },
+                { x: 672 - 15, y: 608 - 200 },
+                { x: 736 - 15, y: 608 - 200 },
+                { x: 816 - 15, y: 608 - 200 },
+                { x: 2272 - 15, y: 608 - 200 },
+                { x: 2448 - 15, y: 608 - 200 },
+                { x: 2736 - 15, y: 928 - 200 },
+                { x: 2912 - 15, y: 928 - 200 },
+                { x: 3008 - 15, y: 928 - 200 },
+                { x: 3136 - 15, y: 928 - 200 }
             ];
+            
+            
             
             enemySpawnPositions.forEach(spawnPosition => {
                 const mob = new Enemy({
                     position: spawnPosition,
                     mobSpawn: spawnPosition,
-                    collisionBlocks: platform,
+                    collisionBlocks: allPlatforms,
                     blackPlatform,
                     whitePlatform,
                     imageSrc: "./img/Enemy.png",
@@ -679,6 +694,9 @@ const levels = {
                             break;
                         case 565:
                             bouncePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                        case 813: // Ajout du checkpoint
+                            checkpoint.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
                         default:
                             break;
                     }
@@ -726,6 +744,13 @@ const levels = {
                 const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
                 if (symbol === 565) {
                     bouncePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+            checkpoint_2.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 813) {
+                    checkpoint.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                    console.log(`Checkpoint ajouté à la position : x = ${position.x}, y = ${position.y}`);
                 }
             });
         }
@@ -819,7 +844,9 @@ function resetLevel() {
     levels[level].init();
     loadMap(mapName);
     updatePowerLeftCounter();
+    checkpointReached = false;
 }
+
 
 
 
@@ -832,12 +859,20 @@ function loadMap(mapName) {
     if (mapName === 'Guided Light') {
         level = 1;
         levels[1].init();
+        playerSpawn = {
+            x: 50,
+            y: 500
+        };
     }
     if (mapName === 'Monochrome Meadows') {
         level = 2;
         levels[2].init();
         CANVAS.width = 3360 / 2;
         CANVAS.height = 1280;
+        playerSpawn = {
+            x: 50,
+            y: 500
+        };
     }
 
     player.isInvertedColor = false;
@@ -847,6 +882,7 @@ function loadMap(mapName) {
     player.killPlatform = killPlatform.slice();
     player.qgPlatform = qgPlatform.slice();
     player.bouncePlatform = bouncePlatform.slice();
+    player.checkpoint = checkpoint.slice();
     player.powerLeft = defaultPowerLeft; 
     player.position = playerSpawn;
     player.velocity = { x: 0, y: 0 };
@@ -863,60 +899,62 @@ function updateScoreDisplay() {
 
 
 const player = new Player({
-    position:playerSpawn,
+    position: playerSpawn,
     playerSpawn: playerSpawn,
-    collisionBlocks : platform,
+    collisionBlocks: platform,
     whitePlatform,
     blackPlatform,
     killPlatform,
     qgPlatform,
     bouncePlatform: bouncePlatform,
-    imageSrc : "./img/Character/Idle.png",
+    imageSrc: "./img/Character/Idle.png",
     frameRate: 12,
-    powerLeft : defaultPowerLeft,
-    animations:{
-        Idle:{
-            imageSrc : "./img/Character/Idle.png",
+    powerLeft: defaultPowerLeft,
+    animations: {
+        Idle: {
+            imageSrc: "./img/Character/Idle.png",
             frameRate: 12,
-            frameBuffer : 5
+            frameBuffer: 5
         },
-        IdleLeft:{
-            imageSrc : "./img/Character/IdleLeft.png",
+        IdleLeft: {
+            imageSrc: "./img/Character/IdleLeft.png",
             frameRate: 12,
-            frameBuffer : 5
+            frameBuffer: 5
         },
-        Run:{
-            imageSrc : "./img/Character/Run.png",
+        Run: {
+            imageSrc: "./img/Character/Run.png",
             frameRate: 8,
-            frameBuffer : 8
+            frameBuffer: 8
         },
-        RunLeft:{
-            imageSrc : "./img/Character/RunLeft.png",
+        RunLeft: {
+            imageSrc: "./img/Character/RunLeft.png",
             frameRate: 8,
-            frameBuffer : 5
+            frameBuffer: 5
         },
-        Jump:{
-            imageSrc : "./img/Character/Jump.png",
+        Jump: {
+            imageSrc: "./img/Character/Jump.png",
             frameRate: 4,
-            frameBuffer : 3
+            frameBuffer: 3
         },
-        JumpLeft:{
-            imageSrc : "./img/Character/JumpLeft.png",
+        JumpLeft: {
+            imageSrc: "./img/Character/JumpLeft.png",
             frameRate: 4,
-            frameBuffer : 3
+            frameBuffer: 3
         },
-        Fall:{
-            imageSrc : "./img/Character/Fall.png",
+        Fall: {
+            imageSrc: "./img/Character/Fall.png",
             frameRate: 3,
-            frameBuffer : 15
+            frameBuffer: 15
         },
-        FallLeft:{
-            imageSrc : "./img/Character/FallLeft.png",
+        FallLeft: {
+            imageSrc: "./img/Character/FallLeft.png",
             frameRate: 3,
-            frameBuffer : 15
+            frameBuffer: 15
         },
     },
-})
+    checkpoint: checkpoint,
+});
+
 
 
 
@@ -983,6 +1021,9 @@ function animate() {
 }
 
 animate();
+
+
+
 
 
 

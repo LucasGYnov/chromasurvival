@@ -1,5 +1,5 @@
 class Player extends Sprite {
-    constructor({position, playerSpawn,  collisionBlocks, whitePlatform, blackPlatform, killPlatform, qgPlatform, bouncePlatform, imageSrc, frameRate, scale = 0.8, powerLeft, animations}) {
+    constructor({position, playerSpawn,  collisionBlocks, whitePlatform, blackPlatform, killPlatform, qgPlatform, bouncePlatform,  imageSrc, frameRate, scale = 0.8, powerLeft, animations, checkpoint}) {
         super({ imageSrc, frameRate, scale});
         this.position = {...position};
         this.playerSpawn = {...playerSpawn};
@@ -19,31 +19,32 @@ class Player extends Sprite {
                 x: this.position.x,
                 y: this.position.y,
             },
-                width:10,
-                height:10
-            }
-            this.animations = animations
-            this.powerLeft = powerLeft
-            this.lastDirection = 'right'
-            this.isInvertedColor = false;
+            width: 10,
+            height: 10
+        };
+        this.animations = animations;
+        this.powerLeft = powerLeft;
+        this.lastDirection = 'right';
+        this.isInvertedColor = false;
+        this.checkpoint = checkpoint;
 
-            for(let key in this.animations) {
-                const image = new Image()
-                image.src = this.animations[key].imageSrc
+        for (let key in this.animations) {
+            const image = new Image();
+            image.src = this.animations[key].imageSrc;
+            this.animations[key].image = image;
+        }
 
-                this.animations[key].image = image
-            }
+        this.camerabox = {
+            position:{
+                x: this.position.x,
+                y: this.position.y,
+            },
+            width: 200,
+            height: 80,
+        };
 
-            this.camerabox = {
-                position:{
-                    x: this.position.x,
-                    y: this.position.y,
-                },
-                width: 200,
-                height: 80,
-
-            }
     }
+
 
     invertColors() {
         this.isInvertedColor = !this.isInvertedColor;
@@ -59,7 +60,7 @@ class Player extends Sprite {
         this.frameRate = this.animations[key].frameRate
     }
 
-    updateCameraBox(){
+        updateCameraBox(){
         this.camerabox = {
             position:{
                 x: this.position.x - 125,
@@ -139,6 +140,7 @@ class Player extends Sprite {
         afficherQG();
         this.updateCameraBox();
         this.checkQG();
+        this.checkpointCollision()
         this.checkKillBlockCollision();
         this.checkEnemyCollision(enemieslevel1);
         this.checkBounceCollision();
@@ -304,6 +306,8 @@ checkKillBlockCollision() {
 }
 
 
+
+
 checkEnemyCollision(enemies) {
     for (let i = 0; i < enemies.length; i++) {
         const enemy = enemies[i];
@@ -316,11 +320,11 @@ checkEnemyCollision(enemies) {
                 player.velocity.y = -5;
                 this.powerLeft += 2
                 playerScore += 100;
-                updatePowerLeftCounter();
+                updateScoreDisplay()
                 break;
             } else if (this.position.y + this.hitbox.width < enemy.position.y) {
                 playerScore -= 150;
-                updatePowerLeftCounter();
+                updateScoreDisplay()
                 this.respawn()
                 break;
             }
@@ -345,17 +349,40 @@ checkBounceCollision() {
 }
 
 
-
-
+checkpointCollision() {
+    for (let i = 0; i < this.checkpoint.length; i++) {
+        const checkpointBlock = this.checkpoint[i];
+        if (collisionDetection({
+            object1: this.hitbox,
+            object2: checkpointBlock
+        })) {
+            if (!checkpointReached) {
+            this.playerSpawn.x = checkpointBlock.position.x;
+            this.playerSpawn.y = checkpointBlock.position.y;
+            checkpointOffsetX = 3526;
+            checkpointOffsetY = 500;
+                this.powerLeft += 5;
+                updatePowerLeftCounter();
+                playerScore += 150;
+                updateScoreDisplay();
+                checkpointReached = true;
+                break;
+            }
+        }
+    }
+}
 
 respawn() {
     this.position.x = this.playerSpawn.x;
     this.position.y = this.playerSpawn.y;
     this.updateCameraBox();
-    camera.position.x = this.position.x - (CANVAS.width / scale - (CANVAS.width/ 3.4)) ;
-    camera.position.y = this.position.y - ((CANVAS.height / scale) + (CANVAS.height/ 5.5));
+
+    camera.position.x = this.position.x - (CANVAS.width / scale - (CANVAS.width / 3.4)) - checkpointOffsetX;
+    camera.position.y = this.position.y - ((CANVAS.height / scale) + (CANVAS.height / 5.5)) - checkpointOffsetY;
+
     this.isInvertedColor = false;
 }
+
 
 checkQG() {
     let isOnQGPlatform = false;
