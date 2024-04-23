@@ -1,26 +1,26 @@
-/******************/
-/* GENERALE GAME */
-/******************/
+// Initialize canvas and screen context
 const CANVAS = document.querySelector('canvas');
 const SCREEN = CANVAS.getContext('2d');
 CANVAS.width = 1280;
 CANVAS.height = 800;
 
+// Define scaling factor for canvas
 const scale = 3;
 const scaledCanvas = {
     width: CANVAS.width / scale,
     height: CANVAS.height / scale,
 };
 
-const uniqueBlockSize = 16;
-
+// Define gravity
 const GRAVITY = 0.5;
 
+// Initialize checkpoint variables
 let checkpointOffsetX = 0;
 let checkpointOffsetY = 0;
 let checkpointReached = false;
+const uniqueBlockSize = 16; // Size of blocks
 
-
+// Define key bindings
 const keys = {
     gaucheInput: {
         pressed: false,
@@ -44,7 +44,9 @@ const keys = {
     },
 };
 
+// Event listener for when the DOM content is loaded
 document.addEventListener('DOMContentLoaded', function () {
+    // Select DOM elements
     const sonCheckbox = document.querySelector('.son-checkbox');
     const mobileCheckbox = document.querySelector('.mobile-checkbox');
     const vibrationCheckbox = document.querySelector('.vibration-checkbox');
@@ -57,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const settingsPage = document.getElementById('settings_page');
     const settingsForm = document.getElementById('control_settings_form');
 
+    // Function to update key bindings
     function updateKeyBindings() {
         keys.gaucheInput.key = gaucheInput.value;
         keys.droiteInput.key = droiteInput.value;
@@ -65,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
         keys.utiliserSortInput.key = utiliserSortInput.value;
     }
 
+    // Function to save settings
     function saveSettings() {
         if (checkUniqueKeys()) {
             localStorage.setItem('son_enabled', sonCheckbox.checked);
@@ -83,6 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Function to load settings
     function loadSettings() {
         sonCheckbox.checked = JSON.parse(localStorage.getItem('son_enabled')) || false;
         mobileCheckbox.checked = JSON.parse(localStorage.getItem('mobile_enabled')) || false;
@@ -96,9 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
         updateKeyBindings();
     }
 
-
-
-
+    // Function to check if key bindings are unique
     function checkUniqueKeys() {
         const keysArray = [
             gaucheInput.value,
@@ -111,110 +114,133 @@ document.addEventListener('DOMContentLoaded', function () {
         return uniqueKeys.size === keysArray.length;
     }
 
+    // Event listener for save button click
     saveButton.addEventListener('click', function (event) {
         event.preventDefault();
         saveSettings();
     });
 
+    // Event listener for form submission
     settingsForm.addEventListener('submit', function (event) {
         event.preventDefault();
         saveSettings();
     });
 
+    // Load settings on page load
     loadSettings();
 });
 
+
+
+// Get reference to the running sound element
 const runningSound = document.getElementById('running-sound');
+// Original volume level
 const originalVolume = 1;
+// Current volume level
 let currentVolume = originalVolume;
 
+// Function to gradually decrease volume
 function decreaseVolume() {
     const decreaseRate = 0.3;
 
+    // Interval to gradually decrease volume
     const interval = setInterval(() => {
         currentVolume -= decreaseRate;
         if (currentVolume <= 0) {
             clearInterval(interval);
             currentVolume = 0;
         }
+        // Set the volume of the running sound
         runningSound.volume = currentVolume;
     }, 200);
 }
 
-
+// Function to reset volume to original level
 function resetVolume() {
-    currentVolume = 0.8;
-    runningSound.volume = currentVolume;
-    decreaseVolume();
+    currentVolume = 0.8; // Set volume to initial level
+    runningSound.volume = currentVolume; // Set volume of running sound
+    decreaseVolume(); // Decrease volume gradually
 }
 
+// Get reference to the jump sound element
 const jumpSound = document.getElementById('jump-sound');
 
-
+// Initialize touch button states
 let leftButtonTouch = false;
 let rightButtonTouch = false;
 let jumpButtonTouch = false;
 let powerButtonTouch = false;
 
+// Function to move player left
 function moveLeft() {
-    player.velocity.x = -2.5;
-    keys.gaucheInput.pressed = true;
-    instructionCount++;
-    updateInstructionText(instructionCount);
-    runningSound.play();
+    player.velocity.x = -2.5; // Set player's horizontal velocity
+    keys.gaucheInput.pressed = true; // Set left key pressed in input
+    instructionCount++; // Increment instruction count
+    updateInstructionText(instructionCount); // Update instruction text
+    runningSound.play(); // Play running sound
 }
 
+// Function to move player right
 function moveRight() {
-    player.velocity.x = 2.5;
-    keys.droiteInput.pressed = true;
-    instructionCount++;
-    updateInstructionText(instructionCount);
-    runningSound.play();
+    player.velocity.x = 2.5; // Set player's horizontal velocity
+    keys.droiteInput.pressed = true; // Set right key pressed in input
+    instructionCount++; // Increment instruction count
+    updateInstructionText(instructionCount); // Update instruction text
+    runningSound.play(); // Play running sound
 }
 
+// Function to make player jump
 function jump() {
+    // Check if player is on ground and not already jumping
     if (player.isOnGround && !player.velocity.y > 0) {
-        player.velocity.y = -6.5;
-        keys.sauterInput.pressed = true;
-        player.isOnGround = false;
-        instructionCount++;
-        updateInstructionText(instructionCount);
+        player.velocity.y = -6.5; // Set player's vertical velocity for jump
+        keys.sauterInput.pressed = true; // Set jump key pressed in input
+        player.isOnGround = false; // Update player's on ground status
+        instructionCount++; // Increment instruction count
+        updateInstructionText(instructionCount); // Update instruction text
     }
 }
 
+// Function to use player's power
 function usePower() {
-    keys.utiliserSortInput.pressed = true;
-    player.isInvertedColor = !player.isInvertedColor;
-    updatePowerLeftCounter();
-    player.powerLeft--;
+    keys.utiliserSortInput.pressed = true; // Set power key pressed in input
+    player.isInvertedColor = !player.isInvertedColor; // Toggle player's color inversion
+    updatePowerLeftCounter(); // Update power left counter
+    player.powerLeft--; // Decrement power left counter
 }
 
 
+// Variable to store the index of the connected gamepad
 let controllerIndex = null;
+// Array to store the previous states of gamepad buttons
 let previousButtonStates = [];
 
+// Event listener for when a gamepad is connected
 window.addEventListener("gamepadconnected", (event) => {
   const gamepad = event.gamepad;
   controllerIndex = gamepad.index;
+  // Initialize previousButtonStates array with false values for each button
   previousButtonStates = new Array(gamepad.buttons.length).fill(false);
-  console.log("Manette connectée :", gamepad.id);
+  console.log("Controller connected:", gamepad.id);
 });
 
+// Event listener for when a gamepad is disconnected
 window.addEventListener("gamepaddisconnected", (event) => {
   controllerIndex = null;
-  console.log("Manette déconnectée");
+  console.log("Controller disconnected");
 });
 
+// Function to update the state of the connected gamepad
 function updateGamepadState() {
   if (controllerIndex !== null) {
     const gamepad = navigator.getGamepads()[controllerIndex];
     
-    // Contrôles des mouvements
+    // Movement controls
     const stickThreshold = 0.4;
     const stickLeftRight = gamepad.axes[0];
     const stickUpDown = gamepad.axes[1];
 
-    // Mouvement horizontal
+    // Horizontal movement
     if (stickLeftRight < -stickThreshold) {
       moveLeft();
     } else if (stickLeftRight > stickThreshold) {
@@ -223,40 +249,40 @@ function updateGamepadState() {
       stopMovingHorizontally();
     }
 
-    // Saut
+    // Jump
     handleButtonPress(gamepad.buttons[1], jump, 1);
 
-    // Contrôle de l'action spéciale (ex: utiliser un pouvoir)
+    // Special action control (using a chroma switch power)
     handleButtonPress(gamepad.buttons[0], usePower, 0);
   }
 }
 
+// Function to handle button presses on the gamepad
 function handleButtonPress(button, action, index) {
   if (button.pressed && !previousButtonStates[index]) {
     action();
   }
+  // Update the previous state of the button
   previousButtonStates[index] = button.pressed;
 }
 
+// Game loop to continuously update gamepad state
 function gameLoop() {
   updateGamepadState();
   requestAnimationFrame(gameLoop);
 }
 
+// Start the game loop
 gameLoop();
 
+// Function to stop horizontal movement
 function stopMovingHorizontally() {
   player.velocity.x = 0;
   keys.gaucheInput.pressed = false;
   keys.droiteInput.pressed = false;
 }
 
-
-
-
-
-
-
+// Touch event listeners for left button
 document.getElementById('left_button').addEventListener('touchstart', (event) => {
     event.preventDefault();
     leftButtonTouch = true;
@@ -264,7 +290,7 @@ document.getElementById('left_button').addEventListener('touchstart', (event) =>
     isRunning = true;
     runningSound.loop = true; 
     runningSound.play();
-    resetVolume()
+    resetVolume();
 });
 
 document.getElementById('left_button').addEventListener('touchend', () => {
@@ -274,13 +300,14 @@ document.getElementById('left_button').addEventListener('touchend', () => {
     runningSound.currentTime = 0;
 });
 
+// Touch event listeners for right button
 document.getElementById('right_button').addEventListener('touchstart', (event) => {
     event.preventDefault();
     rightButtonTouch = true;
     moveRight();
     runningSound.loop = true; 
     runningSound.play();
-    resetVolume()
+    resetVolume();
 });
 
 document.getElementById('right_button').addEventListener('touchend', () => {
@@ -290,6 +317,7 @@ document.getElementById('right_button').addEventListener('touchend', () => {
     runningSound.currentTime = 0;
 });
 
+// Touch event listeners for jump button
 document.getElementById('jump_button').addEventListener('touchstart', (event) => {
     event.preventDefault();
     jumpButtonTouch = true;
@@ -301,6 +329,7 @@ document.getElementById('jump_button').addEventListener('touchend', () => {
     keys.sauterInput.pressed = false;
 });
 
+// Touch event listeners for power button
 document.getElementById('chroma_switch_button').addEventListener('touchstart', (event) => {
     event.preventDefault();
     if (player.powerLeft > 0) {
@@ -315,18 +344,27 @@ document.getElementById('chroma_switch_button').addEventListener('touchend', () 
 });
 
 
+
+// Variable to track whether the player is currently running
 let isRunning = false;
 
+// Event listener for keydown events
 window.addEventListener('keydown', (event) => {
+    // Check if the menu is open
     if (!isMenuOpen) {
+        // Update power left counter
         updatePowerLeftCounter();
+        // Check if the player is on the QG platform
         const isOnQG = player.checkQG();
+        // Handle key presses
         switch (event.key) {
+            // Left movement
             case keys.gaucheInput.key:
                 player.velocity.x = -2.5;
                 keys.gaucheInput.pressed = true;
                 instructionCount++;
                 updateInstructionText(instructionCount);
+                // Start running sound if not already running
                 if (!isRunning) {
                     isRunning = true;
                     runningSound.loop = true;
@@ -334,11 +372,13 @@ window.addEventListener('keydown', (event) => {
                     resetVolume()
                 }
                 break;
+            // Right movement
             case keys.droiteInput.key:
                 player.velocity.x = 2.5;
                 keys.droiteInput.pressed = true;
                 instructionCount++;
                 updateInstructionText(instructionCount);
+                // Start running sound if not already running
                 if (!isRunning) {
                     isRunning = true;
                     runningSound.loop = true; 
@@ -346,33 +386,39 @@ window.addEventListener('keydown', (event) => {
                     resetVolume()
                 }
                 break;
+            // Jump
             case keys.sauterInput.key:
-                // if (player.isOnGround && !player.velocity.y > 0) {
+                // Check if the player is on the ground and not currently jumping
+                if (player.isOnGround && !(player.velocity.y > 0)) {
                     player.velocity.y = -6.5;
                     keys.sauterInput.pressed = true;
                     player.isOnGround = false;
                     instructionCount++;
                     updateInstructionText(instructionCount);
                     jumpSound.play();
-                // }
+                }
                 break;
-                case keys.utiliserSortInput.key:
-                    if (player.powerLeft > 0) {
-                        keys.utiliserSortInput.pressed = true;
-                        player.isInvertedColor = !player.isInvertedColor;
-                        player.powerLeft--;
-                        updatePowerLeftCounter();
-                    }
-                    break;
+            // Use power
+            case keys.utiliserSortInput.key:
+                if (player.powerLeft > 0) {
+                    keys.utiliserSortInput.pressed = true;
+                    player.isInvertedColor = !player.isInvertedColor;
+                    player.powerLeft--;
+                    updatePowerLeftCounter();
+                }
+                break;
             default:
                 break;
         }
     }
 });
 
+// Event listener for keyup events
 window.addEventListener('keyup', (event) => {
+    // Check if the menu is open
     if (!isMenuOpen) {
         hasMoved = true;
+        // Handle key releases
         switch (event.key) {
             case keys.gaucheInput.key:
                 keys.gaucheInput.pressed = false;
@@ -392,6 +438,7 @@ window.addEventListener('keyup', (event) => {
             default:
                 break;
         }
+        // Stop running sound if left or right key is released
         if (event.key === keys.gaucheInput.key || event.key === keys.droiteInput.key) {
             runningSound.pause();
             runningSound.currentTime = 0;
@@ -400,11 +447,13 @@ window.addEventListener('keyup', (event) => {
     }
 });
 
+// Event listener for when running sound ends
 runningSound.addEventListener('ended', () => {
     runningSound.currentTime = 0;
     runningSound.play();
 });
 
+// Event listener for menu button click
 var bouton = document.getElementById('menu_button');
 var menu = document.getElementById('settings_page');
 
@@ -417,59 +466,59 @@ bouton.addEventListener('click', function () {
 
 
 
+// Create a new Image object for the background
+const backgroundImage = new Image();
+// Set the source of the background image
+backgroundImage.src = 'img/bgMap.png';
 
-/******************/
-/* GENERALE LEVEL */
-/******************/
-const backgroundImage = new Image(); //défintion image level
-backgroundImage.src = 'img/bgMap.png'; // assignation image level
-
+// Get the QG (Quartier Général) element from the DOM
 const qg = document.getElementById('qg');
+// Variable to track if QG is displayed
 let qgAffiche = false;
+
+// Function to display the QG if the player is on it
 function afficherQG() {
     const isOnQG = player.checkQG();
+    // If player is on QG and QG is not displayed, show QG
     if (isOnQG && !qgAffiche) {
         qg.style.zIndex = '5';
         qgAffiche = true;
-    } else if ((!isOnQG) && qgAffiche) {
+    } 
+    // If player is not on QG and QG is displayed, hide QG
+    else if ((!isOnQG) && qgAffiche) {
         qgAffiche = false;
     }
 }
 
+// Define a transparent color for the canvas
 const TRANSPARENT_COLOR = 'rgba(0, 0, 0, 0)';
 
-
-
-
-
-
-
-
-//global platform
-
-
+// Get the instruction element from the DOM
 const instructionElement = document.querySelector('.instruction');
+// Variables to track instruction states
 let hasMoved = false;
 let instructionCount = 0;
 let initialInstructionCount = 0;
 let instructionDisplayed = false;
 
+// Function to update instruction text based on the count
 function updateInstructionText(count) {
+    // Display initial instructions after a delay
     if (!instructionDisplayed) {
         if (initialInstructionCount === 0) {
             setTimeout(() => {
                 instructionElement.style.zIndex = '1';
                 instructionElement.innerHTML = `
-                <p class="intrcution-text">Bienvenue dans le monde Contraste mortel, déplacez-vous dans ce monde avec les touches :</p>
+                <p class="intrcution-text">Welcome to the Deadly Contrast world, move in this world with the keys:</p>
                 <div class="instruction-container">
                     <div class="instruction-key">
-                        <div class="card-key">&nbsp&nbsp${keys.gaucheInput.key}</div> pour aller à gauche.
+                        <div class="card-key">&nbsp&nbsp${keys.gaucheInput.key}</div> to move left.
                     </div>
                     <div class="instruction-key">
-                        <div class="card-key">&nbsp&nbsp${keys.droiteInput.key}</div> pour aller à droite.
+                        <div class="card-key">&nbsp&nbsp${keys.droiteInput.key}</div> to move right.
                     </div>
                     <div class="instruction-key">
-                        <div class="card-key">${keys.sauterInput.key}</div> pour sauter.
+                        <div class="card-key">${keys.sauterInput.key}</div> to jump.
                     </div>
                 </div>
                 `;
@@ -479,56 +528,69 @@ function updateInstructionText(count) {
         }
     }
     
+    // Hide initial instructions after player moves four times
     if (count >= initialInstructionCount + 4) {
         instructionElement.style.zIndex = '-1';
     }
 
+    // Display Chroma Switch power instructions after a certain count
     if (count >= initialInstructionCount + 6) {
         instructionElement.style.zIndex = '1';
         instructionElement.innerHTML = `
-        <p class="intrcution-text"> Vous avez un pouvoir spécial en ce monde :</p>
+        <p class="intrcution-text">You have a special power in this world:</p>
         <div class="instruction-container">
             <div class="instruction-key">
-                <div class="card-key">&nbsp&nbsp${keys.utiliserSortInput.key}</div> pour utiliser le pouvoir Chroma Switch.
+                <div class="card-key">&nbsp&nbsp${keys.utiliserSortInput.key}</div> to use the Chroma Switch power.
             </div>
-            <p class="intrcution-text"> Vous pouvez vous déplacer sur les blocs d'une couleur différente de vous.</p>
+            <p class="intrcution-text">You can move on blocks of a different color than you.</p>
         </div>
         `;
     }
 
+    // Hide Chroma Switch power instructions after a certain count
     if (count >= initialInstructionCount + 10) {
         instructionElement.style.zIndex = '-1';
     }
 }
 
+// Initialize instruction text
 updateInstructionText(0);
 
 
-let platform;
-let blackPlatform;
-let whitePlatform;
-let killPlatform;
-let qgPlatform;
-let enemySpawn;
-let bouncePlatform;
-let checkpoint;
+// Declaration of variables for different types of platforms and game elements
+let platform; // General platform
+let blackPlatform; // Platform with black color
+let whitePlatform; // Platform with white color
+let killPlatform; // Platform that kills the player
+let qgPlatform; // Platform for the Quartier Général (QG)
+let enemySpawn; // Spawn point for enemies
+let bouncePlatform; // Platform that bounces the player
+let checkpoint; // Checkpoint in the level
 
-let mapImage = null;
-let playerSpawn = null;
-let bgImageHeight = null;
-let bgImageWidth = null;
-let camera = null;
-let positionMob = null;
+// Variables for map-related data
+let mapImage = null; // Image of the map background
+let playerSpawn = null; // Spawn point for the player
+let bgImageHeight = null; // Height of the background image
+let bgImageWidth = null; // Width of the background image
+let camera = null; // Camera position
+let positionMob = null; // Position of mobile elements (e.g., enemies)
 
-let enemieslevel1;
-let defaultPowerLeft;
-let allPlatforms;
+// Variables for enemies and game settings
+let enemieslevel1; // Enemies in level 1
+let defaultPowerLeft; // Default power left for the player
+let allPlatforms; // Array to store all platforms in the level
 
 
+
+// Variable to store the current level
 let level = 1;
-const levels = {
-    1: { //all good
+
+// Object containing level configurations and initialization functions for each level
+const levels = { // Same concept for all levels
+    1: {
+        // Initialization function for level 1
         init: () => {
+            // Arrays to store different types of platforms and game elements
             platform = [];
             blackPlatform = [];
             whitePlatform = [];
@@ -538,6 +600,8 @@ const levels = {
             enemySpawn = [];
             bouncePlatform = [];
             checkpoint = [];
+
+            // Load background map image for the level
             mapImage = new Sprite({
                 position: {
                     x: 0,
@@ -546,15 +610,20 @@ const levels = {
                 imageSrc: './img/level0.png',
             });
 
+            // Set dimensions of the background map image
             bgImageHeight = 1280 / 2;
             bgImageWidth = 800;
+
+            // Set default power left for the player
             defaultPowerLeft = 6;
 
+            // Set initial spawn point for the player
             playerSpawn = {
                 x: 50,
                 y: 200
             };
 
+            // Set initial camera position
             camera = {
                 position: {
                     x: 0,
@@ -562,43 +631,30 @@ const levels = {
                 },
             };
 
-            mobSpawn = {
-                x: 400,
-                y: 284
-            };
+            // Set initial spawn point for enemies
+            const enemySpawnPositions = [
+                { x: 400, y: 284 },
+                { x: 1136, y: 236 }
+            ];
 
-            const mob = new Enemy({
-                position: mobSpawn,
-                mobSpawn: mobSpawn,
-                collisionBlocks: platform,
-                blackPlatform,
-                whitePlatform,
-                imageSrc: "./img/Enemy.png",
-                frameRate: 6,
-                frameBuffer: 20
-            });
-            
-            enemieslevel1.push(mob);
-            
-            const mob2Spawn = {
-                x: 1136,
-                y: 236
-            };
-            
-            
-            const mob2 = new Enemy({
-                position: mob2Spawn,
-                mobSpawn: mob2Spawn,
-                collisionBlocks: platform,
-                blackPlatform,
-                whitePlatform,
-                imageSrc: "./img/Enemy.png",
-                frameRate: 6,
-                frameBuffer: 20
-            });
-            
-            enemieslevel1.push(mob2);
+            // Create and configure the first enemy object
+            enemySpawnPositions.forEach(spawnPosition => {
+                const mob = new Enemy({
+                    position: spawnPosition,
+                    mobSpawn: spawnPosition,
+                    collisionBlocks: platform,
+                    blackPlatform,
+                    whitePlatform,
+                    imageSrc: "./img/Enemy.png",
+                    frameRate: 6,
+                    frameBuffer: 20
+                });
 
+                enemieslevel1.push(mob);
+            });
+
+
+            // Iterate over the platform symbols array for level 1 and create platforms accordingly
             for (let i = 0; i < platform_tuto.length; i += 80) {
                 const row = platform_tuto.slice(i, i + 80);
                 row.forEach((symbol, x) => {
@@ -623,6 +679,7 @@ const levels = {
                 });
             }
 
+            // Create black platforms based on the black platform symbols array for level 1
             blackPlatform_tuto.forEach((symbol, index) => {
                 const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
                 if (symbol === 779) {
@@ -630,6 +687,7 @@ const levels = {
                 }
             });
 
+            // Create white platforms based on the white platform symbols array for level 1
             whitePlatform_tuto.forEach((symbol, index) => {
                 const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
                 if (symbol === 776) {
@@ -637,6 +695,7 @@ const levels = {
                 }
             });
 
+            // Create kill platforms based on the kill block symbols array for level 1
             killBlock_tuto.forEach((symbol, index) => {
                 const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
                 if (symbol === 71) {
@@ -644,17 +703,16 @@ const levels = {
                 }
             });
 
+            // Create QG platforms based on the QG symbols array for level 1
             QG_tuto.forEach((symbol, index) => {
                 const position = { x: (index % 80) * 16, y: Math.floor(index / 80) * 16 };
                 if (symbol === 11) {
                     qgPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
                 }
             });
-
         }
     },
-
-    2: { //all good
+    2: {
         init: () => {
             platform = [];
             blackPlatform = [];
@@ -692,7 +750,7 @@ const levels = {
                 },
             };
     
-            defaultPowerLeft = 5000 ;
+            defaultPowerLeft = 8 ;
     
             const enemySpawnPositions = [
                 { x: 1936, y: 288 - 50},
@@ -793,7 +851,7 @@ const levels = {
         }
     },
 
-    3: { //all good check spawn + spawn ennemi à redef
+    3: {
         init: () => {
             platform = [];
             blackPlatform = [];
@@ -820,7 +878,7 @@ const levels = {
                 x: 30,
                 y: 50
             };
-
+            
             bgImageHeight = 3360 / 2.5;
             bgImageWidth = 1280;
 
@@ -830,6 +888,8 @@ const levels = {
                     y: -bgImageHeight + 3360/2 - 750,
                 },
             };
+
+            defaultPowerLeft = 15;
 
             const enemySpawnPositions = [
                 { x: 1936, y: 288 - 50},
@@ -871,7 +931,7 @@ const levels = {
                 enemieslevel1.push(mob);
             });
     
-            defaultPowerLeft = 5000;
+            
     
             for (let i = 0; i < platform_level2.length; i += 210) {
                 const row = platform_level2.slice(i, i + 210);
@@ -946,7 +1006,7 @@ const levels = {
         }
     },
 
-    4: { //all good
+    4: {
         init: () => {
             platform = [];
             blackPlatform = [];
@@ -984,7 +1044,7 @@ const levels = {
                 },
             };
     
-            defaultPowerLeft = 5;
+            defaultPowerLeft = 15;
 
             const enemySpawnPositions = [
                 { x: 1968, y: 128 },
@@ -1259,7 +1319,7 @@ const levels = {
         }
     },
 
-    6: { //all good
+    6: {
         init: () => {
             platform = [];
             blackPlatform = [];
@@ -1297,7 +1357,7 @@ const levels = {
                 },
             };
     
-            defaultPowerLeft = 5000;
+            defaultPowerLeft = 8;
     
             const enemySpawnPositions = [
                 { x: 1936, y: 288 - 50},
@@ -1404,50 +1464,55 @@ const levels = {
             });
         }
     },
-
 }
 
+// Initialize the current level
 levels[level].init();
 
+// Event listeners for level selection buttons
 const buttons = document.querySelectorAll('.btn');
-
 buttons.forEach(button => {
     button.addEventListener('click', () => {
+        // Extract map name and lock status from button dataset
         const mapName = button.dataset.map;
         const isLocked = button.dataset.lock === 'true';
 
+        // Check if the level is locked
         if (isLocked) {
+            // Display overlay with transition effect
             const overlay = document.getElementById('overlay');
             overlay.style.display = 'block';
             overlay.style.opacity = '0';
             overlay.style.transition = 'opacity 1s';
             overlay.offsetHeight;
-
             overlay.style.opacity = '1';
 
+            // Load the selected map after a delay
             setTimeout(() => {
-            loadMap(mapName);
-        }, 1000);
+                loadMap(mapName);
+            }, 1000);
         }
     });
 });
 
-
+// Event listener for selecting a map to save
 const overlay = document.getElementById('overlay');
 const saveMapButton = document.getElementById('save-map');
 const levelButtons = document.querySelectorAll('.btn[data-map]');
-
 let selectedMap = null;
 
 levelButtons.forEach(button => {
     button.addEventListener('click', () => {
+        // Set the selected map and enable save button
         selectedMap = button.dataset.map;
         saveMapButton.disabled = false;
     });
 });
 
+// Event listener for saving the selected map
 saveMapButton.addEventListener('click', () => {
     if (selectedMap !== null) {
+        // Hide overlay and update player score after saving
         qg.style.zIndex = '-1';
         overlay.style.transition = 'opacity 1s';
         overlay.style.opacity = '0';
@@ -1462,33 +1527,29 @@ saveMapButton.addEventListener('click', () => {
     }
 });
 
+// Prevent saving if no map is selected
 document.addEventListener('click', (event) => {
     if (event.target.id === 'save-map' && selectedMap === null) {
         event.preventDefault();
     }
 });
 
+// Disable save map button initially
 saveMapButton.disabled = true;
 
-
-
-
-
-
-
+// Event listener for resetting the current level
 const resetLevelButton = document.getElementById('reset-level-button');
-
 resetLevelButton.addEventListener('click', () => {
+    // Deduct points and reset the level
     playerScore -= (250 + (player.powerLeft * 300));
     updateScoreDisplay();
     resetLevel();
     resetLevelButton.blur();
 });
 
-
-
-
+// Function to reset the current level
 function resetLevel() {
+    // Initialize the current level and load the map
     const mapNames = Object.keys(levels);
     const mapName = mapNames[level - 1];
     levels[level].init();
@@ -1502,61 +1563,59 @@ function resetLevel() {
 }
 
 
-
-
+// Function to load a map based on the provided mapName
 function loadMap(mapName) {
+    // Award points based on remaining power
     if (player.powerLeft > 0) {
         playerScore += player.powerLeft * 300;
         updateScoreDisplay();
     }
-    if (mapName === 'Guided Light') {
-        level = 1;
-        levels[1].init();
-        
+    
+    // Determine the map to load and initialize it
+    switch (mapName) {
+        case 'Guided Light':
+            level = 1;
+            levels[1].init();
+            break;
+        case 'Monochrome Meadows':
+            level = 2;
+            levels[2].init();
+            CANVAS.width = 3360 / 2;
+            CANVAS.height = 1280;
+            document.getElementById('level2').dataset.lock = 'true';
+            break;
+        case 'Shadowy Swamps':
+            level = 3;
+            levels[3].init();
+            CANVAS.width = 3360 / 2;
+            CANVAS.height = 1280;
+            document.getElementById('level3').dataset.lock = 'true';
+            break;
+        case 'Eclipsed Forest':
+            level = 4;
+            levels[4].init();
+            CANVAS.width = 3360 / 2;
+            CANVAS.height = 1280;
+            document.getElementById('level4').dataset.lock = 'true';
+            break;
+        case 'Gloom Haven':
+            level = 5;
+            levels[5].init();
+            CANVAS.width = 3360 / 2;
+            CANVAS.height = 1280;
+            document.getElementById('level5').dataset.lock = 'true';
+            break;
+        case 'Spectral Caverns':
+            level = 6;
+            levels[6].init();
+            CANVAS.width = 3360 / 2;
+            CANVAS.height = 1280;
+            break;
+        default:
+            break;
     }
-    if (mapName === 'Monochrome Meadows') {
-        level = 2;
-        levels[2].init();
-        CANVAS.width = 3360 / 2;
-        CANVAS.height = 1280;
-        const levelButton = document.getElementById('level2');
-        levelButton.dataset.lock = 'true';
-    }
-
-    if (mapName === 'Shadowy Swamps') {
-        level = 3;
-        levels[3].init();
-        CANVAS.width = 3360 / 2;
-        CANVAS.height = 1280;
-        const levelButton = document.getElementById('level3');
-        levelButton.dataset.lock = 'true';
-    }
-
-    if (mapName === 'Eclipsed Forest') {
-        level = 4;
-        levels[4].init();
-        CANVAS.width = 3360 / 2;
-        CANVAS.height = 1280;
-        const levelButton = document.getElementById('level4');
-        levelButton.dataset.lock = 'true';
-    }
-
-    if (mapName === 'Gloom Haven') {
-        level = 5;
-        levels[5].init();
-        CANVAS.width = 3360 / 2;
-        CANVAS.height = 1280;
-        const levelButton = document.getElementById('level5');
-        levelButton.dataset.lock = 'true';
-    }
-
-    if (mapName === 'Spectral Caverns') {
-        level = 6;
-        levels[6].init();
-        CANVAS.width = 3360 / 2;
-        CANVAS.height = 1280;
-    }
-
+    
+    // Reset player properties and spawn position
     player.isInvertedColor = false;
     player.collisionBlocks = platform.slice();
     player.whitePlatform = whitePlatform.slice();
@@ -1568,7 +1627,6 @@ function loadMap(mapName) {
     player.powerLeft = defaultPowerLeft; 
     player.position = playerSpawn;
     player.velocity = { x: 0, y: 0 };
-    player.powerLeft = defaultPowerLeft;
     checkpointReached = false;
     player.playerSpawn.x = 50;
     player.playerSpawn.y = 500;
@@ -1578,137 +1636,166 @@ function loadMap(mapName) {
 
 
 
+
+// Element to display the player's score
 const scoreDisplay = document.getElementById('scoreDisplay');
+// Initial player score
 let playerScore = 0;
 
+// Function to update the displayed player score
 function updateScoreDisplay() {
     scoreDisplay.textContent = `Score: ${playerScore}`;
 }
 
-
+// Create a new Player object with specified properties
 const player = new Player({
-    position: playerSpawn,
-    playerSpawn: playerSpawn,
-    collisionBlocks: platform,
-    whitePlatform,
-    blackPlatform,
-    killPlatform,
-    qgPlatform,
-    bouncePlatform: bouncePlatform,
-    imageSrc: "./img/Character/Idle.png",
-    frameRate: 12,
-    powerLeft: defaultPowerLeft,
-    animations: {
-        Idle: {
+    position: playerSpawn, // Initial position of the player
+    playerSpawn: playerSpawn, // Player's spawn point
+    collisionBlocks: platform, // Platforms the player can collide with
+    whitePlatform, // White platforms
+    blackPlatform, // Black platforms
+    killPlatform, // Platforms that kill the player
+    qgPlatform, // Platforms for the Quartier Général (QG)
+    bouncePlatform: bouncePlatform, // Platforms that bounce the player
+    imageSrc: "./img/Character/Idle.png", // Default image source for the player
+    frameRate: 12, // Default frame rate for player animations
+    powerLeft: defaultPowerLeft, // Default power left for the player
+    animations: { // Animation configurations for the player
+        Idle: { // Idle animation
             imageSrc: "./img/Character/Idle.png",
             frameRate: 12,
             frameBuffer: 5
         },
-        IdleLeft: {
+        IdleLeft: { // Idle animation for left direction
             imageSrc: "./img/Character/IdleLeft.png",
             frameRate: 12,
             frameBuffer: 5
         },
-        Run: {
+        Run: { // Running animation
             imageSrc: "./img/Character/Run.png",
             frameRate: 8,
             frameBuffer: 8
         },
-        RunLeft: {
+        RunLeft: { // Running animation for left direction
             imageSrc: "./img/Character/RunLeft.png",
             frameRate: 8,
             frameBuffer: 5
         },
-        Jump: {
+        Jump: { // Jumping animation
             imageSrc: "./img/Character/Jump.png",
             frameRate: 4,
             frameBuffer: 3
         },
-        JumpLeft: {
+        JumpLeft: { // Jumping animation for left direction
             imageSrc: "./img/Character/JumpLeft.png",
             frameRate: 4,
             frameBuffer: 3
         },
-        Fall: {
+        Fall: { // Falling animation
             imageSrc: "./img/Character/Fall.png",
             frameRate: 3,
             frameBuffer: 15
         },
-        FallLeft: {
+        FallLeft: { // Falling animation for left direction
             imageSrc: "./img/Character/FallLeft.png",
             frameRate: 3,
             frameBuffer: 15
         },
     },
-    checkpoint: checkpoint,
+    checkpoint: checkpoint, // Player's checkpoints
 });
 
 
 
 
 
+// Function to animate the game elements
 function animate() {
+    // Request animation frame to continue the animation loop
     window.requestAnimationFrame(animate);
+    
+    // Set background color
     SCREEN.fillStyle = 'grey';
+    // Draw the background image
     SCREEN.drawImage(backgroundImage, 0, 0, CANVAS.width, CANVAS.height);
 
+    // Save the current state of the canvas
     SCREEN.save();
+    // Scale and translate the canvas based on camera position
     SCREEN.scale(scale, scale);
-    SCREEN.translate(camera.position.x,camera.position.y);
+    SCREEN.translate(camera.position.x, camera.position.y);
+
+    // Update the map image
     mapImage.update();
+
+    // Update each platform in the platform array
     platform.forEach((platform) => {
         platform.update();
     });
-    blackPlatform.forEach((blakcBlock) => {
-        blakcBlock.update();
+
+    // Update each black platform
+    blackPlatform.forEach((blackBlock) => {
+        blackBlock.update();
     });
+
+    // Update each white platform
     whitePlatform.forEach((whiteBlock) => {
         whiteBlock.update();
     });
 
-    player.checkForHorizontalCollisionCanvas()
+    // Check for horizontal collision with canvas and update the player
+    player.checkForHorizontalCollisionCanvas();
     player.update();
 
+    // Reset horizontal velocity of the player
     player.velocity.x = 0; 
-    if(keys.droiteInput.pressed) {
-        player.switchSprite('Run')
-        player.velocity.x = 2.5
-        player.lastDirection = 'right'
-        player.cameraToTheLeft({CANVAS, camera})
 
-    } else if(keys.gaucheInput.pressed) {
-        player.switchSprite('RunLeft')
-        player.velocity.x = -2.5
-        player.lastDirection = 'left'
-        player.cameraToTheRight({CANVAS, camera})
-    }
-    else if (player.velocity.y === 0){
-        if(player.lastDirection === 'right') player.switchSprite('Idle')
-        else player.switchSprite('IdleLeft')
+    // Move the player horizontally based on input keys
+    if (keys.droiteInput.pressed) {
+        player.switchSprite('Run');
+        player.velocity.x = 2.5;
+        player.lastDirection = 'right';
+        player.cameraToTheLeft({ CANVAS, camera });
+    } else if (keys.gaucheInput.pressed) {
+        player.switchSprite('RunLeft');
+        player.velocity.x = -2.5;
+        player.lastDirection = 'left';
+        player.cameraToTheRight({ CANVAS, camera });
+    } else if (player.velocity.y === 0) {
+        // If the player is not moving horizontally or vertically, switch to idle animation
+        if (player.lastDirection === 'right') player.switchSprite('Idle');
+        else player.switchSprite('IdleLeft');
     }
 
+    // Handle player animation when jumping or falling
     if (player.velocity.y < 0) {
-        player.cameraToDown({CANVAS, camera})
-        if(player.lastDirection === 'right') player.switchSprite('Jump')
-        else player.switchSprite('JumpLeft')
-    }
-    else if(player.velocity.y > 0) {
-        player.cameraToUp({CANVAS, camera})
-        if(player.lastDirection === 'right')
-            player.switchSprite('Fall')
-        else player.switchSprite('FallLeft')
+        // Player is jumping
+        player.cameraToDown({ CANVAS, camera });
+        if (player.lastDirection === 'right') player.switchSprite('Jump');
+        else player.switchSprite('JumpLeft');
+    } else if (player.velocity.y > 0) {
+        // Player is falling
+        player.cameraToUp({ CANVAS, camera });
+        if (player.lastDirection === 'right') player.switchSprite('Fall');
+        else player.switchSprite('FallLeft');
     }
 
-        enemieslevel1.forEach((enemy) => {
-            enemy.checkForHorizontalCollisionCanvas();
-            enemy.update();
-        });
-    updateScoreDisplay()
+    // Update enemies in level 1
+    enemieslevel1.forEach((enemy) => {
+        enemy.checkForHorizontalCollisionCanvas();
+        enemy.update();
+    });
 
+    // Update the displayed score
+    updateScoreDisplay();
+
+    // Restore the canvas to its previous state
     SCREEN.restore(); 
 }
 
+// Start the animation loop
 animate();
+
 
 
 
