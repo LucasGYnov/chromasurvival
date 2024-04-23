@@ -20,6 +20,8 @@ let checkpointOffsetY = 0;
 let checkpointReached = false;
 const uniqueBlockSize = 16; // Size of blocks
 
+
+
 // Define key bindings
 const keys = {
    gaucheInput: {
@@ -507,16 +509,16 @@ function updateInstructionText(count) {
          setTimeout(() => {
             instructionElement.style.zIndex = '1';
             instructionElement.innerHTML = `
-                <p class="intrcution-text">Welcome to the Deadly Contrast world, move in this world with the keys:</p>
+                <p class="intrcution-text">Bienvenue dans le monde de Deadly Contrast, déplacez-vous dans ce monde à l'aide des touches :</p>
                 <div class="instruction-container">
                     <div class="instruction-key">
-                        <div class="card-key">  &nbsp&nbsp${keys.gaucheInput.key}</div> to move left.
+                        <div class="card-key">  &nbsp&nbsp${keys.gaucheInput.key}</div> pour aller à la gauche.
                     </div>
                     <div class="instruction-key">
-                        <div class="card-key">  &nbsp&nbsp${keys.droiteInput.key}</div> to move right.
+                        <div class="card-key">  &nbsp&nbsp${keys.droiteInput.key}</div> pour aller à la droite.
                     </div>
                     <div class="instruction-key">
-                        <div class="card-key">&nbsp&nbsp${keys.sauterInput.key}</div> to jump.
+                        <div class="card-key">&nbsp&nbsp${keys.sauterInput.key}</div> pour sauter.
                     </div>
                 </div>
                 `;
@@ -535,12 +537,12 @@ function updateInstructionText(count) {
    if (count >= initialInstructionCount + 6) {
       instructionElement.style.zIndex = '1';
       instructionElement.innerHTML = `
-        <p class="intrcution-text">You have a special power in this world:</p>
+        <p class="intrcution-text">Vous avez un pouvoir spécial dans ce monde :</p>
         <div class="instruction-container">
             <div class="instruction-key">
-                <div class="card-key">  &nbsp&nbsp${keys.utiliserSortInput.key}</div> to use the Chroma Switch power.
+                <div class="card-key">  &nbsp&nbsp${keys.utiliserSortInput.key}</div> pour utiliser le Chroma Switch.
             </div>
-            <p class="intrcution-text">You can move on blocks of a different color than you.</p>
+            <p class="intrcution-text">Vous pouvez vous déplacer sur des blocs d'une couleur inverse de la vôtre.</p>
         </div>
         `;
    }
@@ -1876,6 +1878,8 @@ resetLevelButton.addEventListener('click', () => {
    resetLevelButton.blur();
 });
 
+
+
 // Function to reset the current level
 function resetLevel() {
    // Initialize the current level and load the map
@@ -1889,12 +1893,13 @@ function resetLevel() {
    player.playerSpawn.y = 500;
    checkpointOffsetX = 0;
    checkpointOffsetY = 0;
+   /* const powerRemaining = 0; */
 }
-
 
 // Function to load a map based on the provided mapName
 function loadMap(mapName) {
-   // Award points based on remaining power
+   /* const powerRemaining = Math.floor(player.powerLeft / 2) */
+   console.log(player.powerLeft)
    if (player.powerLeft > 0) {
       playerScore += player.powerLeft * 300;
       updateScoreDisplay();
@@ -1953,7 +1958,7 @@ function loadMap(mapName) {
    player.qgPlatform = qgPlatform.slice();
    player.bouncePlatform = bouncePlatform.slice();
    player.checkpoint = checkpoint.slice();
-   player.powerLeft = defaultPowerLeft;
+   player.powerLeft = defaultPowerLeft /* + powerRemaining */;
    player.position = playerSpawn;
    player.velocity = {
       x: 0,
@@ -1964,6 +1969,7 @@ function loadMap(mapName) {
    player.playerSpawn.y = 500;
    checkpointOffsetX = 0;
    checkpointOffsetY = 0;
+   updatePowerLeftCounter();
 }
 
 

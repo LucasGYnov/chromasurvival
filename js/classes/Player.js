@@ -442,6 +442,7 @@ class Player extends Sprite {
                object2: killBlock
             })) {
             this.respawn(); // Respawn the player
+            this.respawn(); // Respawn the player
             playerScore -= 100; // Deduct score for collision with kill platform
             updatePowerLeftCounter(); // Update power left counter
             break; // Exit loop once collision is detected
@@ -466,6 +467,7 @@ class Player extends Sprite {
                this.powerLeft += 2; // Increase player power
                playerScore += 100; // Increase score for defeating enemy
                updateScoreDisplay(); // Update score display
+               updatePowerLeftCounter();
                break; // Exit loop once collision is resolved
             } else if (this.position.y + this.hitbox.width < enemy.position.y) {
                this.respawn(); // Respawn the player
