@@ -791,7 +791,7 @@ const levels = { // Same concept for all levels
             },
          };
 
-         defaultPowerLeft = 8;
+         defaultPowerLeft = 10;
 
          const enemySpawnPositions = [
             { x: 1936, y: 238 },

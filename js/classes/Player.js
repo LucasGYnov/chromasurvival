@@ -189,11 +189,45 @@ class Player extends Sprite {
       }
    }
 
+   invertColors() {
+      for (let key in this.animations) {
+         const canvas = document.createElement('canvas');
+         const ctx = canvas.getContext('2d');
+         const animation = this.animations[key];
+         canvas.width = animation.image.width;
+         canvas.height = animation.image.height;
+
+         // Dessiner l'image sur le canvas
+         ctx.drawImage(animation.image, 0, 0);
+
+         // Obtenir les données de l'image
+         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+         const data = imageData.data;
+
+         // Inverser les couleurs pixel par pixel
+         for (let i = 0; i < data.length; i += 4) {
+            data[i] = 255 - data[i]; // Inverser le canal rouge
+            data[i + 1] = 255 - data[i + 1]; // Inverser le canal vert
+            data[i + 2] = 255 - data[i + 2]; // Inverser le canal bleu
+            // Ne pas modifier l'alpha (canal alpha)
+         }
+
+         // Remettre les données modifiées sur le canvas
+         ctx.putImageData(imageData, 0, 0);
+
+         // Mettre à jour l'image de l'animation avec les couleurs inversées
+         animation.image.src = canvas.toDataURL();
+      }
+   }
+
+
+
 
    update() {
       // Apply color inversion effect if needed
       if (this.isInvertedColor) {
-         SCREEN.filter = 'invert(100%)';
+         // SCREEN.filter = 'invert(100%)';
+         this.invertColors()
       }
 
       // Call the superclass update method
