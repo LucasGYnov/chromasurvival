@@ -46,9 +46,41 @@ class Player extends Sprite {
     }
 
 
-    invertColors() {
-        this.isInvertedColor = !this.isInvertedColor;
+/*     invertColors() {
+        for (let key in this.animations) {
+            const animation = this.animations[key];
+            const invertedImages = [];
+            for (let i = 0; i < animation.images.length; i++) {
+                const image = animation.images[i];
+                const invertedImage = this.invertImage(image);
+                invertedImages.push(invertedImage);
+            }
+            animation.images = invertedImages;
+        }
     }
+
+    invertImage(image) {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = image.width;
+        canvas.height = image.height;
+        context.drawImage(image, 0, 0);
+        const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+        const pixels = imageData.data;
+    
+        for (let i = 0; i < pixels.length; i += 4) {
+            pixels[i] = 255 - pixels[i];       // Rouge
+            pixels[i + 1] = 255 - pixels[i + 1]; // Vert
+            pixels[i + 2] = 255 - pixels[i + 2]; // Bleu
+            // Garder l'alpha (transparence) inchangée
+        }
+    
+        context.putImageData(imageData, 0, 0);
+        const invertedImage = new Image();
+        invertedImage.src = canvas.toDataURL(); // Convertir le canvas en une URL d'image
+        return invertedImage;
+    } */
+    
 
 
     switchSprite(key){
@@ -120,7 +152,8 @@ class Player extends Sprite {
     update() {
         if (this.isInvertedColor) {
             SCREEN.filter = 'invert(100%)';
-        }
+        }   
+        
 
         super.update();
 
@@ -297,9 +330,9 @@ checkKillBlockCollision() {
             object1: this.hitbox,
             object2: killBlock
         })) {
+            this.respawn();
             playerScore -= 100;
             updatePowerLeftCounter();
-            this.respawn();
             break;
         }
     }

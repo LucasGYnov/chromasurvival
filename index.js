@@ -210,7 +210,7 @@ function updateGamepadState() {
     const gamepad = navigator.getGamepads()[controllerIndex];
     
     // Contrôles des mouvements
-    const stickThreshold = 0.5;
+    const stickThreshold = 0.4;
     const stickLeftRight = gamepad.axes[0];
     const stickUpDown = gamepad.axes[1];
 
@@ -347,14 +347,14 @@ window.addEventListener('keydown', (event) => {
                 }
                 break;
             case keys.sauterInput.key:
-                if (player.isOnGround && !player.velocity.y > 0) {
+                // if (player.isOnGround && !player.velocity.y > 0) {
                     player.velocity.y = -6.5;
                     keys.sauterInput.pressed = true;
                     player.isOnGround = false;
                     instructionCount++;
                     updateInstructionText(instructionCount);
                     jumpSound.play();
-                }
+                // }
                 break;
                 case keys.utiliserSortInput.key:
                     if (player.powerLeft > 0) {
@@ -525,7 +525,7 @@ let defaultPowerLeft;
 let allPlatforms;
 
 
-let level = 1 ;
+let level = 1;
 const levels = {
     1: {
         init: () => {
@@ -970,7 +970,433 @@ const levels = {
             });
     
         }
-    }
+    },
+    4: {
+        init: () => {
+            platform = [];
+            blackPlatform = [];
+            whitePlatform = [];
+            killPlatform = [];
+            qgPlatform = [];
+            enemieslevel1 = [];
+            enemySpawn = [];
+            bouncePlatform = [];
+            checkpoint = [];
+            allPlatforms = [];
+    
+            allPlatforms = platform.concat(blackPlatform, whitePlatform);
+    
+            mapImage = new Sprite({
+                position: {
+                    x: 0,
+                    y: 0,
+                },
+                imageSrc: './img/EclipsedForest.png',
+            });
+    
+            playerSpawn = {
+                x: 50,
+                y: 100
+            };
+    
+            bgImageHeight = 3360 / 2.5;
+            bgImageWidth = 1280;
+    
+            camera = {
+                position: {
+                    x: 0,
+                    y: -bgImageHeight + 3360/2 - 300,
+                },
+            };
+    
+            defaultPowerLeft = 5000 ;
+    
+            const enemySpawnPositions = [
+                { x: 1936, y: 288 - 50},
+                { x: 2032, y: 288 - 50},
+                { x: 2144, y: 288- 50 },
+                { x: 2240, y: 288 - 50},
+                { x: 1024, y: 640- 50 },
+                { x: 496, y: 656- 50 },
+                { x: 576, y: 672- 50 },
+                { x: 752, y: 736 - 50}
+            ];
+    
+            enemySpawnPositions.forEach(spawnPosition => {
+                const mob = new Enemy({
+                    position: spawnPosition,
+                    mobSpawn: spawnPosition,
+                    collisionBlocks: allPlatforms,
+                    blackPlatform,
+                    whitePlatform,
+                    imageSrc: "./img/Enemy.png",
+                    frameRate: 6,
+                    frameBuffer: 20
+                });
+    
+                enemieslevel1.push(mob);
+            });
+    
+            for (let i = 0; i < floorCollision_4.length; i += 210) {
+                const row = floorCollision_4.slice(i, i + 210);
+                row.forEach((symbol, x) => {
+                    const position = { x: x * 16, y: (i / 210) * 16 };
+                    switch (symbol) {
+                        case 12:
+                            platform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 779:
+                            blackPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 776:
+                            whitePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 11:
+                            qgPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 241:
+                            enemySpawn.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 565:
+                            bouncePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                        default:
+                            break;
+                    }
+                });
+            }
+    
+            blackCollision_4.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 779) {
+                    blackPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+    
+            whiteCollision_4.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 776) {
+                    whitePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+    
+            killCollision_4.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 71) {
+                    killPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+    
+            QGCollision_4.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 11) {
+                    qgPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+    
+            enemy_4.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 241) {
+                    enemySpawn.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                    console.log(`Bloc de spawn d'ennemi ajouté à la position : x = ${position.x}, y = ${position.y}`);
+                }
+            });
+    
+            bounce_4.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 565) {
+                    bouncePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+        }
+    },5: {
+        init: () => {
+            platform = [];
+            blackPlatform = [];
+            whitePlatform = [];
+            killPlatform = [];
+            qgPlatform = [];
+            enemieslevel1 = [];
+            enemySpawn = [];
+            bouncePlatform = [];
+            checkpoint = [];
+            allPlatforms = [];
+    
+            allPlatforms = platform.concat(blackPlatform, whitePlatform);
+    
+            mapImage = new Sprite({
+                position: {
+                    x: 0,
+                    y: 0,
+                },
+                imageSrc: './img/GloomHaven.png',
+            });
+    
+            playerSpawn = {
+                x: 50,
+                y: 200
+            };
+    
+            bgImageHeight = 3360 / 2.5;
+            bgImageWidth = 1280;
+    
+            camera = {
+                position: {
+                    x: 0,
+                    y: -bgImageHeight + 3360/2 - 750,
+                },
+            };
+
+            const enemySpawnPositions = [
+                { x: 1936, y: 288 - 50},
+                { x: 2032, y: 288 - 50},
+                { x: 2144, y: 288- 50 },
+                { x: 2240, y: 288 - 50},
+                { x: 1024, y: 640- 50 },
+                { x: 496, y: 656- 50 },
+                { x: 576, y: 672- 50 },
+                { x: 752, y: 736 - 50},
+                { x: 2736, y: 384 },
+                { x: 2496, y: 400 },
+                { x: 1712, y: 432 },
+                { x: 2448, y: 448 },
+                { x: 1888, y: 464 },
+                { x: 2112, y: 464 },
+                { x: 2832, y: 480 },
+                { x: 3024, y: 576 },
+                { x: 1504, y: 656 },
+                { x: 400, y: 736 },
+                { x: 608, y: 736 },
+                { x: 816, y: 864 },
+                { x: 1008, y: 864 },
+                { x: 1216, y: 864 }
+            ];
+    
+            enemySpawnPositions.forEach(spawnPosition => {
+                const mob = new Enemy({
+                    position: spawnPosition,
+                    mobSpawn: spawnPosition,
+                    collisionBlocks: allPlatforms,
+                    blackPlatform,
+                    whitePlatform,
+                    imageSrc: "./img/Enemy.png",
+                    frameRate: 6,
+                    frameBuffer: 20
+                });
+    
+                enemieslevel1.push(mob);
+            });
+    
+            defaultPowerLeft = 5000;
+    
+            for (let i = 0; i < floorCollision_5.length; i += 210) {
+                const row = floorCollision_5.slice(i, i + 210);
+                row.forEach((symbol, x) => {
+                    const position = { x: x * 16, y: (i / 210) * 16 };
+                    switch (symbol) {
+                        case 12:
+                            platform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 779:
+                            blackPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 776:
+                            whitePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 11:
+                            qgPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 241:
+                            enemySpawn.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 565:
+                            bouncePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                        default:
+                            break;
+                    }
+                });
+            }
+    
+            blackCollision_5.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 779) {
+                    blackPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+    
+            whiteCollision_5.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 776) {
+                    whitePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+    
+            killCollision_5.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 71) {
+                    killPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+    
+            QGCollision_5.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 11) {
+                    qgPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+    
+            enemy_5.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 241) {
+                    enemySpawn.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                    console.log(`Bloc de spawn d'ennemi ajouté à la position : x = ${position.x}, y = ${position.y}`);
+                }
+            });
+        }
+    },6: {
+        init: () => {
+            platform = [];
+            blackPlatform = [];
+            whitePlatform = [];
+            killPlatform = [];
+            qgPlatform = [];
+            enemieslevel1 = [];
+            enemySpawn = [];
+            bouncePlatform = [];
+            checkpoint = [];
+            allPlatforms = [];
+    
+            allPlatforms = platform.concat(blackPlatform, whitePlatform);
+    
+            mapImage = new Sprite({
+                position: {
+                    x: 0,
+                    y: 0,
+                },
+                imageSrc: './img/SpectralCaverns.png',
+            });
+    
+            playerSpawn = {
+                x: 50,
+                y: 100
+            };
+    
+            bgImageHeight = 3360 / 2.5;
+            bgImageWidth = 1280;
+    
+            camera = {
+                position: {
+                    x: 0,
+                    y: -bgImageHeight + 3360/2 - 300,
+                },
+            };
+    
+            defaultPowerLeft = 5000;
+    
+            const enemySpawnPositions = [
+                { x: 1936, y: 288 - 50},
+                { x: 2032, y: 288 - 50},
+                { x: 2144, y: 288- 50 },
+                { x: 2240, y: 288 - 50},
+                { x: 1024, y: 640- 50 },
+                { x: 496, y: 656- 50 },
+                { x: 576, y: 672- 50 },
+                { x: 752, y: 736 - 50}
+            ];
+    
+            enemySpawnPositions.forEach(spawnPosition => {
+                const mob = new Enemy({
+                    position: spawnPosition,
+                    mobSpawn: spawnPosition,
+                    collisionBlocks: allPlatforms,
+                    blackPlatform,
+                    whitePlatform,
+                    imageSrc: "./img/Enemy.png",
+                    frameRate: 6,
+                    frameBuffer: 20
+                });
+    
+                enemieslevel1.push(mob);
+            });
+
+    
+            for (let i = 0; i < floorCollision_6.length; i += 210) {
+                const row = floorCollision_6.slice(i, i + 210);
+                row.forEach((symbol, x) => {
+                    const position = { x: x * 16, y: (i / 210) * 16 };
+                    switch (symbol) {
+                        case 12:
+                            platform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 779:
+                            blackPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 776:
+                            whitePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 11:
+                            qgPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 241:
+                            enemySpawn.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        case 565:
+                            bouncePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            }
+    
+            // Génération des plateformes noires
+            blackCollision_6.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 779) {
+                    blackPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+    
+            // Génération des plateformes blanches
+            whiteCollision_6.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 776) {
+                    whitePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+    
+            // Génération des plateformes de mort
+            killCollision_6.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 71) {
+                    killPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+    
+            // Génération des plateformes de point de départ
+            QGCollision_6.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 11) {
+                    qgPlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+    
+            // Génération des plateformes rebondissantes
+            bounce_6.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 565) {
+                    bouncePlatform.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                }
+            });
+
+            enemy_6.forEach((symbol, index) => {
+                const position = { x: (index % 210) * 16, y: Math.floor(index / 210) * 16 };
+                if (symbol === 241) {
+                    enemySpawn.push(new Platform({ position, color: TRANSPARENT_COLOR }));
+                    console.log(`Bloc de spawn d'ennemi ajouté à la position : x = ${position.x}, y = ${position.y}`);
+                }
+            });
+        }
+    },
     
     
 }
@@ -1083,18 +1509,48 @@ function loadMap(mapName) {
         levels[1].init();
     }
     if (mapName === 'Monochrome Meadows') {
-        level = 2;
-        levels[2].init();
+        level = 4;
+        levels[4].init();
         CANVAS.width = 3360 / 2;
         CANVAS.height = 1280;
         const levelButton = document.getElementById('level2');
         levelButton.dataset.lock = 'true';
     }
+
     if (mapName === 'Shadowy Swamps') {
+        level = 5;
+        levels[5].init();
+        CANVAS.width = 3360 / 2;
+        CANVAS.height = 1280;
+        const levelButton = document.getElementById('level3');
+        levelButton.dataset.lock = 'true';
+    }
+
+    if (mapName === 'Eclipsed Forest') {
+        level = 2;
+        levels[2].init();
+        CANVAS.width = 3360 / 2;
+        CANVAS.height = 1280;
+        const levelButton = document.getElementById('level4');
+        levelButton.dataset.lock = 'true';
+    }
+
+    if (mapName === 'GloomHaven') {
+        level = 6;
+        levels[6].init();
+        CANVAS.width = 3360 / 2;
+        CANVAS.height = 1280;
+        const levelButton = document.getElementById('level5');
+        levelButton.dataset.lock = 'true';
+    }
+
+    if (mapName === 'Spectral Caverns') {
         level = 3;
         levels[3].init();
         CANVAS.width = 3360 / 2;
         CANVAS.height = 1280;
+        const levelButton = document.getElementById('level2');
+        levelButton.dataset.lock = 'true';
     }
 
     player.isInvertedColor = false;
