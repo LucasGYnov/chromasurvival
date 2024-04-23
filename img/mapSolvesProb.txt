@@ -1,2 +1,0 @@
-map 1 => ras power=> good
-map 2 => passage bas + collision kill block à fix / image à fix (bloc noir diff + top left + killblcok + ennemi)
