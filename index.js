@@ -202,10 +202,13 @@ function jump() {
 
 // Function to use player's power
 function usePower() {
-   keys.utiliserSortInput.pressed = true; // Set power key pressed in input
-   player.isInvertedColor = !player.isInvertedColor; // Toggle player's color inversion
-   updatePowerLeftCounter(); // Update power left counter
-   player.powerLeft--; // Decrement power left counter
+   // Check if the player has remaining powers
+   if (player.powerLeft > 0) {
+      keys.utiliserSortInput.pressed = true; // Set power key pressed in input
+      player.isInvertedColor = !player.isInvertedColor; // Toggle player's color inversion
+      player.powerLeft--; // Decrement power left counter
+      updatePowerLeftCounter(); // Update power left counter
+   }
 }
 
 
