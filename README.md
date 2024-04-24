@@ -1,4 +1,4 @@
-![[ChromaSurvivalImage.png]]
+![Illustratiuon du jeu](/img/ChromaSurvivalImage.png)
 
 ## A propos de ce jeu : 
 Chroma Survival est un jeu de survie plongeant le joueur dans l'univers "Contraste Mortel". 
