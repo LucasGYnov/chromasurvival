@@ -11,60 +11,68 @@
       <title>Chroma Survival</title>
       <meta name="description" content="ChromaSurvival est un jeu de survie captivant où la couleur devient à la fois votre alliée et votre ennemie. Plongé dans un monde monochrome où la vie et la mort dépendent de votre capacité à maîtriser le pouvoir du switch de couleur, vous devrez explorer, résoudre des énigmes et affronter des dangers pour survivre et percer les mystères de ce monde étrange."/>
       <meta name="keywords" content="jeu"/>
-      <meta name="author" content="[A COMPLETER]" />
+      <meta name="author" content="Lucas Gerard" />
       <meta name="copyright" content="Copyright owner" />
-      <link rel ="icon" href = "/public/logo_chromasurvival.png" type = "image/x-icon">
+      <link rel ="icon" href = "/public/logo_chromasurvival.webp" type = "image/x-icon">
       <!-- Link for the page -->
       <link rel="stylesheet" href="style/style.css">
+      <link rel="stylesheet" href="style/mediaquery.css">
    </head>
    <body>
-      <div class="cursor"></div>
-      <div class="background_image">
-         <img src="public/spaceBackground.webp" alt="Background Image">
+      <div id="settings">
+         <button id="settings_button">
+         <img src="public/setting.webp" alt="Paramètre">
+         </button>
       </div>
-      <main>
-         <div id="settings">
-            <button id="settings_button">
-            <img src="public/setting.webp" alt="Paramètre">
-            </button>
-         </div>
-         <div class = "container_content">
-            <h1>Chroma Survival</h1>
-            <button id="lunch_game"> Joueur </button>
-            <button id="about"> A propos </button>
-            <button id="credits"> Credits </button>
-         </div>
-      </main>
-      <script src="script.js"></script>
       <div id="settings_page">
          <h2>Paramètre</h2>
          <form id="control_settings_form" method="post" action="">
-            <label for="gauche">Gauche:</label>
-            <input type="text" id="gauche" name="gauche" value="a" maxlength="1"><br>
-            <label for="droite">Droite:</label>
-            <input type="text" id="droite" name="droite" value="d" maxlength="1"><br>
-            <label for="sauter">Sauter:</label>
-            <input type="text" id="sauter" name="sauter" value=" " maxlength="1"><br>
-            <label for="utiliser">Utiliser:</label>
-            <input type="text" id="utiliser" name="utiliser" value="e" maxlength="1"><br>
-            <label for="utiliser_sort">Chroma Switch:</label>
-            <input type="text" id="utiliser_sort" name="utiliser_sort" value="s"><br>
-            <span>Son: </span>
-            <div class="toggle-switch">
-               <label class="switch-label">
-               <input type="checkbox" class="checkbox son-checkbox">
-               <span class="slider" style="--image-url-before: url('../public/volume_off.webp'); --image-url-after: url('../public/volume_on.webp');"></span>
-               </label>
+            <div id="keys">
+               <label for="gauche">Gauche:</label>
+               <input type="text" id="gauche" name="gauche" value="a" maxlength="1"><br>
+               <label for="droite">Droite:</label>
+               <input type="text" id="droite" name="droite" value="d" maxlength="1"><br>
+               <label for="sauter">Sauter:</label>
+               <input type="text" id="sauter" name="sauter" value=" " maxlength="1"><br>
+               <label for="utiliser">Utiliser:</label>
+               <input type="text" id="utiliser" name="utiliser" value="e" maxlength="1"><br>
+               <label for="utiliser_sort">Chroma Switch:</label>
+               <input type="text" id="utiliser_sort" name="utiliser_sort" value="s"><br>
             </div>
-            <span>Mobile: </span> 
+            <div class="sound">
+               <span>Son: </span>
+               <div class="toggle-switch">
+                  <label class="switch-label">
+                  <input type="checkbox" class="checkbox son-checkbox" checked>
+                  <span class="slider" style="--image-url-before: url('../public/volume_off.webp'); --image-url-after: url('../public/volume_on.webp');"></span>
+                  </label>
+               </div>
+               <span>Musique: </span>
+               <div class="toggle-switch">
+                  <label class="switch-label">
+                  <input type="checkbox" class="checkbox music-checkbox" checked>
+                  <span class="slider" style="--image-url-before: url('../public/music_off.webp'); --image-url-after: url('../public/music_on.webp');"></span>
+                  </label>
+               </div>
+            </div>
+            <span>Mobile: </span>
             <div class="toggle-switch">
                <label class="switch-label">
                <input type="checkbox" class="checkbox mobile-checkbox">
                <span class="slider" style="--image-url-before: url('../public/mobile_off.webp'); --image-url-after: url('../public/mobile_on.webp');"></span>
                </label>
             </div>
+            <div id="reverse_section">
+               <span>Inversions: </span>
+               <div class="toggle-switch">
+                  <label class="switch-label">
+                  <input type="checkbox" class="checkbox reverse-checkbox">
+                  <span class="slider" style="--image-url-before: url('../public/reverse.webp'); --image-url-after: url('../public/reverse.webp');"></span>
+                  </label>
+               </div>
+            </div>
             <div id="vibration_section">
-               <span>Vibration: </span> 
+               <span>Vibration: </span>
                <div class="toggle-switch">
                   <label class="switch-label">
                   <input type="checkbox" class="checkbox vibration-checkbox">
@@ -74,7 +82,155 @@
             </div>
             <input id="save" type="submit" value="Enregistrer">
          </form>
+         <button id="menu_button">
+         <img src="public/menu.webp" alt="Menu">
+         </button>
          <button class="close"></button>
+         <p id="quit">QUITTER</p>
       </div>
+      <div class="menu" id="menu">
+         <div class="cursor"></div>
+         <div class="background_image"></div>
+         <div class = "container_content">
+            <h1>Chroma Survival</h1>
+            <button id="lunch_game"> Joueur </button>
+            <button id="about"> A propos </button>
+            <button id="credits"> Credits </button>
+         </div>
+      </div>
+      <div class="jeu" id="jeu">
+         <audio id="game-music">
+            <source src="public/music_game.mp3" type="audio/mpeg">
+         </audio>
+         <audio id="running-sound" src="public/running_sound.mp3"></audio>
+         <audio id="jump-sound" src="public/jump_sound.mp3"></audio>
+         <div id="powerLeftCounter">
+         </div>
+         <div class="instruction"></div>
+         <div id="qg">
+            <p class="qg-title">QG</p>
+            <p class="qg-description">Il permet de se déplacer à travers les différents mondes.</p>
+            <div class="btn-container">
+               <button id="level0" class="btn" data-map="Guided Light" data-lock="true">Guided Light</button>
+               <button id="level1" class="btn" data-map="Monochrome Meadows" data-lock="true">Monochrome Meadows</button>
+               <button id="level2" class="btn" data-map="Shadowy Swamps" data-lock="false">Shadowy Swamps</button>
+               <button id="level3" class="btn" data-map="Eclipsed Forest" data-lock="false">Eclipsed Forest</button>
+               <button id="level4" class="btn" data-map="Gloom Haven" data-lock="false">Gloom Haven</button>
+               <button id="level5" class="btn" data-map="Spectral Caverns" data-lock="false">Spectral Caverns</button>
+               <button id="save-map" class="btn" tabindex="-1">Changer de Monde</button>
+            </div>
+         </div>
+         <div class ="reset-level">
+            <button id="reset-level-button" tabindex="-1">
+            <img src="public/reset_level.webp" alt="Reset Level">
+            </button>
+            <div id="scoreDisplay"> </div>
+         </div>
+         <div id="overlay"></div>
+         <canvas></canvas>
+         <div id="mobile-controls">
+            <div id="left-controls">
+               <button id="left_button" style="--image-url: url('../public/icon_gauche.webp');"></button>
+               <button id="right_button" style="--image-url: url('../public/icon_droite.webp');"></button>
+            </div>
+            <div id="right-controls">
+               <button id="jump_button" style="--image-url: url('../public/icon_saut.webp');"></button>
+               <button id="chroma_switch_button" style="--image-url: url('../public/icon_power.webp');"></button>
+            </div>
+         </div>
+      </div>
+      <div class="about" id ="about">
+         <div class="background_image"></div>
+
+         <div class ="return-menu">
+            <button id="return-menu-button" tabindex="-1">
+            <img src="public/home-icon.webp" alt="Icon enu">
+            </button>
+         </div>
+
+         <div class="wrapper">
+            <div class="container">
+                <input type="radio" name="slide" id="c1" checked>
+                <label for="c1" class="card">
+                    <div class="row">
+                        <div class="icon">1</div>
+                        <div class="description">
+                            <h4>A propos de ce jeu</h4>
+                            <p>
+                                 Chroma Survival est un jeu de survie plongeant le joueur dans l'univers "<strong>Contraste Mortel</strong>". <br /><br />
+                                 Dans ce monde hostile, les joueurs doivent utiliser le pouvoir "<strong>Chroma Switch</strong>" pour naviguer, résoudre des énigmes, combattre des ennemis et survivre.
+                            </p>
+                           </div>
+                    </div>
+                </label>
+                <input type="radio" name="slide" id="c2" >
+                <label for="c2" class="card">
+                    <div class="row">
+                        <div class="icon">2</div>
+                        <div class="description">
+                            <h4>Histoire</h4>
+                            <p>
+                                 Les joueurs incarnent un personnage mystérieusement transporté dans un monde monochrome, dépourvu de toute couleur. Sans explication sur leur présence soudaine dans cet environnement énigmatique, les joueurs se retrouvent pris au piège, désireux de comprendre les raisons de leur venue et de trouver un moyen de retourner chez eux.
+                           </p>
+                        </div>
+                    </div>
+                </label>
+                <input type="radio" name="slide" id="c3" >
+                <label for="c3" class="card">
+                    <div class="row">
+                        <div class="icon">3</div>
+                        <div class="description">
+                            <h4>Compatibilité</h4>
+                            <p>Retrouver Chroma Survival sur tous vos appareil !
+                            Compatible sur ordinateur, mobile et jouable à la manette<br /><br />
+                           Retrouvez notre jeux sur : <a href="https://lucasgynov.itch.io/chroma" target="_blank">Itch.io</a></p>
+                        </div>
+                    </div>
+                </label>
+                <input type="radio" name="slide" id="c4" >
+                <label for="c4" class="card">
+                    <div class="row">
+                        <div class="icon">4</div>
+                        <div class="description">
+                           <h4>Les règles</h4>
+                           <p>Les règles sont simples. Avoir sur le plus grand score en survivant à travers ce monde.
+                             <br /><br /><strong>Pour marquer des points, c'est très simple :</strong>
+                             <ul>
+                               <li>Tué des ennemis ! (+100 points & 2 Chroma Switch)</li>
+                               <li>Complété un niveau ! (+250)</li>
+                               <li>Petit bonus, +300 par Chroma Switch restant du précédent niveau.</li>
+                             </ul>
+                             <br />
+                             <p><strong>Perdre des points aussi... :</strong></p>
+                             <ul>
+                               <li>Tué par des ennemis... (-150 points)</li>
+                               <li>Mourir de chutes ou d'obstacles... (-100 points)</li>
+                               <li>Recommencer un niveau (-250 points)</li>
+                             </ul>
+                           </p>
+                        </div>
+                    </div>
+                </label>
+            </div>
+        </div>
+      </div>
+      <div class="credits" id ="credits">
+         <div class="background_image"></div>
+
+         <div class ="return-menu">
+            <button id="return-menu-button2" tabindex="-1">
+            <img src="public/home-icon.webp" alt="Icon enu">
+            </button>
+         </div>
+         
+         <a href="https://github.com/LucasGPro" target="_blank"><p id="name-author" data-texte="Lucas Gerard">Lucas Gerard</p>
+      </div>
+      <script src="./js/classes/Sprite.js"></script>
+      <script src="./js/classes/Enemy.js"></script>
+      <script src="./js/classes/Player.js"></script>
+      <script src="./js/classes/Platform.js"></script>
+      <script src="js/classes/utile.js"></script>
+      <script src="collision.js"></script>
+      <script src="index.js"></script>
+      <script src="script.js"></script>
    </body>
-</html>
