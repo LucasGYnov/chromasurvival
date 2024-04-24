@@ -113,9 +113,11 @@ document.addEventListener('DOMContentLoaded', function () {
    const jeuContainer = document.querySelector('.jeu');
    const menuContainer = document.querySelector('.menu');
    const aboutContainer = document.querySelector('.about');
+   const creditsContainer = document.querySelector('.credits');
 
    // Function to show menu
    function afficherMenu() {
+      creditsContainer.style.zIndex = "-3";
       aboutContainer.style.zIndex = "-2";
       jeuContainer.style.zIndex = "-1";
       menuContainer.style.zIndex = "1";
@@ -124,6 +126,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
    // Function to show game
    function afficherJeu() {
+      creditsContainer.style.zIndex = "-3";
       aboutContainer.style.zIndex = "-2";
       menuContainer.style.zIndex = "-1";
       jeuContainer.style.zIndex = "1";
@@ -132,9 +135,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
    // Function to show about setion
    function afficherApropos() {
+      creditsContainer.style.zIndex = "-3";
       jeuContainer.style.zIndex = "-2";
       menuContainer.style.zIndex = "-1";
       aboutContainer.style.zIndex = "1";
+      isMenuOpen = false;
+   }
+
+   function afficherCredits() {
+      jeuContainer.style.zIndex = "-3";
+      menuContainer.style.zIndex = "-2";
+      aboutContainer.style.zIndex = "-1";
+      creditsContainer.style.zIndex = "1";
       isMenuOpen = false;
    }
 
@@ -143,6 +155,8 @@ document.addEventListener('DOMContentLoaded', function () {
    const boutonRetourMenu = document.getElementById('menu_button');
    const boutonAbout = document.getElementById('about');
    const boutonMenu = document.getElementById('return-menu-button');
+   const boutonMenu2 = document.getElementById('return-menu-button2');
+   const boutonCredits = document.getElementById('credits');
 
    // Event listener to launch game
    boutonJoueur.addEventListener('click', function () {
@@ -151,6 +165,11 @@ document.addEventListener('DOMContentLoaded', function () {
    });
 
    boutonMenu.addEventListener('click', function () {
+      afficherMenu();
+      isMenuOpen = true;
+   });
+
+   boutonMenu2.addEventListener('click', function () {
       afficherMenu();
       isMenuOpen = true;
    });
@@ -165,6 +184,12 @@ document.addEventListener('DOMContentLoaded', function () {
       afficherApropos();
       isMenuOpen = false;
    });
+
+   boutonCredits.addEventListener('click', function () {
+      afficherCredits();
+      isMenuOpen = false;
+   });
+
 
    // Show menu by default
    afficherMenu();
