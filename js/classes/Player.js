@@ -226,8 +226,7 @@ class Player extends Sprite {
    update() {
       // Apply color inversion effect if needed
       if (this.isInvertedColor) {
-         // SCREEN.filter = 'invert(100%)';
-         this.invertColors()
+         SCREEN.filter = 'invert(100%)';
       }
 
       // Call the superclass update method
@@ -475,7 +474,6 @@ class Player extends Sprite {
                object1: this.hitbox,
                object2: killBlock
             })) {
-            this.respawn(); // Respawn the player
             this.respawn(); // Respawn the player
             playerScore -= 100; // Deduct score for collision with kill platform
             updatePowerLeftCounter(); // Update power left counter

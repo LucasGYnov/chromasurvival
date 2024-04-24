@@ -132,39 +132,58 @@ document.addEventListener('DOMContentLoaded', function () {
    loadSettings();
 });
 
-
-// Get reference to the running sound element
 const runningSound = document.getElementById('running-sound');
-// Original volume level
-const originalVolume = 1;
-// Current volume level
+runningSound.volume = 0.05;
+
+const originalVolume = 0.4; // Original volume of the sound
 let currentVolume = originalVolume;
 
-// Function to gradually decrease volume
+// Function to decrease volume gradually
 function decreaseVolume() {
-   const decreaseRate = 0.3;
+    const decreaseRate = 0.09; // Rate at which volume decreases
 
-   // Interval to gradually decrease volume
-   const interval = setInterval(() => {
-      currentVolume -= decreaseRate;
-      if (currentVolume <= 0) {
-         clearInterval(interval);
-         currentVolume = 0;
-      }
-      // Set the volume of the running sound
-      runningSound.volume = currentVolume;
-   }, 200);
+    // Start decreasing volume gradually
+    const interval = setInterval(() => {
+        currentVolume -= decreaseRate; // Decrease volume
+        if (currentVolume <= 0) { // Check if volume has reached zero
+            clearInterval(interval); // Stop decreasing volume
+        }
+        runningSound.volume = currentVolume; // Set current volume
+    }, 100); // Interval for volume decrease
 }
 
-// Function to reset volume to original level
-function resetVolume() {
-   currentVolume = 0.8; // Set volume to initial level
-   runningSound.volume = currentVolume; // Set volume of running sound
-   decreaseVolume(); // Decrease volume gradually
+// Function to increase volume gradually
+function increaseVolume() {
+    const increaseRate = 0.1; // Rate at which volume increases
+
+    // Start increasing volume gradually
+    const interval = setInterval(() => {
+        currentVolume += increaseRate; // Increase volume
+        if (currentVolume >= originalVolume) { // Check if volume has reached original volume
+            currentVolume = originalVolume; // Ensure volume does not exceed original volume
+            clearInterval(interval); // Stop increasing volume
+        }
+        runningSound.volume = currentVolume; // Set current volume
+    }, 100); // Interval for volume increase
 }
+
+// Function to fade in the sound before starting
+function fadeInSound() {
+    runningSound.volume = 0; // Set initial volume to 0
+    increaseVolume(); // Start increasing volume gradually
+}
+
+// Function to fade out the sound before stopping
+function fadeOutSound() {
+    decreaseVolume(); // Start decreasing volume gradually
+}
+
 
 // Get reference to the jump sound element
 const jumpSound = document.getElementById('jump-sound');
+jumpSound.volume = 0.5; // Réduit le volume à 50%
+
+
 
 // Initialize touch button states
 let leftButtonTouch = false;
@@ -178,7 +197,14 @@ function moveLeft() {
    keys.gaucheInput.pressed = true; // Set left key pressed in input
    instructionCount++; // Increment instruction count
    updateInstructionText(instructionCount); // Update instruction text
-   runningSound.play(); // Play running sound
+   // Start running sound if not already running and player is on the ground
+   if (!isRunning && player.isOnGround) {
+      isRunning = true;
+      runningSound.loop = true;
+      fadeInSound(); // Start the running sound with fade in effect
+      runningSound.play();
+   }
+
 }
 
 // Function to move player right
@@ -187,7 +213,14 @@ function moveRight() {
    keys.droiteInput.pressed = true; // Set right key pressed in input
    instructionCount++; // Increment instruction count
    updateInstructionText(instructionCount); // Update instruction text
-   runningSound.play(); // Play running sound
+   // Start running sound if not already running and player is on the ground
+   if (!isRunning && player.isOnGround) {
+      isRunning = true;
+      runningSound.loop = true;
+      fadeInSound(); // Start the running sound with fade in effect
+      runningSound.play();
+   }
+
 }
 
 // Function to make player jump
@@ -195,6 +228,7 @@ function jump() {
    // Check if player is on ground and not already jumping
    if (player.isOnGround && !player.velocity.y > 0) {
       player.velocity.y = -6.5; // Set player's vertical velocity for jump
+      jumpSound.play();
       keys.sauterInput.pressed = true; // Set jump key pressed in input
       player.isOnGround = false; // Update player's on ground status
       instructionCount++; // Increment instruction count
@@ -213,7 +247,6 @@ function usePower() {
    }
 }
 
-
 // Variable to store the index of the connected gamepad
 let controllerIndex = null;
 // Array to store the previous states of gamepad buttons
@@ -231,7 +264,7 @@ window.addEventListener("gamepadconnected", (event) => {
 // Event listener for when a gamepad is disconnected
 window.addEventListener("gamepaddisconnected", (event) => {
    controllerIndex = null;
-   console.log("Controller disconnected");
+   stopMovingHorizontally();
 });
 
 // Function to update the state of the connected gamepad
@@ -255,6 +288,8 @@ function updateGamepadState() {
 
       // Jump
       handleButtonPress(gamepad.buttons[1], jump, 1);
+      // Stop moving horizontally when jump button is pressed
+      handleButtonPress(gamepad.buttons[1], stopMovingHorizontally, 1);
 
       // Special action control (using a chroma switch power)
       handleButtonPress(gamepad.buttons[0], usePower, 0);
@@ -279,11 +314,23 @@ function gameLoop() {
 // Start the game loop
 gameLoop();
 
-// Function to stop horizontal movement
+// Function to handle button releases on the gamepad
+function handleButtonRelease(button, action, index) {
+   if (!button.pressed && previousButtonStates[index]) {
+      action();
+   }
+   // Update the previous state of the button
+   previousButtonStates[index] = button.pressed;
+}
+
+// Function to stop player movement horizontally
 function stopMovingHorizontally() {
-   player.velocity.x = 0;
-   keys.gaucheInput.pressed = false;
-   keys.droiteInput.pressed = false;
+   player.velocity.x = 0; // Set player's horizontal velocity to 0
+   keys.gaucheInput.pressed = false; // Set left key released in input
+   keys.droiteInput.pressed = false; // Set right key released in input
+   runningSound.pause(); // Pause running sound
+   runningSound.currentTime = 0; // Rewind running sound to start
+   isRunning = false; // Update running status
 }
 
 // Touch event listeners for left button
@@ -291,10 +338,14 @@ document.getElementById('left_button').addEventListener('touchstart', (event) =>
    event.preventDefault();
    leftButtonTouch = true;
    moveLeft();
+   // Start running sound if not already running and player is on the ground
+   if (!isRunning && player.isOnGround) {
    isRunning = true;
    runningSound.loop = true;
+   fadeInSound(); // Start the running sound with fade in effect
    runningSound.play();
-   resetVolume();
+}
+
 });
 
 document.getElementById('left_button').addEventListener('touchend', () => {
@@ -309,9 +360,14 @@ document.getElementById('right_button').addEventListener('touchstart', (event) =
    event.preventDefault();
    rightButtonTouch = true;
    moveRight();
+   // Start running sound if not already running and player is on the ground
+   if (!isRunning && player.isOnGround) {
+   isRunning = true;
    runningSound.loop = true;
+   fadeInSound(); // Start the running sound with fade in effect
    runningSound.play();
-   resetVolume();
+}
+
 });
 
 document.getElementById('right_button').addEventListener('touchend', () => {
@@ -367,29 +423,29 @@ window.addEventListener('keydown', (event) => {
             keys.gaucheInput.pressed = true;
             instructionCount++;
             updateInstructionText(instructionCount);
-            // Start running sound if not already running
-            if (!isRunning) {
+            // Start running sound if not already running and player is on the ground
+            if (!isRunning && player.isOnGround) {
                isRunning = true;
                runningSound.loop = true;
+               fadeInSound(); // Start the running sound with fade in effect
                runningSound.play();
-               resetVolume()
             }
             break;
-            // Right movement
+         // Right movement
          case keys.droiteInput.key:
             player.velocity.x = 2.5;
             keys.droiteInput.pressed = true;
             instructionCount++;
             updateInstructionText(instructionCount);
-            // Start running sound if not already running
-            if (!isRunning) {
+            // Start running sound if not already running and player is on the ground
+            if (!isRunning && player.isOnGround) {
                isRunning = true;
                runningSound.loop = true;
+               fadeInSound(); // Start the running sound with fade in effect
                runningSound.play();
-               resetVolume()
             }
             break;
-            // Jump
+         // Jump
          case keys.sauterInput.key:
             // Check if the player is on the ground and not currently jumping
             if (player.isOnGround && !(player.velocity.y > 0)) {
@@ -401,7 +457,7 @@ window.addEventListener('keydown', (event) => {
                jumpSound.play();
             }
             break;
-            // Use power
+         // Use power
          case keys.utiliserSortInput.key:
             if (player.powerLeft > 0) {
                keys.utiliserSortInput.pressed = true;
@@ -449,6 +505,7 @@ window.addEventListener('keyup', (event) => {
       }
    }
 });
+
 
 // Event listener for when running sound ends
 runningSound.addEventListener('ended', () => {
