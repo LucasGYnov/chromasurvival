@@ -112,9 +112,11 @@ document.addEventListener('DOMContentLoaded', function () {
    // Get the jeu (game) and menu container elements
    const jeuContainer = document.querySelector('.jeu');
    const menuContainer = document.querySelector('.menu');
+   const aboutContainer = document.querySelector('.about');
 
    // Function to show menu
    function afficherMenu() {
+      aboutContainer.style.zIndex = "-2";
       jeuContainer.style.zIndex = "-1";
       menuContainer.style.zIndex = "1";
       isMenuOpen = true;
@@ -122,14 +124,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
    // Function to show game
    function afficherJeu() {
+      aboutContainer.style.zIndex = "-2";
       menuContainer.style.zIndex = "-1";
       jeuContainer.style.zIndex = "1";
+      isMenuOpen = false;
+   }
+
+   // Function to show about setion
+   function afficherApropos() {
+      jeuContainer.style.zIndex = "-2";
+      menuContainer.style.zIndex = "-1";
+      aboutContainer.style.zIndex = "1";
       isMenuOpen = false;
    }
 
    // Get the buttons for launching game and returning to menu
    const boutonJoueur = document.getElementById('lunch_game');
    const boutonRetourMenu = document.getElementById('menu_button');
+   const boutonAbout = document.getElementById('about');
+   const boutonMenu = document.getElementById('return-menu-button');
 
    // Event listener to launch game
    boutonJoueur.addEventListener('click', function () {
@@ -137,10 +150,20 @@ document.addEventListener('DOMContentLoaded', function () {
       isMenuOpen = false;
    });
 
+   boutonMenu.addEventListener('click', function () {
+      afficherMenu();
+      isMenuOpen = true;
+   });
+
    // Event listener to return to menu
    boutonRetourMenu.addEventListener('click', function () {
       afficherMenu();
       isMenuOpen = true;
+   });
+
+   boutonAbout.addEventListener('click', function () {
+      afficherApropos();
+      isMenuOpen = false;
    });
 
    // Show menu by default
@@ -234,11 +257,13 @@ document.addEventListener('DOMContentLoaded', function () {
    const mobileCheckbox = document.querySelector('.mobile-checkbox');
    const sonCheckbox = document.querySelector('.son-checkbox');
    const musicCheckbox = document.querySelector('.music-checkbox');
+   const soundCheckbox = document.querySelector('.son-checkbox'); // Correction ici
 
    // Set initial states for the checkboxes
    mobileCheckbox.checked = false;
    sonCheckbox.checked = true;
    musicCheckbox.checked = false;
+   soundCheckbox.checked = false;
 
    // Get the keys section
    const keysSection = document.getElementById('keys');
@@ -248,6 +273,7 @@ document.addEventListener('DOMContentLoaded', function () {
    // Add event listener to the mobile checkbox to trigger visibility update
    mobileCheckbox.addEventListener('change', updateKeysVisibility);
 });
+
 
 // Event listener for when the DOM content is loaded
 document.addEventListener('DOMContentLoaded', function () {
@@ -275,6 +301,7 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener('DOMContentLoaded', function () {
    // Get the game music element and the music checkbox
    const gameMusic = document.getElementById('game-music');
+   
    const musicCheckbox = document.querySelector('.music-checkbox');
 
    // Function to restart the music with a random delay
@@ -309,6 +336,18 @@ document.addEventListener('DOMContentLoaded', function () {
          gameMusic.pause();
       } else {
          restartMusic();
+      }
+   });
+
+   // Event listener for when the sound checkbox state changes
+   soundCheckbox.addEventListener('change', function () {
+      // Pause or play the sounds based on the checkbox state
+      if (!this.checked) {
+         runningSound.muted = true;
+         jumpSound.muted = true;
+      } else {
+         runningSound.muted = false;
+         jumpSound.muted = false;
       }
    });
 });
@@ -364,3 +403,6 @@ function updatePowerLeftCounter() {
 
 // Initially update the power left counter display
 updatePowerLeftCounter();
+
+
+
