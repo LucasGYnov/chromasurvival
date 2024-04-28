@@ -1973,28 +1973,38 @@ function loadMap(mapName) {
          levels[2].init();
          CANVAS.width = 3360 / 2;
          CANVAS.height = 1280;
-         document.getElementById('level2').dataset.lock = 'true';
+         document.addEventListener('click', (event) => {
+            if (event.target.id === 'save-map' && selectedMap === null) {
+               document.getElementById('level2').dataset.lock = 'true';
+            }
+         });
          break;
       case 'Shadowy Swamps':
          level = 3;
          levels[3].init();
          CANVAS.width = 3360 / 2;
          CANVAS.height = 1280;
-         document.getElementById('level3').dataset.lock = 'true';
+         if (event.target.id === 'save-map' && selectedMap === null) {
+            document.getElementById('level3').dataset.lock = 'true';
+         }
          break;
       case 'Eclipsed Forest':
          level = 4;
          levels[4].init();
          CANVAS.width = 3360 / 2;
          CANVAS.height = 1280;
-         document.getElementById('level4').dataset.lock = 'true';
+         if (event.target.id === 'save-map' && selectedMap === null) {
+            document.getElementById('level4').dataset.lock = 'true';
+         }
          break;
       case 'Gloom Haven':
          level = 5;
          levels[5].init();
          CANVAS.width = 3360 / 2;
          CANVAS.height = 1280;
-         document.getElementById('level5').dataset.lock = 'true';
+         if (event.target.id === 'save-map' && selectedMap === null) {
+            document.getElementById('level5').dataset.lock = 'true';
+         }
          break;
       case 'Spectral Caverns':
          level = 6;
